@@ -37,7 +37,7 @@ class Jobs(object):
         fids = filtering.get("ids", None)
         fsinceId = filtering.get("sinceId", None)
         fmaxId = filtering.get("maxId", None)
-        flocation = filtering.get("location", None)
+        flocation = filtering.get("location", {})
         ftitle = filtering.get("title", None)
         fdescription = filtering.get("description", None)
         fjobType = filtering.get("jobType", "")
