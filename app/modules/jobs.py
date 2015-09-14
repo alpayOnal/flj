@@ -93,11 +93,14 @@ class Jobs(object):
         return renameID(job)
 
     def getNewest(self, filtering=None):
+        if not filtering:
+            filtering = {}
         query = self.generateQuery(filtering)
         jobs = self.storage.find(
             query).limit(1).sort("date", pymongo.DESCENDING)
         if jobs.count() > 0:
             return renameID(jobs.next())
+        raise NotFoundException()
 
     def getNewestBySource(self, source):
         return self.getNewest(filtering={

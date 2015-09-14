@@ -39,9 +39,6 @@ class Accounts(object):
         self.storage.insert(account)
         return renameID(account)
 
-    def get(self, filtering=None, length=100):
-        return self.storage.find().limit(length)
-
     def getOne(self, accountId):
         account = self.storage.find_one({"_id": ObjectId(accountId)})
         if not account:
@@ -51,7 +48,7 @@ class Accounts(object):
 
     def get(self, filtering=None):
         if not filtering:
-            filtering = dict()
+            filtering = {}
         flocation = filtering.get("location", None)
         fkeyword = filtering.get("keyword", [])
         query = {}
