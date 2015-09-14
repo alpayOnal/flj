@@ -29,10 +29,16 @@ class Accounts(object):
         return alarm
 
     def insert(self, account):
-        # schema validation is needed here
+        # @TODO schema validation is needed here
+        if "gcmId" not in account:
+            raise WrongArgumentException("every account must have a gcmId.")
+
         account["createdAt"] = arrow.utcnow().naive
+
         if "alarms" not in account:
             account["alarms"] = []
+        if "jobs" not in account:
+            account["jobs"] = {"starred": []}
 
         for alarm in account['alarms']:
             alarm = self.makeAlarmReadyToDb(alarm)

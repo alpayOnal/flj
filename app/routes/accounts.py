@@ -26,6 +26,11 @@ def getBlueprint(config):
         account = Accounts(config).getOne(accountId)
         return jsonify(response.make(20, {"account": account}).__json__())
 
+    @app.route('/accounts/gcmids/<gcmId>', methods=['GET'])
+    def getByGcmId(gcmId):
+        account = Accounts(config).getByGcm(gcmId)
+        return jsonify(response.make(20, {"account": account}).__json__())
+
     @app.route('/accounts/<accountId>/alarms/', methods=['PUT'])
     @jsonizeRequest
     def insertAlarm(accountId, data):
