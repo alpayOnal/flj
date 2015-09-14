@@ -1,8 +1,8 @@
 Welcome to the FLJ!
 ===================
 
-* [RESTful API Documentation](restful)
-* [Modules Documentation](modules)
+* [RESTful API Documentation](https://github.com/muatik/flj/wiki/restful)
+* [Modules Documentation](https://github.com/muatik/flj/wiki/modules)
 
 
 
