@@ -1,10 +1,11 @@
 # -*- coding: utf8 -*-
+import arrow
+import pymongo
+from bson.objectid import ObjectId
 from app.libraries import loggerFactory
 from app.libraries.mongodb import getDb
-from bson.objectid import ObjectId
 from app.modules.errors import (NotFoundException,
                                 WrongArgumentException)
-import arrow
 
 
 def renameID(job):
@@ -22,18 +23,7 @@ class Jobs(object):
         self.storage = self.db["jobs"]
         self.logger = loggerFactory.get()
 
-    def insert(self, job):
-        # schema validation is needed here
-        if "id" in job:
-            del job["id"]
-        job["location"]["country"] = job["location"]["country"].lower()
-        job["location"]["city"] = job["location"]["city"].lower()
-        job["location"]["region"] = job["location"]["region"].lower()
-        job["jobType"] = job["jobType"].lower()
-        self.storage.insert(job)
-        return renameID(job)
-
-    def get(self, filtering=None, length=100):
+    def generateQuery(self, filtering):
         fids = filtering.get("ids", None)
         fsinceId = filtering.get("sinceId", None)
         fmaxId = filtering.get("maxId", None)
@@ -41,6 +31,7 @@ class Jobs(object):
         ftitle = filtering.get("title", None)
         fdescription = filtering.get("description", None)
         fjobType = filtering.get("jobType", "")
+        fsource = filtering.get("source", "")
         query = {"$or": []}
 
         if fids:
@@ -71,11 +62,28 @@ class Jobs(object):
         if fjobType:
             query["jobType"] = {"$regex": fjobType.lower()}
 
+        if fsource:
+            query["source"] = fsource.lower()
+
         if not query["$or"]:
             del query["$or"]
 
-        self.logger.debug("jobs query: " + str(query))
+        return query
 
+    def insert(self, job):
+        # schema validation is needed here
+        if "id" in job:
+            del job["id"]
+        job["location"]["country"] = job["location"]["country"].lower()
+        job["location"]["city"] = job["location"]["city"].lower()
+        job["location"]["region"] = job["location"]["region"].lower()
+        job["jobType"] = job["jobType"].lower()
+        self.storage.insert(job)
+        return renameID(job)
+
+    def get(self, filtering=None, length=100):
+        query = self.generateQuery(filtering)
+        self.logger.debug("jobs query: " + str(query))
         return self.storage.find(query).limit(length)
 
     def getOne(self, jobId):
@@ -83,6 +91,18 @@ class Jobs(object):
         if not job:
             raise NotFoundException("job with id {} not found".format(jobId))
         return renameID(job)
+
+    def getNewest(self, filtering=None):
+        query = self.generateQuery(filtering)
+        jobs = self.storage.find(
+            query).limit(1).sort("date", pymongo.DESCENDING)
+        if jobs.count() > 0:
+            return renameID(jobs.next())
+
+    def getNewestBySource(self, source):
+        return self.getNewest(filtering={
+            "source": source
+            })
 
     def delete(self, jobId):
         self.storage.remove({"_id": ObjectId(jobId)})

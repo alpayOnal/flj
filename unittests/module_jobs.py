@@ -10,12 +10,13 @@ class TestWidget(BaseTest, unittest.TestCase):
     """docstring for TestHistory"""
 
     JOBS = [{
-        "date": "2014-04-12 15:30:12",
+        "date": arrow.utcnow().replace(hours=-10).naive,
         "title": "Receptionist - Fluent French Speaker",
         "description": "At KLMN, we are looking for experienced French speakers to work at one ...",
         "company": "1X Hotels",
         "salary": "Competitive + Benefits",
         "jobType": "Contract/Interim",
+        "source": "flj.com",
         "location": {
           "country": "United Kingdom",
           "state": "",
@@ -29,12 +30,13 @@ class TestWidget(BaseTest, unittest.TestCase):
           "starred": 4
         }
     }, {
-        "date": "2014-04-12 18:00:12",
+        "date": arrow.utcnow().replace(hours=+2).naive,
         "title": "Waitress Fluent German Speaker",
         "description": "Office & Accounts Administrator - Construction",
         "company": "Tenders",
         "salary": "£21,000 to £23,000 p.a. plus some fantastic benefit",
         "jobType": "part-time",
+        "source": "dublinxyzjobs.com",
         "location": {
           "country": "Ireland",
           "state": "",
@@ -48,12 +50,13 @@ class TestWidget(BaseTest, unittest.TestCase):
           "starred": 14
         }
     }, {
-        "date": "2014-04-14 20:00:12",
+        "date": arrow.utcnow().replace(hours=-8).naive,
         "title": "Payroll and Benefits Administrator",
         "description": "One of my top London based Media clients urgently seeks a talented Payroll and Benefits Administrator ",
         "company": "Harriet Rawlinson",
         "salary": "£10 - £15 p hour",
         "jobType": "PART TIME",
+        "source": "flj.com",
         "location": {
           "country": "United Kingdom",
           "state": "",
@@ -67,12 +70,13 @@ class TestWidget(BaseTest, unittest.TestCase):
           "starred": 2
         }
     }, {
-        "date": "2014-04-14 21:00:12",
+        "date":  arrow.utcnow().replace(hours=-3).naive,
         "title": "Trainee Personal Trainers",
         "description": "One of my top London based Media clients urgently seeks a talented Payroll and Benefits Administrator ",
         "company": "Blink",
         "salary": "Up to £37,000",
         "jobType": "permanent",
+        "source": "flj.com",
         "location": {
           "country": "United Kingdom",
           "state": "",
@@ -102,7 +106,7 @@ class TestWidget(BaseTest, unittest.TestCase):
         self.assertEqual(jobsFound.count(), len(self.JOBS))
 
     def test_02_getOne(self):
-        job = self.jobsModule.insert(self.JOBS[0])
+        job = self.JOBS[0]
         jobFound = self.jobsModule.getOne(job['id'])
         self.assertEqual(job['id'], jobFound['id'])
 
@@ -147,7 +151,7 @@ class TestWidget(BaseTest, unittest.TestCase):
             jobsFound = self.jobsModule.get(filtering=filtering)
             self.assertEqual(countWithRegion, jobsFound.count())
 
-        doFilter(self.JOBS[3], 3, 1)  # 3 london jobs, 1 westcost jobs
+        doFilter(self.JOBS[3], 2, 1)  # 3 london jobs, 1 westcost jobs
         doFilter(self.JOBS[1], 1, 1)  # 1 dublin job, 1 central job
 
     def test_0402_getByKeywordFilter(self):
@@ -158,7 +162,7 @@ class TestWidget(BaseTest, unittest.TestCase):
             jobsFound = self.jobsModule.get(filtering=filtering)
             self.assertEqual(count, jobsFound.count())
         doFilter("geRM", 1)  # 1 greman job
-        doFilter("speak", 3)  # 3 jobs containg *speak* in title
+        doFilter("speak", 2)  # 3 jobs containg *speak* in title
 
     def test_0403_getByJobTypeFilter(self):
         def doFilter(keyword, count):
@@ -203,8 +207,19 @@ class TestWidget(BaseTest, unittest.TestCase):
         doFilter(job, "speak", "naaa", 0)  # 0 speaker job with type naaa in Dublin
 
         job = self.JOBS[0]
-        doFilter(job, "speak", job['jobType'], 2)  # 2 part time jobs
+        doFilter(job, "speak", job['jobType'], 1)  # 2 part time jobs
         doFilter(job, "one of my", "permanent", 1)  # 2 part time jobs
+
+    def test_0406_getNewestJobBySource(self):
+        job = self.JOBS[3]
+        source = job["source"]
+        jobFound = self.jobsModule.getNewestBySource(source)
+        self.assertEqual(jobFound["id"], job["id"])
+
+    def test_0407_getNewestJobBySource(self):
+        job = self.JOBS[1]
+        jobFound = self.jobsModule.getNewest(filtering={})
+        self.assertEqual(jobFound["id"], job["id"])
 
     # @TODO: delete method test
 
