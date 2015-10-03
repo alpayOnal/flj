@@ -6,7 +6,7 @@ import arrow
 from app.modules.jobs import Jobs
 
 
-class TestWidget(BaseTest, unittest.TestCase):
+class TestJobs(BaseTest, unittest.TestCase):
     """docstring for TestHistory"""
 
     JOBS = [{

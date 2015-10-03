@@ -42,21 +42,24 @@ class Matcher(object):
 
     def __init__(self):
         super(Matcher, self).__init__()
+        self.jobsIndex = defaultdict(dict)
 
     @classmethod
     def locationsMatch(cls, location1, location2):
         l1 = location1
         l2 = location2
 
-        if l1["country"] != l2["country"]:
-            return False
-
         l1State = l1.get("state", False)
         l2State = l2.get("state", False)
-        if l1State and l2State and l1State != l2State:
+        l1County = l1["country"].lower()
+        l2County = l2["country"].lower()
+        l1City = l1["city"].lower()
+        l2City = l2["city"].lower()
+
+        if l1County != l2County or l1City != l2City:
             return False
 
-        if l1["city"] != l2["city"]:
+        if l1State and l2State and l1State != l2State:
             return False
 
         return True
@@ -67,7 +70,7 @@ class Matcher(object):
 
     def startIndexing(self):
         for position, job in enumerate(self.jobs):
-            words = self.extractWords(job["title"])
+            words = self.extractWords(job["title"] + " " + job["description"])
             for word in words:
                 wordIndex = self.jobsIndex[word]
                 wordIndex[position] = True
@@ -77,7 +80,9 @@ class Matcher(object):
         haystack = self.jobsIndex.keys()
         found = []
         for keyword in alarm["keywords"]:
+            # print "keyword: ", keyword
             for word in haystack:
+                # print keyword.lower(), word
                 if keyword.lower() in word:
                     jobPositions = self.jobsIndex[word].keys()
                     found += jobPositions
