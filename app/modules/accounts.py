@@ -18,7 +18,7 @@ class Accounts(object):
 
     def __init__(self, config):
         super(Accounts, self).__init__()
-        self.db = getDb()
+        self.db = getDb(config)
         self.storage = self.db["accounts"]
         self.logger = loggerFactory.get()
 
@@ -85,6 +85,7 @@ class Accounts(object):
     def insertAlarm(self, accountId, alarm):
         alarm = self.makeAlarmReadyToDb(alarm)
         alarm["createdAt"] = arrow.utcnow().naive
+        alarm["id"] = ObjectId()
         self.storage.update(
             {
                 "_id": ObjectId(accountId)
@@ -133,7 +134,7 @@ class Accounts(object):
             })
 
     # @TODO: unittest
-    def saveNotifiactionStatus(self, notification):
+    def saveNotifiactionStatus(self, accountId, notification):
         self.storage.update(
             {
                 "_id": ObjectId(accountId)
