@@ -131,3 +131,13 @@ class Accounts(object):
             {
                 "$pull": {"jobs.starred": jobId}
             })
+
+    # @TODO: unittest
+    def saveNotifiactionStatus(self, notification):
+        self.storage.update(
+            {
+                "_id": ObjectId(accountId)
+            },
+            {
+                "$push": {"notifications": notification}
+            })
