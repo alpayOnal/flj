@@ -44,6 +44,24 @@ class Matcher(object):
         super(Matcher, self).__init__()
 
     @classmethod
+    def locationsMatch(cls, location1, location2):
+        l1 = location1
+        l2 = location2
+
+        if l1["country"] != l2["country"]:
+            return False
+
+        l1State = l1.get("state", False)
+        l2State = l2.get("state", False)
+        if l1State and l2State and l1State != l2State:
+            return False
+
+        if l1["city"] != l2["city"]:
+            return False
+
+        return True
+
+    @classmethod
     def extractWords(cls, text):
         return text.lower().split(cls.tokenSplitter)
 
@@ -76,6 +94,7 @@ class Matcher(object):
         for alarm in alarms:
             matchingJobPositions = self.findMatchingJobs(alarm)
             for position in matchingJobPositions:
-                matchingJob = self.jobs[position]
-                machings.insert(matchingJob, alarm)
+                job = self.jobs[position]
+                if self.locationsMatch(job["location"], alarm["location"]):
+                    machings.insert(job, alarm)
         return machings

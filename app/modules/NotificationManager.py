@@ -1,5 +1,4 @@
 # -*- coding: utf8 -*-
-
 import arrow
 from collections import defaultdict
 
