@@ -2,11 +2,11 @@
 from collections import defaultdict
 
 
-class Matches(object):
+class Matchings(object):
     """Represents a job and alarm matching and generally used by
     the class Matcher"""
     def __init__(self):
-        super(Matches, self).__init__()
+        super(Matchings, self).__init__()
         self.matches = {}
 
     def insert(self, job, alarm):
@@ -72,9 +72,10 @@ class Matcher(object):
         return self
 
     def match(self, alarms):
-        matches = Matches()
+        machings = Matchings()
         for alarm in alarms:
             matchingJobPositions = self.findMatchingJobs(alarm)
             for position in matchingJobPositions:
-                matches.insert(self.jobs[position], alarm)
-        return matches
+                matchingJob = self.jobs[position]
+                machings.insert(matchingJob, alarm)
+        return machings

@@ -1,15 +1,14 @@
 # -*- coding: utf8 -*-
-# from app.libraries import loggerFactory
-# from app.libraries.mongodb import getDb
-# from app.modules.errors import (NotFoundException,
-#                                 WrongArgumentException)
 
 import arrow
 from collections import defaultdict
-from pprint import pprint as pp
+
 from accounts import Accounts
-from matcher import Matcher, Matches
+from matcher import Matcher
 from GCMClient import GCMClient
+from app.libraries import loggerFactory
+
+logger = loggerFactory.get()
 
 
 class NotificationManager(object):
@@ -21,7 +20,6 @@ class NotificationManager(object):
     def __init__(self, config):
         super(NotificationManager, self).__init__()
         self.matcher = Matcher()
-        # self.ntfNuilder = NotificationBuilder()
         self.publisher = GCMClient({})
         self.accountCollection = Accounts(config)
 
@@ -30,49 +28,29 @@ class NotificationManager(object):
         return self
 
     def start(self):
-        # accounts = [{
-        #     "id": 1,
-        #     "alarms": [
-        #         {
-        #             "id": "jrt9",
-        #             "keywords": ["armut"]
-        #         },
-        #         {
-        #             "id": "mke3",
-        #             "keywords": ["elma"]
-        #         }
-        #     ]
-        # }, {
-        #     "id": 2,
-        #     "alarms": [
-        #         {
-        #             "id": "a312",
-        #             "keywords": ["kav"]
-        #         },
-        #         {
-        #             "id": "b598",
-        #             "keywords": ["elma"]
-        #         }
-        #     ]
-        # }]
         accounts = self.accountCollection.get()
         for account in accounts:
             try:
                 matches = self.matcher.match(account["alarms"])
                 if matches.count() == 0:
                     continue
+
                 notification = Notification(matches)
-                # print "account: ", account["id"]
-                # print notification.getTitle()
-                # print notification
-                self.publisher.publish("gcm1", notification)
+                gcmID = account["gcmId"]
+                self.publisher.publish(gcmID, notification)
+
+                logger.info("notification - gcm: {} {}".format(
+                    gcmID, repr(notification)))
 
                 ntfStatus = notification.genNotificationID()
                 self.accountCollection.saveNotifiactionStatus(
                     account["_id"], ntfStatus)
+
+                logger.debug("saved notification status: {}".format(
+                    ntfStatus))
             except Exception, e:
                 emsg = "notification builder error. accountId <{}>".format
-                # logger.exception(emsg(account["id"]))
+                logger.exception(emsg(account["_id"]))
 
 
 class Notification(object):
@@ -112,38 +90,7 @@ class Notification(object):
 
     def genNotificationID(self):
         return {
-            "created_at": self.createdAt.naive,
+            "createdAt": self.createdAt.naive,
+            "jobIDs": self.matches.getJobIDs(),
             "matchingCount": self.matches.count()
         }
-
-
-if __name__ == '__main__':
-    from pprint import pprint as pp
-    cursor = [
-        {
-            "id": 1,
-            "title": "elma armut patates"
-        }, {
-            "id": 2,
-            "title": "patates domates patlican"
-        }, {
-            "id": 3,
-            "title": "patlican karpuz kavun"
-        }, {
-            "id": 4,
-            "title": "elma karpuz patates"
-        }
-    ]
-    accounts = [{
-        "id": 1,
-        "alarms": [
-            {
-                "keywords": ["armut"]
-            },
-            {
-                "keywords": ["elma"]
-            }
-        ]
-    }]
-
-    matches = NotificationManager().setJobs(cursor).start()
