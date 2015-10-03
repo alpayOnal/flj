@@ -5,8 +5,9 @@
 #                                 WrongArgumentException)
 
 import arrow
-
 from collections import defaultdict
+from pprint import pprint as pp
+from accounts import Accounts
 from matcher import Matcher, Matches
 from GCMClient import GCMClient
 
@@ -17,12 +18,12 @@ class NotificationManager(object):
     notifications and can be regarded as the entry point of notification layer;
     that is, other modules will interact with only this class.
     """
-    def __init__(self):
+    def __init__(self, config):
         super(NotificationManager, self).__init__()
         self.matcher = Matcher()
         # self.ntfNuilder = NotificationBuilder()
         self.publisher = GCMClient({})
-        # self.accountCollection = Accounts()
+        self.accountCollection = Accounts(config)
 
     def setJobs(self, jobsIterator):
         self.matcher.setJobs(jobsIterator)
@@ -58,6 +59,8 @@ class NotificationManager(object):
         for account in accounts:
             try:
                 matches = self.matcher.match(account["alarms"])
+                if matches.count() == 0:
+                    continue
                 notification = Notification(matches)
                 # print "account: ", account["id"]
                 # print notification.getTitle()
@@ -65,9 +68,9 @@ class NotificationManager(object):
                 self.publisher.publish("gcm1", notification)
 
                 ntfStatus = notification.genNotificationID()
-                self.accountCollection.saveNotifiactionStatus(ntfStatus)
+                self.accountCollection.saveNotifiactionStatus(
+                    account["_id"], ntfStatus)
             except Exception, e:
-                raise e
                 emsg = "notification builder error. accountId <{}>".format
                 # logger.exception(emsg(account["id"]))
 
@@ -109,8 +112,7 @@ class Notification(object):
 
     def genNotificationID(self):
         return {
-            "created_at": self.createdAt,
-            "latestJobId": self.matches.getLatesJobID(),
+            "created_at": self.createdAt.naive,
             "matchingCount": self.matches.count()
         }
 
