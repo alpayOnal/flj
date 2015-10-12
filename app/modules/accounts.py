@@ -23,6 +23,10 @@ class Accounts(object):
         self.logger = loggerFactory.get()
 
     def makeAlarmReadyToDb(self, alarm):
+        if "id" in alarm:
+            alarm.pop("id")
+        elif "_id" in alarm:
+            alarm.pop("_id")
         alarm['location']['country'] = alarm['location']['country'].lower()
         alarm['location']['city'] = alarm['location']['city'].lower()
         alarm['location']['state'] = alarm['location']['state'].lower()
