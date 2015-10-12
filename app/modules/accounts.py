@@ -23,6 +23,8 @@ class Accounts(object):
         self.logger = loggerFactory.get()
 
     def makeAlarmReadyToDb(self, alarm):
+        if "id" in alarm:
+            alarm.pop("id")
         alarm['location']['country'] = alarm['location']['country'].lower()
         alarm['location']['city'] = alarm['location']['city'].lower()
         alarm['location']['state'] = alarm['location']['state'].lower()
@@ -40,9 +42,14 @@ class Accounts(object):
         if "jobs" not in account:
             account["jobs"] = {"starred": []}
 
-        for alarm in account['alarms']:
-            alarm = self.makeAlarmReadyToDb(alarm)
+        alarms = account['alarms']
+        account.pop("alarms")
         self.storage.insert(account)
+
+        for alarm in alarms:
+            alarm = self.insertAlarm(account["_id"], alarm)
+        account["alarms"] = alarms
+
         return renameID(account)
 
     def getOne(self, accountId):
@@ -94,19 +101,15 @@ class Accounts(object):
                 "$push": {"alarms": alarm}
             })
 
-    def removeAlarm(self, accountId, alarm):
-        alarm = self.makeAlarmReadyToDb(alarm)
-        location = alarm["location"]
+    def removeAlarm(self, accountId, alarmId):
+        alarmId = ObjectId(alarmId)
         self.storage.update(
             {
                 "_id": ObjectId(accountId)
             },
             {
                 "$pull": {"alarms": {
-                    "location.country": location["country"],
-                    "location.state": location["state"],
-                    "location.city": location["city"],
-                    "keywords": alarm["keywords"]
+                    "id": alarmId
                 }}
             })
 

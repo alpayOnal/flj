@@ -43,16 +43,17 @@ def getBlueprint(config):
         Accounts(config).insertAlarm(accountId, alarm)
         return jsonify(response.make(20, {"alarm": alarm}).__json__())
 
-    @app.route('/accounts/<accountId>/alarms/', methods=['DELETE'])
+    @app.route('/accounts/<accountId>/alarms/<alarmId>', methods=['DELETE'])
     @jsonizeRequest
-    def removeAlarm(accountId, data):
+    def removeAlarm(accountId, alarmId, data):
         try:
             alarm = data["alarm"]
         except Exception, e:
             raise WrongArgumentException(
                 "alarm data not found in the request body")
 
-        Accounts(config).removeAlarm(accountId, alarm)
+        Accounts(config).removeAlarm(accountId, alarmId)
+        alarm = {"id": alarmId}
         return jsonify(response.make(20, {"alarm": alarm}).__json__())
 
     @app.route('/dummies/accounts', methods=['GET'])

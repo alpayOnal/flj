@@ -93,8 +93,9 @@ class TestAccount(BaseTest, unittest.TestCase):
     def test_00_insert(self):
         for account in self.ACCOUNTS:
             record = self.accounts.insert(account)
-            account['id'] = record['id']
-            self.assertIsInstance(record['id'], ObjectId)
+            account["id"] = record["id"]
+            account["alarms"] = record["alarms"]
+            self.assertIsInstance(record["id"], ObjectId)
 
     def test_01_getWithoutFilter(self):
         accountsFound = self.accounts.get(filtering={})
@@ -182,8 +183,7 @@ class TestAccount(BaseTest, unittest.TestCase):
         account = self.ACCOUNTS[0]
         alarms = account["alarms"]
         initialAlarmsCount = len(alarms)
-
-        self.accounts.removeAlarm(account["id"], alarms[0])
+        self.accounts.removeAlarm(account["id"], alarms[0]["id"])
         account = self.accounts.getOne(account["id"])
         self.assertEqual(initialAlarmsCount - 1, len(account["alarms"]))
 
