@@ -1,9 +1,7 @@
 # -*- coding: utf8 -*-
 from flask import Flask, jsonify
-from flask import render_template
 import libraries.mongodb as mongodb
-from app.libraries import loggerFactory, response
-from app.modules.errors import BaseException
+from modules.errors import BaseException
 
 
 def createApp(config, url_prefix=None):
@@ -15,11 +13,14 @@ def createApp(config, url_prefix=None):
 
     from routes import jobs
     from routes import accounts
+    from routes import adminJobs
 
     app.register_blueprint(
         jobs.getBlueprint(config), url_prefix=url_prefix)
     app.register_blueprint(
         accounts.getBlueprint(config), url_prefix=url_prefix)
+    app.register_blueprint(
+        adminJobs.getBlueprint(config), url_prefix=url_prefix)
 
     @app.errorhandler(BaseException)
     def handle_exceptions(error):

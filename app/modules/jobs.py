@@ -32,6 +32,12 @@ class Jobs(object):
         fdescription = filtering.get("description", None)
         fjobType = filtering.get("jobType", "")
         fsource = filtering.get("source", "")
+
+        # @TODO: add to api documentation
+        # @TODO: need unittest
+        fdateStart = filtering.get("dateStart", "")
+        fdateEnd = filtering.get("dateEnd", "")
+
         query = {"$or": []}
 
         if fids:
@@ -62,6 +68,11 @@ class Jobs(object):
         if fjobType:
             query["jobType"] = {"$regex": fjobType.lower()}
 
+        if fdateStart and fdateEnd:
+            query["date"] = {
+                "$gte": arrow.get(fdateStart).naive,
+                "$lt": arrow.get(fdateEnd).naive}
+
         if fsource:
             query["source"] = fsource.lower()
 
@@ -84,7 +95,8 @@ class Jobs(object):
     def get(self, filtering=None, length=100):
         query = self.generateQuery(filtering)
         self.logger.debug("jobs query: " + str(query))
-        return self.storage.find(query).limit(length)
+        return self.storage.find(
+            query).sort("date", pymongo.DESCENDING).limit(length)
 
     def getOne(self, jobId):
         job = self.storage.find_one({"_id": ObjectId(jobId)})
