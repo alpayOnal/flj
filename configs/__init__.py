@@ -47,7 +47,6 @@ def get(env=None):
             imported = __import__(ENV)
             conf = imported.Config()
         except Exception, e:
-            raise e
             raise Exception(
                 ('Config module "{}" not found. Maybe you did '
                     'forget setting {} environment variable.')
