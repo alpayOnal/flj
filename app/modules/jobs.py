@@ -8,6 +8,65 @@ from app.modules.errors import (NotFoundException,
                                 WrongArgumentException)
 
 
+def generateQuery(filtering):
+    fids = filtering.get("ids", None)
+    fsinceId = filtering.get("sinceId", None)
+    fmaxId = filtering.get("maxId", None)
+    flocation = filtering.get("location", {})
+    ftitle = filtering.get("title", None)
+    fdescription = filtering.get("description", None)
+    fjobType = filtering.get("jobType", "")
+    fsource = filtering.get("source", "")
+
+    # @TODO: add to api documentation
+    # @TODO: need unittest
+    fdateStart = filtering.get("dateStart", "")
+    fdateEnd = filtering.get("dateEnd", "")
+
+    query = {"$or": []}
+
+    if fids:
+        query["_id"] = {"$in": fids}
+
+    if fsinceId:
+        query["_id"] = {"$gt": ObjectId(fsinceId)}
+
+    if fmaxId:
+        if query.get("_id"):
+            query["_id"]["$lt"] = ObjectId(fmaxId)
+        else:
+            query["_id"] = {"$gt": ObjectId(fmaxId)}
+
+    if flocation.get("country", None):
+        query["location.country"] = flocation["country"].lower()
+        query["location.city"] = flocation["city"].lower()
+        if flocation.get("region", None):
+            query["location.region"] = flocation["region"].lower()
+
+    if ftitle:
+        query["$or"].append({"title": {"$regex": ftitle, "$options": "i"}})
+
+    if fdescription:
+        query["$or"].append({"description": {
+            "$regex": fdescription, "$options": "i"}})
+
+    if fjobType:
+        query["jobType"] = {"$regex": fjobType.lower()}
+
+    if fdateStart and fdateEnd:
+        query["date"] = {
+            "$gte": arrow.get(fdateStart).naive,
+            "$lt": arrow.get(fdateEnd).naive}
+
+    if fsource:
+        query["source"] = fsource.lower()
+
+    if not query["$or"]:
+        del query["$or"]
+
+    return query
+
+
 def renameID(job):
     job["id"] = job["_id"]
     del job["_id"]
@@ -23,64 +82,6 @@ class Jobs(object):
         self.storage = self.db["jobs"]
         self.logger = loggerFactory.get()
 
-    def generateQuery(self, filtering):
-        fids = filtering.get("ids", None)
-        fsinceId = filtering.get("sinceId", None)
-        fmaxId = filtering.get("maxId", None)
-        flocation = filtering.get("location", {})
-        ftitle = filtering.get("title", None)
-        fdescription = filtering.get("description", None)
-        fjobType = filtering.get("jobType", "")
-        fsource = filtering.get("source", "")
-
-        # @TODO: add to api documentation
-        # @TODO: need unittest
-        fdateStart = filtering.get("dateStart", "")
-        fdateEnd = filtering.get("dateEnd", "")
-
-        query = {"$or": []}
-
-        if fids:
-            query["_id"] = {"$in": fids}
-
-        if fsinceId:
-            query["_id"] = {"$gt": ObjectId(fsinceId)}
-
-        if fmaxId:
-            if query.get("_id"):
-                query["_id"]["$lt"] = ObjectId(fmaxId)
-            else:
-                query["_id"] = {"$gt": ObjectId(fmaxId)}
-
-        if flocation.get("country", None):
-            query["location.country"] = flocation["country"].lower()
-            query["location.city"] = flocation["city"].lower()
-            if flocation.get("region", None):
-                query["location.region"] = flocation["region"].lower()
-
-        if ftitle:
-            query["$or"].append({"title": {"$regex": ftitle, "$options": "i"}})
-
-        if fdescription:
-            query["$or"].append({"description": {
-                "$regex": fdescription, "$options": "i"}})
-
-        if fjobType:
-            query["jobType"] = {"$regex": fjobType.lower()}
-
-        if fdateStart and fdateEnd:
-            query["date"] = {
-                "$gte": arrow.get(fdateStart).naive,
-                "$lt": arrow.get(fdateEnd).naive}
-
-        if fsource:
-            query["source"] = fsource.lower()
-
-        if not query["$or"]:
-            del query["$or"]
-
-        return query
-
     def insert(self, job):
         # schema validation is needed here
         if "id" in job:
@@ -93,7 +94,7 @@ class Jobs(object):
         return renameID(job)
 
     def get(self, filtering=None, length=100):
-        query = self.generateQuery(filtering)
+        query = generateQuery(filtering)
         self.logger.debug("jobs query: " + str(query))
         return self.storage.find(
             query).sort("date", pymongo.DESCENDING).limit(length)
@@ -107,7 +108,7 @@ class Jobs(object):
     def getNewest(self, filtering=None):
         if not filtering:
             filtering = {}
-        query = self.generateQuery(filtering)
+        query = generateQuery(filtering)
         jobs = self.storage.find(
             query).limit(1).sort("date", pymongo.DESCENDING)
         if jobs.count() > 0:

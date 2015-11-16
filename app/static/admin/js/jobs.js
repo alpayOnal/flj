@@ -41,3 +41,62 @@ function renderJobEntry($container, job) {
     var rendered = Mustache.render(template, job)
     $container.append(rendered)
 }
+
+function plotTimeseriesForNewJobs($container) {
+    var m = moment()
+    var interval = "hourly"
+    var dateEnd = m.format("YYYY-MM-DD HH:mm:ss")
+    var dateStart = m.subtract(3, "months").format("YYYY-MM-DD")
+    console.log(interval + '&dateStart=' + dateStart + '&dateEnd=' + dateEnd)
+    $.getJSON('/api/v1/admin/jobs/analysis/newJobs/?interval='
+        + interval + '&dateStart=' + dateStart + '&dateEnd=' + dateEnd, function (data) {
+
+        timeseries = data.data.timeseries
+        formated = []
+        for(var i in timeseries)
+            formated.push([
+                new Date(i + ":00:00").getTime(),
+                timeseries[i]
+            ])
+
+        console.log(formated)
+
+        $($container).highcharts('StockChart', {
+            rangeSelector : {
+                buttons: [
+                    {
+                        type: "day",
+                        count: 1,
+                        text: "1d"
+                    },
+                    {
+                        type: "day",
+                        count: 3,
+                        text: "3d"
+                    },
+                    {
+                        type: "week",
+                        count: 1,
+                        text: "1w"
+                    },
+                    {
+                        type: "month",
+                        count: 1,
+                        text: "1m"
+                    }
+                ],
+                selected : 0
+            },
+            title : {
+                text : 'New Job Entries'
+            },
+            series : [{
+                name : 'jobs',
+                data : formated,
+                tooltip: {
+                    valueDecimals: 1
+                }
+            }]
+        });
+    });
+}

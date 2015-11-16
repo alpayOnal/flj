@@ -6,20 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
-    <title>Starter Template for Bootstrap</title>
+    <title>Jobs Management for Bosses</title>
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet"
           href="https://cdn.rawgit.com/twbs/bootstrap/v4-dev/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="css/main.css">
 
 </head>
 
 <body>
 <nav class="navbar">
-    <a class="navbar-brand" href="#">Project name</a>
+    <a class="navbar-brand" href="#">FLJ</a>
     <ul class="nav nav-pills">
         <li class="nav-item">
-            <a href="#" class="nav-link active">Active</a>
+            <a href="#" class="nav-link active">Jobs</a>
         </li>
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
@@ -46,7 +47,7 @@
 </nav>
 
 <div class="container">
-
+    <div id="timeseries"></div>
     <h4>Jobs</h4>
 
     <div class="btn-group" data-toggle="buttons">
@@ -73,6 +74,9 @@
                     <td class="title">{{title}}</td>
                     <td class="date">{{date}}</td>
                     <td class="source">{{source}}</td>
+                    <td class="actions">
+                        <button>go</button>
+                    </td>
                 </tr>
 
         </script>
@@ -85,12 +89,15 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="https://cdn.rawgit.com/twbs/bootstrap/v4-dev/dist/js/bootstrap.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.2.0/mustache.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
+<script src="https://code.highcharts.com/stock/highstock.js"></script>
 <script src="js/jobs.js"></script>
 <script type="text/javascript">
         $(".jobDateFilter").click(function(){
             loadJobEntries($("#jobs tbody"), $(this).attr("data-range"))
         });
         loadJobEntries($("#jobs tbody"), "today")
+        plotTimeseriesForNewJobs($("#timeseries"))
 </script>
 </body>
 </html>

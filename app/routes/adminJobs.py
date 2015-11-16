@@ -1,12 +1,32 @@
 # -*- coding: utf8 -*-
+import arrow
 from app.modules.adminAuth import requires_admin
 from app.modules.jobs import Jobs
+from app.modules.jobsAnalyzer import JobsAnalyzer
 from flask import Blueprint, jsonify, request
 from app.libraries import response
 
 
 def getBlueprint(config):
     app = Blueprint('adminJobs', __name__)
+
+    @app.route("/admin/jobs/analysis/newJobs/")
+    @requires_admin
+    def getAnalysis():
+        # TODO: adds to api documentation
+        dateStart = request.args.get("dateStart")
+        dateEnd = request.args.get("dateEnd")
+        interval = request.args.get("interval")
+        filtering={
+            "dateStart": arrow.get(dateStart).naive,
+            "dateEnd": arrow.get(dateEnd).naive
+        }
+        result = JobsAnalyzer(config).getFrequency(interval, filtering)
+
+        filtering["interval"] = interval;
+        return jsonify(response.make(20, {
+            "filtering": filtering,
+            "timeseries": result}).__json__())
 
     @app.route("/admin/jobs")
     @requires_admin
