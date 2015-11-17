@@ -6,6 +6,9 @@
     margin-top: 20px;
 }
 
+#newJobsTimeseries {
+    margin-bottom: 35px;
+}
 tr.detail {
     display: none;
     font-size: 0.9em;
@@ -22,4 +25,16 @@ tr.detail .description span{
 
 button.toggleDetail.expanded {
     # background-color: green;
+}
+
+
+
+.listToolbar .actions .delete{
+    display: none;
+}
+
+
+tr.deleted{
+    text-decoration: line-through;
+    color: #aaa;
 }

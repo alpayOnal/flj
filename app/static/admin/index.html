@@ -22,7 +22,13 @@
         <li class="nav-item">
             <a href="#" class="nav-link active">Jobs</a>
         </li>
-        <li class="nav-item dropdown">
+        <li class="nav-item">
+            <a href="#" class="nav-link">Accounts</a>
+        </li>
+        <li class="nav-item">
+            <a href="#" class="nav-link">Crawlers</a>
+        </li>
+        <!--<li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
                role="button" aria-haspopup="true"
                aria-expanded="false">Dropdown</a>
@@ -35,70 +41,68 @@
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="#">Separated link</a>
             </div>
-        </li>
-        <li class="nav-item">
-            <a href="#" class="nav-link">Another link</a>
-        </li>
-        <li class="nav-item">
-            <a href="#" class="nav-link disabled">Disabled</a>
-        </li>
+        </li>-->
     </ul>
 
 </nav>
 
 <div class="container">
-    <div id="timeseries"></div>
-    <h4>Jobs</h4>
+    <div id="newJobsTimeseries"></div>
 
-    <div class="btn-group" data-toggle="buttons">
-        <label class="btn btn-primary btn-sm active jobDateFilter"
-               data-range="today">
-            <input type="radio" name="options" autocomplete="off" checked> Today
-        </label>
-        <label class="btn btn-primary btn-sm jobDateFilter"
+    <div class="listToolbar">
+        <div class="btn-group" data-toggle="buttons">
+            <label class="btn btn-primary btn-sm active jobDateFilter"
+                   data-range="today">
+                <input type="radio" name="options" autocomplete="off" checked> Today
+            </label>
+            <label class="btn btn-primary btn-sm jobDateFilter"
                data-range="yesterday">
             <input type="radio" name="options" autocomplete="off"> Yesterday
-        </label>
-        <label class="btn btn-primary btn-sm jobDateFilter" data-range="week">
-            <input type="radio" name="options" autocomplete="off"> This week
-        </label>
+            </label>
+            <label class="btn btn-primary btn-sm jobDateFilter" data-range="week">
+                <input type="radio" name="options" autocomplete="off"> This week
+            </label>
+        </div>
+        <div class="btn-group actions" data-toggle="buttons">
+            <button class="btn btn-sm btn-danger delete">Delete selected jobs</button>
+        </div>
+        <i id="jobCount" class="pull-right"></i>
     </div>
-
-    <i id="jobCount"></i>
 
     <table id="jobs" class="table table-hover">
         <thead></thead>
         <script id="template_job_entry" type="x-tmpl-mustache">
-                <tr>
-                    <td><input type="checkbox" name="job[]" /></td>
-                    <td class="title">{{title}}</td>
-                    <td class="date">{{date}}</td>
-                    <td class="source">{{source}}</td>
-                    <td class="actions">
-                        <button class="toggleDetail">...</button>
-                    </td>
-                </tr>
-                <tr class="detail">
-                    <td colspan="5">
-                        <div class="location">
-                            <b>Location: </b>
-                            <span>{{locationStr}}</span></div>
-                        <div class="company">
-                            <b>Company: </b>
-                            <span>{{company}}</span></div>
-                        <div class="jobType">
-                            <b>Job type: </b>
-                            <span>{{jobType}} </span>
-                            <b>Salary: </b>
-                            <span>{{salary}}</span>
-                            <b>URL: </b>
-                            <span>{{{sourceUrl}}}</span>
-                            </div>
-                        <div class="description">
-                            <b>Description: </b>
-                            <span>{{description}}</span></div>
-                    </td>
-                </tr>
+            <tr>
+                <td class="selection">
+                    <input type="checkbox" name="job[]" value="{{_id}}" /></td>
+                <td class="title">{{title}}</td>
+                <td class="date">{{date}}</td>
+                <td class="source">{{source}}</td>
+                <td class="actions">
+                    <button class="toggleDetail">...</button>
+                </td>
+            </tr>
+            <tr class="detail">
+                <td colspan="5">
+                    <div class="location">
+                        <b>Location: </b>
+                        <span>{{locationStr}}</span></div>
+                    <div class="company">
+                        <b>Company: </b>
+                        <span>{{company}}</span></div>
+                    <div class="jobType">
+                        <b>Job type: </b>
+                        <span>{{jobType}} </span>
+                        <b>Salary: </b>
+                        <span>{{salary}}</span>
+                        <b>URL: </b>
+                        <span>{{{sourceUrl}}}</span>
+                        </div>
+                    <div class="description">
+                        <b>Description: </b>
+                        <span>{{description}}</span></div>
+                </td>
+            </tr>
         </script>
         <tbody>
         </tbody>
@@ -113,11 +117,12 @@
 <script src="https://code.highcharts.com/stock/highstock.js"></script>
 <script src="js/jobs.js"></script>
 <script type="text/javascript">
-        $(".jobDateFilter").click(function(){
+        $(".jobDateFilter").click(function(e){
             loadJobEntries($("#jobs tbody"), $(this).attr("data-range"))
         });
         loadJobEntries($("#jobs tbody"), "today")
-        plotTimeseriesForNewJobs($("#timeseries"))
+        plotTimeseriesForNewJobs($("#newJobsTimeseries"))
+        bindListToolbar()
 </script>
 </body>
 </html>

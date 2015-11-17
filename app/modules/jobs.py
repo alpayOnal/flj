@@ -80,6 +80,10 @@ class Jobs(object):
         super(Jobs, self).__init__()
         self.db = getDb()
         self.storage = self.db["jobs"]
+
+        # this is the collection in which deleted job entries reside.
+        self.trashStorage = self.db["jobs_trash"]
+
         self.logger = loggerFactory.get()
 
     def insert(self, job):
@@ -121,7 +125,10 @@ class Jobs(object):
             })
 
     def delete(self, jobId):
+        record = self.storage.find_one({"_id": ObjectId(jobId)})
+        self.trashStorage.insert(record)
         self.storage.remove({"_id": ObjectId(jobId)})
+        self.logger.info("job <{}> deleted.".format(jobId))
 
     def increaseView(self, jobId):
         return self.storage.update(

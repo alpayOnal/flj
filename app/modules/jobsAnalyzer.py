@@ -56,7 +56,6 @@ class JobsAnalyzer(object):
             timeseries[arrow.get(i).format(dateFormat)] = 0
 
         for i in result:
-            self.logger.warning(i["date"])
             timeseries[arrow.get(i["date"]).format(dateFormat)] = i["count"]
 
         return timeseries

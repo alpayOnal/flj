@@ -62,3 +62,10 @@ target/
 configs/*
 !configs/default.py
 !configs/__init__.py
+
+
+# pycharm
+.idea
+
+# virtualenv
+venv

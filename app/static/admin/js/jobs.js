@@ -1,3 +1,7 @@
+
+var $list = $("#jobs tbody")
+var $toolbar = $(".listToolbar")
+
 function loadJobEntries($container, dateRange) {
 
     var timestamp = new Date().getTime() / 1000;
@@ -41,7 +45,6 @@ function renderJobEntry($container, job) {
     Mustache.parse(template);
 
     job.locationStr= function(){
-        console.log(this.location)
         return this.location.country + " / " +
             this.location.state + " / " +this.location.city;
     };
@@ -58,12 +61,59 @@ function renderJobEntry($container, job) {
 }
 
 function bindJobEntries($container) {
-    $container.find("button.toggleDetail").click(function() {
+    $list.find("button.toggleDetail").click(function() {
         // tr > td > button
         // tr.detail
         $(this).toggleClass("expanded");
         $(this).parent().parent().next().toggle();
     })
+
+    $list.find(".selection input").click(function() {
+        if ($container.find(".selection input:checked").length == 0)
+            $(".listToolbar .actions .delete").hide()
+        else
+            $(".listToolbar .actions .delete").show()
+    })
+}
+
+function bindListToolbar() {
+    $toolbar.find(".actions .delete").click(deleteJobs)
+}
+
+function getSelectedJobs() {
+    return $list.find(".selection input:checked")
+}
+
+function deleteJobs() {
+    var $jobs = getSelectedJobs();
+    if (!confirm("Are you sure to delete " + $jobs.length + " jobs PERMANENTLY?"))
+        return;
+
+    $jobs.each(function() {
+        var $input = $(this)
+        var id = $input.val();
+        $input.closest('tr').addClass("deleted")
+
+        $.ajax({
+            method: "DELETE",
+            url: "/api/v1/admin/job/" + id,
+        }).success(function(data){
+            console.log("deletion job " + id + ": " + data.status.message)
+            if (data.status.code == 20)
+                removeJobFromList($input.closest('tr'))
+        }).fail(function(e){
+            console.error("cannot delete job " + id + ". ")
+            console.error(e)
+        }).always(function(){
+            $input.closest('tr').removeClass("deleted")
+        })
+    })
+    $(".listToolbar .actions .delete").hide()
+}
+
+function removeJobFromList(tr) {
+    $(tr).next().remove();
+    $(tr).remove();
 }
 
 function plotTimeseriesForNewJobs($container) {
@@ -71,7 +121,7 @@ function plotTimeseriesForNewJobs($container) {
     var interval = "hourly"
     var dateEnd = m.format("YYYY-MM-DD HH:mm:ss")
     var dateStart = m.subtract(3, "months").format("YYYY-MM-DD")
-    console.log(interval + '&dateStart=' + dateStart + '&dateEnd=' + dateEnd)
+
     $.getJSON('/api/v1/admin/jobs/analysis/newJobs/?interval='
         + interval + '&dateStart=' + dateStart + '&dateEnd=' + dateEnd, function (data) {
 
@@ -83,7 +133,6 @@ function plotTimeseriesForNewJobs($container) {
                 timeseries[i]
             ])
 
-        console.log(formated)
 
         $($container).highcharts('StockChart', {
             rangeSelector : {
@@ -118,7 +167,7 @@ function plotTimeseriesForNewJobs($container) {
                 name : 'jobs',
                 data : formated,
                 tooltip: {
-                    valueDecimals: 1
+                    valueDecimals: 0
                 }
             }]
         });
