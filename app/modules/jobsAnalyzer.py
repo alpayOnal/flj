@@ -28,15 +28,6 @@ class JobsAnalyzer(object):
             "month": {"$month": "$date"},
             "year": {"$year": "$date"}}
 
-        result = self.jobsStorage.aggregate([
-            {"$match": query},
-            {"$group": {
-                "_id": groupId,
-                "date": {"$first": "$date"},
-                "count": {"$sum": 1}
-            }}
-        ])
-
         if interval == "hourly":
             intervalSeconds = 3600
             dateFormat = 'YYYY-MM-DD HH'
@@ -46,6 +37,15 @@ class JobsAnalyzer(object):
             dateFormat = 'YYYY-MM-DD'
 
         # creating a timeserie list filled with zeroes.
+        result = self.jobsStorage.aggregate([
+            {"$match": query},
+            {"$group": {
+                "_id": groupId,
+                "date": {"$first": "$date"},
+                "count": {"$sum": 1}
+            }}
+        ])
+
         timeseriesRange = range(
             arrow.get(filtering["dateStart"]).timestamp,
             arrow.get(filtering["dateEnd"]).timestamp,
@@ -56,6 +56,7 @@ class JobsAnalyzer(object):
             timeseries[arrow.get(i).format(dateFormat)] = 0
 
         for i in result:
+            self.logger.warning(i["date"])
             timeseries[arrow.get(i["date"]).format(dateFormat)] = i["count"]
 
         return timeseries

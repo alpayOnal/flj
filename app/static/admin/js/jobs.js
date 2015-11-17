@@ -31,6 +31,7 @@ function loadJobEntries($container, dateRange) {
         $("#jobCount").html(jobs.length + " jobs")
         for(var i = 0; i < jobs.length; i++)
             renderJobEntry($container, jobs[i])
+        bindJobEntries($container)
     })
 }
 
@@ -38,8 +39,31 @@ function loadJobEntries($container, dateRange) {
 function renderJobEntry($container, job) {
     var template = $('#template_job_entry').html();
     Mustache.parse(template);
+
+    job.locationStr= function(){
+        console.log(this.location)
+        return this.location.country + " / " +
+            this.location.state + " / " +this.location.city;
+    };
+
+    job.sourceUrl= function(){
+        if (this.source == "user")
+            return
+        url = "http://londonjobs.co.uk/" + this.meta.url;
+        return "<a href='" + url + "' target='_blank' >go</a>"
+    }
+
     var rendered = Mustache.render(template, job)
     $container.append(rendered)
+}
+
+function bindJobEntries($container) {
+    $container.find("button.toggleDetail").click(function() {
+        // tr > td > button
+        // tr.detail
+        $(this).toggleClass("expanded");
+        $(this).parent().parent().next().toggle();
+    })
 }
 
 function plotTimeseriesForNewJobs($container) {

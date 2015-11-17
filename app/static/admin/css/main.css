@@ -5,3 +5,21 @@
 .container {
     margin-top: 20px;
 }
+
+tr.detail {
+    display: none;
+    font-size: 0.9em;
+}
+tr.detail td {
+    padding-left: 80px;
+}
+tr.detail .description{
+    margin-top: 10px;
+}
+tr.detail .description span{
+    font-size: 0.9em;
+}
+
+button.toggleDetail.expanded {
+    # background-color: green;
+}

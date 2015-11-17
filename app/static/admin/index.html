@@ -75,10 +75,30 @@
                     <td class="date">{{date}}</td>
                     <td class="source">{{source}}</td>
                     <td class="actions">
-                        <button>go</button>
+                        <button class="toggleDetail">...</button>
                     </td>
                 </tr>
-
+                <tr class="detail">
+                    <td colspan="5">
+                        <div class="location">
+                            <b>Location: </b>
+                            <span>{{locationStr}}</span></div>
+                        <div class="company">
+                            <b>Company: </b>
+                            <span>{{company}}</span></div>
+                        <div class="jobType">
+                            <b>Job type: </b>
+                            <span>{{jobType}} </span>
+                            <b>Salary: </b>
+                            <span>{{salary}}</span>
+                            <b>URL: </b>
+                            <span>{{{sourceUrl}}}</span>
+                            </div>
+                        <div class="description">
+                            <b>Description: </b>
+                            <span>{{description}}</span></div>
+                    </td>
+                </tr>
         </script>
         <tbody>
         </tbody>
