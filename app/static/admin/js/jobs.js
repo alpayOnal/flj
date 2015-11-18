@@ -173,3 +173,47 @@ function plotTimeseriesForNewJobs($container) {
         });
     });
 }
+
+
+
+function loadCrawlerLogs($container) {
+   $container.html("loading...")
+
+    $.ajax({
+        url: "/api/v1/admin/crawlers/logs/",
+        data: {}
+    }).success(function(data){
+        if (!data.status || data.status.code != 20) {
+            console.error("cannot fetch crawler entries." + data)
+            $container.html("cannot fetch crawler log entries: " + data)
+            return
+        }
+
+        $container.html("")
+        var logs = data.data.logs;
+
+        for(var i = 0; i < logs.length; i++)
+            renderCrawlerLogEntry($container, logs[i])
+        bindJobEntries($container)
+    })
+}
+
+
+function renderCrawlerLogEntry($container, log) {
+    console.log("asd")
+    var template = $('#template_crawlerlog_entry').html();
+
+    var date = log.date;
+    log.date= function(){
+        return "<span title='" +date + "'>" + moment(date).fromNow() + "</span>"
+    };
+
+    var url = log.url;
+    log.url= function(){
+        return "<a href='" + url + "' target='_blank'>go to url</a>"
+    };
+
+    Mustache.parse(template);
+    var rendered = Mustache.render(template, log)
+    $container.append(rendered)
+}

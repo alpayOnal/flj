@@ -20,13 +20,16 @@
     <a class="navbar-brand" href="#">FLJ</a>
     <ul class="nav nav-pills">
         <li class="nav-item">
-            <a href="#" class="nav-link active">Jobs</a>
+            <a class="nav-link active" href="#jobs" role="tab"
+               data-toggle="tab">Jobs</a>
         </li>
         <li class="nav-item">
-            <a href="#" class="nav-link">Accounts</a>
+            <a class="nav-link" href="#accounts" role="tab"
+               data-toggle="tab">Accounts</a>
         </li>
         <li class="nav-item">
-            <a href="#" class="nav-link">Crawlers</a>
+            <a class="nav-link" href="#crawlers" role="tab"
+               data-toggle="tab">Crawlers</a>
         </li>
         <!--<li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
@@ -46,32 +49,40 @@
 
 </nav>
 
-<div class="container">
-    <div id="newJobsTimeseries"></div>
+<div class="container tab-content">
+    <div role="tabpanel" class="tab-pane active" id="jobs">
 
-    <div class="listToolbar">
-        <div class="btn-group" data-toggle="buttons">
-            <label class="btn btn-primary btn-sm active jobDateFilter"
-                   data-range="today">
-                <input type="radio" name="options" autocomplete="off" checked> Today
-            </label>
-            <label class="btn btn-primary btn-sm jobDateFilter"
-               data-range="yesterday">
-            <input type="radio" name="options" autocomplete="off"> Yesterday
-            </label>
-            <label class="btn btn-primary btn-sm jobDateFilter" data-range="week">
-                <input type="radio" name="options" autocomplete="off"> This week
-            </label>
-        </div>
-        <div class="btn-group actions" data-toggle="buttons">
-            <button class="btn btn-sm btn-danger delete">Delete selected jobs</button>
-        </div>
-        <i id="jobCount" class="pull-right"></i>
-    </div>
+        <div id="newJobsTimeseries"></div>
 
-    <table id="jobs" class="table table-hover">
-        <thead></thead>
-        <script id="template_job_entry" type="x-tmpl-mustache">
+        <div class="listToolbar">
+            <div class="btn-group" data-toggle="buttons">
+                <label class="btn btn-primary btn-sm active jobDateFilter"
+                       data-range="today">
+                    <input type="radio" name="options" autocomplete="off"
+                           checked> Today
+                </label>
+                <label class="btn btn-primary btn-sm jobDateFilter"
+                       data-range="yesterday">
+                    <input type="radio" name="options" autocomplete="off">
+                    Yesterday
+                </label>
+                <label class="btn btn-primary btn-sm jobDateFilter"
+                       data-range="week">
+                    <input type="radio" name="options" autocomplete="off"> This
+                    week
+                </label>
+            </div>
+            <div class="btn-group actions" data-toggle="buttons">
+                <button class="btn btn-sm btn-danger delete">Delete selected
+                    jobs
+                </button>
+            </div>
+            <i id="jobCount" class="pull-right"></i>
+        </div>
+
+        <table id="jobs" class="table table-hover">
+            <thead></thead>
+            <script id="template_job_entry" type="x-tmpl-mustache">
             <tr>
                 <td class="selection">
                     <input type="checkbox" name="job[]" value="{{_id}}" /></td>
@@ -103,10 +114,37 @@
                         <span>{{description}}</span></div>
                 </td>
             </tr>
+
+
+            </script>
+            <tbody>
+            </tbody>
+        </table>
+    </div> <!-- END OF TAB "JOBS" -->
+
+
+    <div role="tabpanel" class="tab-pane" id="accounts">accounts
+    </div> <!-- END OF TAB "ACCOUNTS" -->
+
+
+    <div role="tabpanel" class="tab-pane" id="crawlers">
+        <h3>Crawlers</h3>
+        <script id="template_crawlerlog_entry" type="x-tmpl-mustache">
+            <tr>
+                <td class="date">{{{date}}}</td>
+                <td class="name">{{name}}</td>
+                <td class="newJobs">{{newJobs}}</td>
+                <td class="jobsFound">{{jobsFound}}</td>
+                <td class="url">{{{url}}}</td>
+            </tr>
         </script>
-        <tbody>
-        </tbody>
-    </table>
+        <table id="crawlerLogs" class="table table-hover">
+            <thead></thead>
+            <tbody></tbody>
+        </table>
+    </div> <!-- END OF TAB "CRAWLERS" -->
+
+
 </div>
 <!-- /.container -->
 
@@ -123,6 +161,13 @@
         loadJobEntries($("#jobs tbody"), "today")
         plotTimeseriesForNewJobs($("#newJobsTimeseries"))
         bindListToolbar()
+
+        $('.navbar a').click(function (e) {
+          e.preventDefault()
+          $(this).tab('show')
+        })
+        loadCrawlerLogs($("#crawlerLogs"))
+
 </script>
 </body>
 </html>
