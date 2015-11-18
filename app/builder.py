@@ -14,6 +14,7 @@ def createApp(config, url_prefix=None):
     from routes import jobs
     from routes import accounts
     from routes import adminJobs
+    from routes import crawlers
 
     app.register_blueprint(
         jobs.getBlueprint(config), url_prefix=url_prefix)
@@ -21,6 +22,8 @@ def createApp(config, url_prefix=None):
         accounts.getBlueprint(config), url_prefix=url_prefix)
     app.register_blueprint(
         adminJobs.getBlueprint(config), url_prefix=url_prefix)
+    app.register_blueprint(
+        crawlers.getBlueprint(config), url_prefix=url_prefix)
 
     @app.errorhandler(BaseException)
     def handle_exceptions(error):

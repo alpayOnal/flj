@@ -5,7 +5,7 @@ import arrow
 import dateparser
 from ..items import JobItem
 from modules.jobs import Jobs
-from .. import config
+from .. import config, CrawlerLogs
 
 
 class Londonjobs(scrapy.Spider):
@@ -20,6 +20,8 @@ vr=&agency_group_id=&agency_id=&vr=&engine=db"
 
     def __init__(self):
         super(Londonjobs, self).__init__()
+
+        CrawlerLogs().insert(self.name, self.start_urls[0])
 
         jobs = Jobs(config)
         try:
@@ -41,10 +43,11 @@ vr=&agency_group_id=&agency_id=&vr=&engine=db"
         :param response:
         :return request:
         """
+        CrawlerLogs().insert(self.name, "FormRequest: psform")
         yield FormRequest.from_response(
             response, formname='psform',
             formdata={
-                'daysback': "7", 'location_within': "50"},
+                'daysback': "1", 'location_within': "50"},
             callback=self.parseSearchList)
 
     @staticmethod
@@ -106,6 +109,7 @@ vr=&agency_group_id=&agency_id=&vr=&engine=db"
         jobSegments = response.xpath(jobDetailXpath)
         self.logger.info("{} job segment found.".format(len(jobSegments)))
 
+        newJobCounter = 0
         for sel in jobSegments:
             self.crawler.stats.inc_value("scanned jobs")
             date = sel.xpath(datePath).extract()
@@ -134,12 +138,18 @@ vr=&agency_group_id=&agency_id=&vr=&engine=db"
                         self.lastSavedJob["date"],
                         self.lastSavedJob["title"]
                     ))
+                CrawlerLogs.insert(
+                    self.name, self.orderedSearchUrl,
+                    len(jobSegments), newJobCounter)
                 return
 
             self.crawler.stats.inc_value("new jobs")
+            newJobCounter += 1
             yield Londonjobs.redirect(
                 response, response.urljoin(link),
                 callbackWrapper(date, link, title, salary, address, jobType))
+        CrawlerLogs.insert(
+            self.name, self.orderedSearchUrl, len(jobSegments), newJobCounter)
 
     def parseJobPage(
             self, response, date, link, title, salary, address, jobType):
