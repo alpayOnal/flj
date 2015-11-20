@@ -2,20 +2,75 @@
 {% block title %}Index{% endblock %}
 {% block head %}
     {{ super() }}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/job_list.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/job_list.cssa') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/job.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/job_detail.css') }}">
 {% endblock %}
 
 {% block content %}
-    <div class="job">
-        <h5 class="title"><a href="#">{{job['title']}}</a></h5>
-            by <a href="company/{{ job['company'] }}" class="company">{{ job["company"] }} </a>
-        <p>
-            <span class="date">{{ job["date"] }}</span> -
-            <a href="#" class="location">
-                {{ job['location']['country'] }} / {{ job["location"]["city"] }}</a>
-        </p>
-        <div class="detail">
+    <div class="job job-detail">
+        <h1 class="job-title">
+            {{job['title']}}
+        </h1>
+        <ul class="job-info">
+            <li>
+                <b>Company</b>
+                <span class="info job-company">Microsoft Inc.</span></li>
+            <li>
+                <b>Location</b>
+                <a class="info job-location fa fa-map-marker" href="#">
+                    {{ job['location']['country'] }} / {{ job["location"]["city"] }}</a></li>
+            <li>
+                <b>Date</b>
+                <span class="info job-date">{{ job["date"] }}</span></li>
+            <li>
+                <b>Type</b>
+                <span class="info job-type">{{ job["jobType"] }}</span></li>
+        </ul>
+        <div class="job-description">
             {{ job["description"] }}
         </div>
+    </div>
+
+    <div class="recommendations similarJobs">
+        <h5 class="title">Similar Jobs</h5>
+        <ul>
+            <li><a href="#">Branch Manager Builders Merchants</a></li>
+            <li><a href="#">Trainee Recruitment Consultant - Wimbledon - £16K- £19K, Higs</a></li>
+            <li><a href="#">Associate Technical Director: Transport Planning</a></li>
+            <li><a href="#">Junior Sales Executive - Immediate Start!</a></li>
+            <li><a href="#">Helpdesk Analyst | 1st-2nd Line Support</a></li>
+        </ul>
+    </div>
+
+    <div class="recommendations companyJobs">
+        <h5 class="title">Jobs by Microsoft Inc.</h5>
+        <ul>
+            <li><a href="#">Branch Manager Builders Merchants</a></li>
+            <li><a href="#">Trainee Recruitment Consultant - Wimbledon - £16K- £19K, Higs</a></li>
+            <li><a href="#">Associate Technical Director: Transport Planning</a></li>
+            <li><a href="#">Junior Sales Executive - Immediate Start!</a></li>
+            <li><a href="#">Helpdesk Analyst | 1st-2nd Line Support</a></li>
+        </ul>
+    </div>
+
+    <div class="recommendations searchJobs">
+        <h5 class="title">Find Jobs</h5>
+        <form>
+            <fieldset class="form-group">
+                <input type="email" class="form-control" id="exampleInputEmail1"
+                       placeholder="e.g. sales manager">
+            </fieldset>
+            <fieldset class="form-group">
+                <select class="form-control" id="exampleSelect1">
+                    <option>London</option>
+                    <option>New york</option>
+                    <option>Paris</option>
+                    <option>Amsterdam</option>
+                    <option>Berlin</option>
+                </select>
+            </fieldset>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
     </div>
 {% endblock %}

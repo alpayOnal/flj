@@ -1,0 +1,19 @@
+.job-title, .job-title a {
+    display: inline-block;
+    color: #333;
+}
+.job-date {
+    color: #888;
+    font-size: 0.9em;
+}
+
+.job-location, .job-company {
+    color: #627C92;
+}
+
+.job-info {
+    color: #666;
+    list-style-type: none;
+    padding: 0;
+}
+

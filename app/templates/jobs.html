@@ -2,6 +2,7 @@
 {% block title %}Index{% endblock %}
 {% block head %}
     {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/job.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/job_list.css') }}">
 {% endblock %}
 
@@ -28,13 +29,12 @@
     <ul id="jobs-list">
         {% for job in jobs %}
         <li class="job">
-            <h5 class="title"><a href="job/{{ job['_id'] }}">{{job['title']}}</a></h5>
-                by <a href="company/{{ job['company'] }}" class="company">{{ job["company"] }} </a>
-            <p>
-                <span class="date">{{ job["date"] }}</span> -
-                <a href="#" class="location">
+            <h5 class="job-title"><a href="job/{{ job['_id'] }}">{{job['title']}}</a></h5>
+            <p class="job-info">
+                <span class="job-date">{{ job["date"] }}</span> -
+                <a href="#" class="job-location fa fa-map-marker"">
                     {{ job['location']['country'] }} / {{ job["location"]["city"] }}</a> -
-
+                <a href="company/{{ job['company'] }}" class="job-company">{{ job["company"] }} </a>
             </p>
         </li>
         {% endfor %}
