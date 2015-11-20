@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Index{% endblock %}
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/job_list.css') }}">
+{% endblock %}
+
+{% block content %}
+    <div class="job">
+        <h5 class="title"><a href="#">{{job['title']}}</a></h5>
+            by <a href="company/{{ job['company'] }}" class="company">{{ job["company"] }} </a>
+        <p>
+            <span class="date">{{ job["date"] }}</span> -
+            <a href="#" class="location">
+                {{ job['location']['country'] }} / {{ job["location"]["city"] }}</a>
+        </p>
+        <div class="detail">
+            {{ job["description"] }}
+        </div>
+    </div>
+{% endblock %}

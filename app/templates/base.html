@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block head %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <title>{% block title %}{% endblock %}</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet"
+          href="https://cdn.rawgit.com/twbs/bootstrap/v4-dev/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    {% endblock %}
+</head>
+
+<body>
+{% block navbar %}
+<nav class="navbar" id="main-navigation">
+    <a class="navbar-brand" href="#">FLJ</a>
+    <ul class="nav nav-pills">
+        <li class="nav-item">
+            <a class="nav-link active" href="#jobs" role="tab"
+               data-toggle="tab">Jobs</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#accounts" role="tab"
+               data-toggle="tab">Accounts</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#crawlers" role="tab"
+               data-toggle="tab">Crawlers</a>
+        </li>
+    </ul>
+</nav>
+{% endblock %}
+
+<div id="main-container" class="container tab-content">
+    {% block content %}{% endblock %}
+</div>
+<!-- /.container -->
+
+{% block bottomscripts %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="https://cdn.rawgit.com/twbs/bootstrap/v4-dev/dist/js/bootstrap.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.2.0/mustache.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
+{% endblock %}
+
+</body>
+</html>

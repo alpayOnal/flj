@@ -1,0 +1,35 @@
+#jobs-toolbar {
+    margin-bottom: 60px;
+}
+
+#jobs-list{
+    list-style-type: none;
+    padding: 0 1rem;
+    border-top: 1px solid #eaeaea;
+}
+
+#jobs-list .job{
+    margin: 1rem 0 2.5rem 0;
+}
+
+#jobs-list .title a{
+    color: #373a3c
+}
+
+#jobs-list .date {
+    color: #aaa;
+    font-size: 0.9em;
+}
+#jobs-list .title {
+    display: inline-block;
+}
+
+#jobs-list .location {
+    font-size: 0.9em;
+    color: #666;
+}
+
+#jobs-list .company {
+    font-size: 0.9em;
+    color: #006621;
+}

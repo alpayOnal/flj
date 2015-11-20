@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Index{% endblock %}
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/job_list.css') }}">
+{% endblock %}
+
+{% block content %}
+
+    {% set toolbar = [
+        ('today', 'Today'),
+        ('yesterday', 'Yesterday'),
+        ('thisweek', 'This week')
+    ] -%}
+    {% set active_page = active_page|default('today') -%}
+    <div id="jobs-toolbar">
+        <ul class="nav nav-pills">
+            {% for href, caption in toolbar %}
+            <li class="nav-item">
+                <a href="{{href}}" class="nav-link {% if href == active_page %}active{% endif
+  %}">{{caption}}</a>
+            </li>
+            {% endfor %}
+        </ul>
+        <i id="jobCount" class="pull-right">{{ jobsCount }} jobs found</i>
+    </div>
+
+    <ul id="jobs-list">
+        {% for job in jobs %}
+        <li class="job">
+            <h5 class="title"><a href="job/{{ job['_id'] }}">{{job['title']}}</a></h5>
+                by <a href="company/{{ job['company'] }}" class="company">{{ job["company"] }} </a>
+            <p>
+                <span class="date">{{ job["date"] }}</span> -
+                <a href="#" class="location">
+                    {{ job['location']['country'] }} / {{ job["location"]["city"] }}</a> -
+
+            </p>
+        </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
