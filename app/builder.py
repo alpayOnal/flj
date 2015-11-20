@@ -33,6 +33,9 @@ def createApp(config, url_prefix=None):
     app.register_blueprint(
         crawlers.getBlueprint(config), url_prefix=url_prefix)
 
+    from app.libraries.jinjaTemplateFilters import createFilters
+    createFilters(app)
+
     @app.errorhandler(BaseException)
     def handle_exceptions(error):
         return jsonify({"status": error.__json__()})
