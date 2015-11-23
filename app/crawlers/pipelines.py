@@ -13,5 +13,6 @@ class JobPipeline(object):
     def process_item(self, item, spider):
         job = dict(item)
         job["date"] = job["date"].naive
+        # TODO: remove location information in title if exists
         Jobs(config).insert(job)
         return item

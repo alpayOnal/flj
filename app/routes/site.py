@@ -1,32 +1,32 @@
 # -*- coding: utf8 -*-
 from app.modules.jobs import Jobs
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request
+import arrow
 
 
 def getBlueprint(config):
     app = Blueprint("site", __name__)
 
-    @app.route("/today")
+    def getJobList(filtering, active_page):
+        jobs = Jobs(config).get(filtering)
+        return render_template(
+            "jobs.html",
+            filtering=filtering, jobs=jobs, jobsCount=jobs.count())
+
+    @app.route("/jobs/")
     def index():
-        jobs = Jobs(config).get(filtering={})
-        return render_template(
-            "jobs.html", jobs=jobs,
-            active_page="today", jobsCount=jobs.count())
+        filtering = {
+            "title": request.args.get("keyword", ""),
+            "description": request.args.get("keyword", ""),
+            "location": {
+                "country": "united kingdom",
+                "city": request.args.get("location", "london")
+            }
+        }
+        return getJobList(filtering, "today")
 
-    @app.route("/yesterday")
-    def yesterday():
-        jobs = Jobs(config).get(filtering={})
-        return render_template(
-            "jobs.html", jobs=jobs,
-            jobsCount=jobs.count(), active_page="yesterday")
-
-    @app.route("/thisweek")
-    def thisweek():
-        jobs = Jobs(config).get(filtering={})
-        return render_template("jobs.html", jobs=jobs, active_page="thisweek")
-
-    @app.route("/job/<jobId>/", defaults={"title": None})
-    @app.route("/job/<jobId>/<path:title>")
+    @app.route("/jobs/<jobId>/", defaults={"title": None})
+    @app.route("/jobs/<jobId>/<path:title>")
     def getJobDetail(jobId, title):
         job = Jobs(config).getOne(jobId)
         return render_template("job.html", job=job)

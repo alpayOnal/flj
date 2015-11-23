@@ -37,6 +37,9 @@ class Accounts(object):
 
         account["createdAt"] = arrow.utcnow().naive
 
+        if "email" in account:
+            account["email"] = account["email"].lower()
+
         if "alarms" not in account:
             account["alarms"] = []
         if "jobs" not in account:

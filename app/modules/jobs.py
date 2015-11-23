@@ -44,6 +44,10 @@ def generateQuery(filtering):
             query["location.region"] = flocation["region"].lower()
 
     if ftitle:
+        # TODO: must be a whole word searching, not sql-like searching
+        # e.g. someone search for "cook" and sql-like search may yield "cookies"
+
+        # TODO: ftitle must be splitted into words
         query["$or"].append({"title": {"$regex": ftitle, "$options": "i"}})
 
     if fdescription:

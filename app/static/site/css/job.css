@@ -7,7 +7,10 @@
     font-size: 0.9em;
 }
 
-.job-location, .job-company {
+.job-location {
+    text-transform: capitalize;
+}
+.job-company {
     color: #627C92;
 }
 
