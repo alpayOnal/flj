@@ -1,6 +1,7 @@
 # -*- coding: utf8 -*-
 import arrow
 import pymongo
+import re
 from bson.objectid import ObjectId
 from app.libraries import loggerFactory
 from app.libraries.mongodb import getDb
@@ -44,15 +45,17 @@ def generateQuery(filtering):
             query["location.region"] = flocation["region"].lower()
 
     if ftitle:
-        # TODO: must be a whole word searching, not sql-like searching
+        # must be a whole word searching, not sql-like searching
         # e.g. someone search for "cook" and sql-like search may yield "cookies"
-
-        # TODO: ftitle must be splitted into words
-        query["$or"].append({"title": {"$regex": ftitle, "$options": "i"}})
+        # ftitle must be splitted into words
+        for word in ftitle.split(","):
+            query["$or"].append(
+                {"title": re.compile(r"\b%s\b" % word, re.IGNORECASE)})
 
     if fdescription:
-        query["$or"].append({"description": {
-            "$regex": fdescription, "$options": "i"}})
+        for word in fdescription.split(","):
+            query["$or"].append(
+                {"description": re.compile(r"\b%s\b" % word, re.IGNORECASE)})
 
     if fjobType:
         query["jobType"] = {"$regex": fjobType.lower()}
