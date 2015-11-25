@@ -51,3 +51,11 @@
 .select2-container--default .select2-selection--single {
     border-color: #ccc!important;
 }
+
+
+.subscription-card .card{
+    background-color: #f5f5f5;
+}
+.subscription-card{
+    float: none;
+}

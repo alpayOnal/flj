@@ -57,7 +57,7 @@
     </form>
 
     {% if jobsCount == 0 %}
-    <div class="text-muted text-center">
+    <div class="text-muted text-center no-jobs-found">
         <!-- TODO: show suggestion, e.g. split multiple words by commas -->
         No jobs found. Try again with a simple keyword like "manager", "driver" etc.
     </div>
@@ -76,11 +76,17 @@
         </li>
         {% endfor %}
     </ul>
+
+    {% include "subscription.html" %}
+
 {% endblock %}
 
 {% block bottomscripts %}
     {{ super() }}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
+    <script src="{{ url_for('static', filename='js/subscription.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/search.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
     <script>
         $(document).ready(function(){
             $('#search-location').select2({
