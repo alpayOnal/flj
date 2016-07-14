@@ -10,12 +10,18 @@ sudo apt-get install libssl-dev
 sudo apt-get install libxml2-dev libxslt1-dev python-dev
 sudo pip install dateparser
 sudo pip install scrapy
-sudo pip install flask
-sudo pip install schema
+# sudo pip install flask
+# sudo pip install schema
 sudo pip install colorlog
-sudo pip install pillow
-sudo pip install pymongo
+# sudo pip install pillow
+# sudo pip install pymongo
 sudo pip install arrow
+sudo pip install django
+sudo pip install djangorestframework
+sudo pip install markdown
+sudo pip install django-filter
+sudo pip install django-rest-swagger
+sudo pip install django-debug-toolbar
 
 sudo cp /flj/setup/apache-dev.conf /etc/apache2/sites-available/flj-dev.conf
 sudo a2ensite flj-dev.conf

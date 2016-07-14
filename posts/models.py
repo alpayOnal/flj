@@ -4,8 +4,9 @@ from django.db import models
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    # user = models.ForeignKey(User, unique=True, on_delete=models.CASCADE)
+    gcm_id = models.TextField(max_length=200, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    started_jobs = models.ManyToManyField("JobPost")
 
 
 class JobPost(models.Model):
@@ -22,3 +23,11 @@ class Location(models.Model):
     city = models.TextField(max_length=25, blank=False)
     country = models.TextField(max_length=25, blank=False)
     post = models.ForeignKey(JobPost, on_delete=models.CASCADE)
+
+
+# class SavedJobs(models.Model):
+#
+#     job = models.ForeignKey(
+#         primary_key=True, to=JobPost, on_delete=models.CASCADE)
+#     user = models.ForeignKey(
+#         UserProfile, on_delete=models.CASCADE, related_name='job_posts')
