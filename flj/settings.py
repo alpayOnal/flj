@@ -33,7 +33,9 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     "posts.apps.PostsConfig",
     "rest_framework_swagger",
-    'debug_toolbar',
+    "debug_toolbar",
+    "rest_framework_gis",
+    # "geoposition",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -77,10 +79,20 @@ WSGI_APPLICATION = 'flj.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'flj',
+        'USER': 'root',
+        'PASSWORD': 'root',
+        'HOST': '192.168.33.10',   # Or an IP Address that your DB is hosted on
+        'PORT': '3306',
     }
 }
 
@@ -130,3 +142,5 @@ REST_FRAMEWORK = {
 }
 
 AUTH_PROFILE_MODULE = 'posts.models.UserProfile'
+
+GEOPOSITION_GOOGLE_MAPS_API_KEY = "ff"

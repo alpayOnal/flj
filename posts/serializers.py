@@ -1,12 +1,18 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import JobPost, Location, UserProfile
+from .models import JobPost, UserProfile, StarredJobs
 
 
-class StarredJobs(serializers.ModelSerializer):
+class StarredJobsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UserProfile
-        fields = ("stared_jobs", )
+        model = StarredJobs
+        fields = ("job", )
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+        validated_data["user_id"] = user.id
+        return super(StarredJobsSerializer, self).create(validated_data)
+
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -50,11 +56,13 @@ class JobPostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = JobPost
-        fields = ("title", "description", "user")
+        fields = (
+            "title", "description", "user",
+            "city", "country", "latitude", "longitude")
         read_only_fields = ("user", )
 
     def create(self, validated_data):
-        user_profile = self.context['request'].user.userprofile
-        validated_data["user"] = user_profile
+        user = self.context['request'].user
+        validated_data["user"] = user
         post = JobPost.objects.create(**validated_data)
         return post
