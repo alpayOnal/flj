@@ -34,8 +34,6 @@ INSTALLED_APPS = [
     "posts.apps.PostsConfig",
     "rest_framework_swagger",
     "debug_toolbar",
-    "rest_framework_gis",
-    # "geoposition",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -87,11 +85,11 @@ WSGI_APPLICATION = 'flj.wsgi.application'
 # }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'django.contrib.gis.db.backends.mysql',
         'NAME': 'flj',
         'USER': 'root',
         'PASSWORD': 'root',
-        'HOST': '192.168.33.10',   # Or an IP Address that your DB is hosted on
+        'HOST': '192.168.34.10',   # Or an IP Address that your DB is hosted on
         'PORT': '3306',
     }
 }

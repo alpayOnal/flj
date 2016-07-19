@@ -53,16 +53,27 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class JobPostSerializer(serializers.ModelSerializer):
+    state = serializers.SerializerMethodField()
+
+    def get_state(self, obj):
+        """
+        instade of displaying code of choice, display its label.
+        :param obj:
+        :return:
+        """
+        return obj.get_state_display()
 
     class Meta:
         model = JobPost
         fields = (
-            "title", "description", "user",
+            "created_at", "state", "title", "description", "user",
             "city", "country", "latitude", "longitude")
-        read_only_fields = ("user", )
+        read_only_fields = ("user", "created_at", )
 
     def create(self, validated_data):
         user = self.context['request'].user
         validated_data["user"] = user
+        validated_data["city"] = validated_data["city"].lower()
+        validated_data["country"] = validated_data["country"].lower()
         post = JobPost.objects.create(**validated_data)
         return post
