@@ -1,8 +1,8 @@
 from django.contrib.auth.models import User
-from posts.models import StarredJobs
+from posts.models import StarredJob, Alarm
 from posts.permissions import IsSelf, IsOwner
 from posts.serializers import UserProfileSerializer, UserSerializer, \
-    StarredJobsSerializer
+    StarredJobsSerializer, AlarmSerializer
 from rest_framework import generics
 from rest_framework import permissions
 
@@ -27,11 +27,26 @@ class StarredJobsList(generics.ListCreateAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        return StarredJobs.objects.filter(user=user.id)
+        return StarredJob.objects.filter(user=user.id)
 
 
 class StarredJobDetail(generics.DestroyAPIView):
-    queryset = StarredJobs.objects.all()
+    queryset = StarredJob.objects.all()
     serializer_class = StarredJobsSerializer
     permission_classes = (IsOwner,)
     lookup_field = "job"
+
+
+class AlarmList(generics.ListCreateAPIView):
+    serializer_class = AlarmSerializer
+    permission_classes = (IsAuthenticated, )
+
+    def get_queryset(self):
+        user = self.request.user
+        return Alarm.objects.filter(user=user.id)
+
+
+class AlarmDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Alarm.objects.all()
+    serializer_class = AlarmSerializer
+    permission_classes = (IsOwner,)

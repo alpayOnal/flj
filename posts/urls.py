@@ -9,6 +9,8 @@ urlpatterns = [
     url(r'^posts/(?P<pk>[0-9]+)/$', job_post_view.JobPostDetail.as_view()),
     url(r'^starredjobs/$', user_views.StarredJobsList.as_view()),
     url(r'^starredjobs/(?P<job>[0-9]+)/$', user_views.StarredJobDetail.as_view()),
+    url(r'^alarms/$', user_views.AlarmList.as_view()),
+    url(r'^alarms/(?P<pk>[0-9]+)/$', user_views.AlarmDetail.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

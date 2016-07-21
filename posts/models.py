@@ -1,6 +1,14 @@
 from django.contrib.auth.models import User
 from django.db import models
-from django.contrib.gis.db import models as gis_models
+
+
+class LowerCaseCharField(models.CharField):
+    def get_prep_value(self, value):
+        value = super(LowerCaseCharField, self).get_prep_value(value)
+        if value is not None:
+            value = value.lower()
+        return value
+
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -20,20 +28,21 @@ class JobPost(models.Model):
         User, on_delete=models.CASCADE, related_name='job_posts')
     state = models.SmallIntegerField(choices=STATES, default=STATES[1][0])
     post_id = models.AutoField(primary_key=True)
-    created_at = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=255, blank=False)
     description = models.TextField(blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    city = models.CharField(max_length=25, blank=False)
-    country = models.CharField(max_length=25, blank=False)
-    # longitude = models.FloatField(blank=None)
-    # latitude = models.FloatField(blank=None)
-    point = gis_models.PointField()
+    city = LowerCaseCharField(max_length=25, blank=False)
+    country = LowerCaseCharField(max_length=25, blank=False)
+    longitude = models.FloatField(blank=None)
+    latitude = models.FloatField(blank=None)
+    # point = gis_models.PointField()
 
-class StarredJobs(models.Model):
+
+class StarredJob(models.Model):
     class Meta:
         unique_together = ("job", "user",)
 
+    created_at = models.DateTimeField(auto_now_add=True)
     job = models.ForeignKey(
         to="JobPost",
         on_delete=models.CASCADE,
@@ -41,4 +50,16 @@ class StarredJobs(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='user_id')
+        related_name='starred_job')
+
+
+class Alarm(models.Model):
+    updated_at = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="alarm"
+    )
+    keyword = LowerCaseCharField(max_length=50, blank=False)
+    country = LowerCaseCharField(max_length=25, blank=False)
+    city = models.CharField(max_length=25, blank=False)

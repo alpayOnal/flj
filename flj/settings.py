@@ -89,7 +89,7 @@ DATABASES = {
         'NAME': 'flj',
         'USER': 'root',
         'PASSWORD': 'root',
-        'HOST': '192.168.34.10',   # Or an IP Address that your DB is hosted on
+        'HOST': 'mysql',   # Or an IP Address that your DB is hosted on
         'PORT': '3306',
     }
 }
@@ -142,3 +142,4 @@ REST_FRAMEWORK = {
 AUTH_PROFILE_MODULE = 'posts.models.UserProfile'
 
 GEOPOSITION_GOOGLE_MAPS_API_KEY = "ff"
+

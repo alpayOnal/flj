@@ -1,0 +1,22 @@
+version: '2'
+services:
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+     - "8000:8000"
+    volumes:
+     - .:/flj
+    depends_on:
+     - redis
+     - mysql
+     - rabbitmq
+  redis:
+    image: redis
+  mysql:
+    image: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=flj
+  rabbitmq:
+    image: rabbitmq
