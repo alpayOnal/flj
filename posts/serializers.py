@@ -67,7 +67,7 @@ class JobPostSerializer(serializers.ModelSerializer):
         model = JobPost
         fields = (
             "created_at", "state", "title", "description", "user",
-            "city", "country")
+            "city", "country", "latitude", "longitude")
         read_only_fields = ("user", "created_at", )
 
     def create(self, validated_data):

@@ -3,4 +3,3 @@ ADD . /flj
 WORKDIR /flj
 RUN pip install -r requirements.txt
 CMD python manage.py migrate
-RUN apt-get install phpmyadmin

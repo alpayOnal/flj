@@ -11,6 +11,7 @@ services:
      - redis
      - mysql
      - rabbitmq
+     - migration
   redis:
     image: redis
   mysql:
@@ -20,3 +21,10 @@ services:
       - MYSQL_DATABASE=flj
   rabbitmq:
     image: rabbitmq
+  migration:
+    build: .
+    command: python manage.py migrate
+    volumes:
+      - .:/flj
+    depends_on:
+      - mysql
