@@ -89,7 +89,7 @@ DATABASES = {
         'NAME': 'flj',
         'USER': 'root',
         'PASSWORD': 'root',
-        'HOST': 'mysql',   # Or an IP Address that your DB is hosted on
+        'HOST': '172.20.0.3',   # Or an IP Address that your DB is hosted on
         'PORT': '3306',
     }
 }

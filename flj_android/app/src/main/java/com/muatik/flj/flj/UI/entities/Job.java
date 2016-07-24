@@ -1,122 +1,80 @@
 package com.muatik.flj.flj.UI.entities;
 
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-
 /**
- * Created by alpay on 10/6/15.
+ * Created by muatik on 24.07.2016.
  */
-public class Job implements Serializable {
+public class Job {
+    public String job_id;
+    public String title;
 
-    private String _id;
-    private String date;
-    private String title;
-    private String description;
-    private String company;
-    private String salary;
-    private String jobType;
-    private HashMap<String, String> location;
-    private HashMap<String, Object> stats;
 
-    public String getDate() {
-        return date;
+
+    public String employer;
+    public String description;
+    public String created_at;
+    public String country;
+    public String city;
+    public String latitude;
+    public String longitude;
+    public Integer user;
+
+    public Job() {
+
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public Job(String title, String created_at, String city, String country) {
+        this.title = title;
+        this.city = city;
+        this.country = country;
+        this.created_at= created_at;
+    }
+
+    public String getId() {
+        return job_id;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String descrption) {
-        this.description = descrption;
+    public String getCountry() {
+        return country;
     }
 
-    public String getCompany() {
-        return company;
+    public String getCity() {
+        return city;
     }
 
-    public void setCompany(String company) {
-        this.company = company;
+    public String getLatitude() {
+        return latitude;
     }
 
-    public String getSalary() {
-        return salary;
+    public String getLongitude() {
+        return longitude;
     }
 
-    public void setSalary(String salary) {
-        this.salary = salary;
+    public Integer getUser() {
+        return user;
     }
 
-    public String getJobType() {
-        return jobType;
+    public String getCreated_at() {
+        return created_at;
     }
 
-    public void setJobType(String jobType) {
-        this.jobType = jobType;
+    public String getJob_id() {
+        return job_id;
     }
 
-    public HashMap<String, String> getLocation() {
-        return location;
+    public String getEmployer() {
+        return employer;
     }
 
-    public void setLocation(HashMap<String, String> location) {
-        this.location = location;
+    public void setEmployer(String employer) {
+        this.employer = employer;
     }
 
-    public HashMap<String, Object> getStats() {
-        return stats;
-    }
-
-    public void setStats(HashMap<String, Object> stats) {
-        this.stats = stats;
-    }
-
-    public String getId() {
-        return _id;
-    }
-
-    public void setId(String id) {
-        this._id = _id;
-    }
-
-
-
-    public ArrayList<String> getLocationList(){
-        ArrayList<String> location = new ArrayList<String>();
-
-        if (getLocation().containsKey("country")){
-            if (!getLocation().get("country").isEmpty() && getLocation().get("city") !=null)
-                location.add(getLocation().get("country"));
-        }
-
-        if (getLocation().containsKey("city")){
-            if (!getLocation().get("city").isEmpty() && getLocation().get("city") !=null)
-                location.add(getLocation().get("city"));
-        }
-
-        if (getLocation().containsKey("state")){
-            if (!getLocation().get("state").isEmpty() && getLocation().get("state") !=null)
-                location.add(getLocation().get("state"));
-        }
-
-        if (getLocation().containsKey("region")){
-            if (!getLocation().get("region").isEmpty() && getLocation().get("region") !=null)
-                location.add(getLocation().get("region"));
-        }
-
-        return location;
-    }
 }

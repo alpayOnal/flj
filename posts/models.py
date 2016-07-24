@@ -23,11 +23,11 @@ class JobPost(models.Model):
         (0, "inactive"),
         (1, "active")
     ]
-
+    job_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='job_posts')
+    employer = models.CharField(max_length=50, blank=False)
     state = models.SmallIntegerField(choices=STATES, default=STATES[1][0])
-    post_id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=255, blank=False)
     description = models.TextField(blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -46,7 +46,7 @@ class StarredJob(models.Model):
     job = models.ForeignKey(
         to="JobPost",
         on_delete=models.CASCADE,
-        related_name="job_id")
+        related_name="jobpost_id")
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
