@@ -29,13 +29,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
                 <TextView
+                    android:id="@+id/search_location"
                     android:text="@string/location"
                     android:layout_width="match_parent"
                     android:padding="5dp"
                     android:layout_marginTop="7dp"
                     android:layout_marginBottom="7dp"
                     android:layout_height="wrap_content"
-                    android:id="@+id/textView2"
                     android:layout_below="@+id/search_keyword" />
 
             </RelativeLayout>
@@ -44,7 +44,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/job_list_content" />
+    <include layout="@layout/main_content" />
 
 
 

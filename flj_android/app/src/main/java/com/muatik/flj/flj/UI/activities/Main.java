@@ -2,28 +2,34 @@ package com.muatik.flj.flj.UI.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.muatik.flj.flj.R;
-import com.muatik.flj.flj.UI.fragments.Search;
+import com.muatik.flj.flj.UI.fragments.*;
+import com.muatik.flj.flj.UI.fragments.JobList;
 import com.muatik.flj.flj.UI.views.SearchForm;
 
-public class JobList extends FragmentActivity
+/**
+ * Created by muatik on 25.07.2016.
+ */
+public class Main extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.job_list_activity);
+        setContentView(R.layout.main_activity);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
+        setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -34,7 +40,19 @@ public class JobList extends FragmentActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        new SearchForm(this.getWindow().getDecorView());
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        JobList jobFragment = new JobList();
+        Bundle bundle = new Bundle();
+        bundle.putString(JobList.ARG_KEYWORD, "java");
+        bundle.putString(JobList.ARG_LOCATION, "Istanbul");
+        jobFragment.setArguments(bundle);
+
+        fragmentManager
+                .beginTransaction()
+                .replace(R.id.main_content, jobFragment )
+                .addToBackStack(null)
+                .commit();
     }
 
     private void bindSearchForm() {
@@ -90,7 +108,12 @@ public class JobList extends FragmentActivity
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
-            startActivity(new Intent(this, Search.class));
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager
+                    .beginTransaction()
+                    .replace(R.id.main_content, new Search())
+                    .addToBackStack(null)
+                    .commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

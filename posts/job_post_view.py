@@ -36,7 +36,9 @@ class JobPosts(generics.ListCreateAPIView):
         # elif lat and long:
         #     point = GEOSGeometry('POINT(%s %s)' % (lat, long), srid=4326)
         #     criteria.append(Q(point__distance_lte=(point, D(m=5))))
-        queryset = JobPost.objects.filter(*criteria).order_by("-created_at")
+        queryset = JobPost.objects\
+            .filter(*criteria)\
+            .order_by("-created_at")[:9]
         return queryset
 
 

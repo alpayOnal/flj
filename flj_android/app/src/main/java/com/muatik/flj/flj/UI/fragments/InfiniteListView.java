@@ -55,7 +55,7 @@ public class InfiniteListView<Entity, ViewHolder> extends Fragment implements On
 //                .addConverterFactory(GsonConverterFactory.create())
 //                .build();
 //
-//        FLJ_ENDPOIN apiService = retrofit.create(FLJ_ENDPOIN.class);
+//        FLJ_ENDPOINT apiService = retrofit.create(FLJ_ENDPOINT.class);
 //        Call<List<Job>> call = apiService.getJobs();
 //        call.enqueue(new Callback<List<Job>>() {
 //            @Override
