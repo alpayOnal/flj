@@ -10,28 +10,47 @@ import com.muatik.flj.flj.UI.entities.Job;
 import java.util.List;
 
 
-public class JobsRecyclerViewAdapter extends RecyclerView.Adapter<JobViewHolder> {
+public class JobsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     List<Job> data;
 
     public JobsRecyclerViewAdapter(Context context, List<Job> data) {
         this.data = data;
     }
+    // A check for the pre-definied value that will indicate footer
+
+    private final int VIEW_ITEM = 1;
+    private final int VIEW_PROG = 0;
 
     @Override
-    public JobViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(
-                R.layout.job_item, parent, false);
-        return new JobViewHolder(view);
+    public int getItemViewType(int position) {
+        return data.get(position) != null ? VIEW_ITEM : VIEW_PROG;
     }
 
     @Override
-    public void onBindViewHolder(JobViewHolder holder, int position) {
-        Job job = data.get(position);
-        holder.title.setText(job.getTitle()  + " " + job.getId());
-        holder.setCity(job.getCity());
-        holder.setCountry(job.getCountry());
-        holder.setCreatedAt(job.getCreated_at());
-        holder.setEmployer(job.getEmployer());
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        RecyclerView.ViewHolder vh;
+        if (viewType == VIEW_ITEM) {
+            View v = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.job_item, parent, false);
+            vh = new JobViewHolder(v);
+        } else {
+            View v = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.job_progressbar_item, parent, false);
+            vh = new JobProgressViewHolder(v);
+        }
+        return vh;
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof JobViewHolder) {
+            JobViewHolder vh = (JobViewHolder) holder;
+            Job job = data.get(position);
+            vh.setJob(job);
+        } else {
+            ((JobProgressViewHolder) holder).progressBar.setIndeterminate(true);
+        }
+
     }
 
     @Override

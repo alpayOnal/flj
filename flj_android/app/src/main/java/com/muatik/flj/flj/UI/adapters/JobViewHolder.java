@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.muatik.flj.flj.R;
+import com.muatik.flj.flj.UI.BusManager;
+import com.muatik.flj.flj.UI.entities.Job;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -16,11 +18,21 @@ import java.util.Date;
  */
 public class JobViewHolder extends RecyclerView.ViewHolder{
 
-    public TextView title;
-    public TextView employer;
-    public TextView country;
-    public TextView city;
-    public TextView created_at;
+
+    private Job job;
+
+    public class EventOnJobClicked {
+        public Job job;
+        public EventOnJobClicked(Job job) {
+            this.job = job;
+        }
+    }
+
+    private TextView title;
+    private TextView employer;
+    private TextView country;
+    private TextView city;
+    private TextView created_at;
 
     public JobViewHolder(View view) {
         super(view);
@@ -29,12 +41,28 @@ public class JobViewHolder extends RecyclerView.ViewHolder{
         this.country= (TextView) view.findViewById(R.id.job_country);
         this.city= (TextView) view.findViewById(R.id.job_city);
         this.created_at= (TextView) view.findViewById(R.id.job_created_at);
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                BusManager.get().post(new EventOnJobClicked(job));
+            }
+        });
     }
 
     public static String capitalize(String t) {
         if (t != null)
             return t.substring(0,1).toUpperCase() + t.substring(1).toLowerCase();
         return t;
+    }
+
+    public void setJob(Job job) {
+        this.job = job;
+        title.setText(job.getTitle()  + " " + job.getId());
+        setCity(job.getCity());
+        setCountry(job.getCountry());
+        setCreatedAt(job.getCreated_at());
+        setEmployer(job.getEmployer());
     }
 
     public void setCreatedAt(String created_at) {
@@ -64,4 +92,5 @@ public class JobViewHolder extends RecyclerView.ViewHolder{
     public void setEmployer(String employer) {
         this.employer.setText("Google Microsoft LTD. STI");
     }
+
 }

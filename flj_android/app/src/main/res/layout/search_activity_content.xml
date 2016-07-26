@@ -1,41 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".UI.fragments.Search"
-    tools:showIn="@layout/search_app_bar">
+    android:orientation="vertical">
 
 
     <LinearLayout
-    android:layout_margin="0dp"
-    android:gravity="center"
-    android:paddingLeft="14dp"
-    android:paddingRight="14dp"
-    android:paddingTop="52dp"
-    android:paddingBottom="52dp"
-    android:background="#e0e0e0"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
-        <EditText
-        android:hint="Garson, A2 ehliyetli motorcu"
+        android:layout_margin="0dp"
+        android:gravity="center"
+        android:paddingLeft="14dp"
+        android:paddingRight="14dp"
+        android:paddingTop="32dp"
+        android:paddingBottom="32dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textFilter"
-        android:layout_marginBottom="15dp" />
+        android:orientation="vertical"
+        android:background="#eaeaea">
 
         <EditText
-        android:hint="Istanbul, Turkey"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textAutoComplete" />
+            android:id="@+id/search_keyword"
+            android:hint="Garson, A2 ehliyetli motorcu"
+            android:inputType="textFilter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:layout_marginBottom="15dp"
+            android:drawableLeft="@android:drawable/ic_menu_search" />
+
+        <EditText
+            android:id="@+id/search_location"
+            android:hint="Istanbul, Turkey"
+            android:inputType="textAutoComplete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:drawableLeft="@drawable/ic_room_black_24dp" />
         <Button
-            android:id="@+id/search_button"
-            android:text="Search"
+            style="@style/Base.Widget.AppCompat.Button.Colored"
+            android:id="@+id/search_submit"
+            android:paddingLeft="50dp"
+            android:paddingRight="50dp"
+            android:text="Search jobs"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
-</RelativeLayout>
+    <TextView
+        style="@style/TextAppearance.AppCompat.Title"
+        android:padding="15dp"
+        android:background="#e0e0e0"
+        android:text="Previous searches"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </android.support.v7.widget.RecyclerView>
+</LinearLayout>

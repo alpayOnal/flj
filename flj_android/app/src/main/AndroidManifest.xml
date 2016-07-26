@@ -21,12 +21,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:label="Search"
-            android:name=".UI.fragments.Search"
-            android:theme="@style/AppTheme">
-
-        </activity>
     </application>
 
 </manifest>

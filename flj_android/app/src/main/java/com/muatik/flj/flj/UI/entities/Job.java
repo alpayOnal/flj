@@ -1,22 +1,24 @@
 package com.muatik.flj.flj.UI.entities;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
+
 /**
  * Created by muatik on 24.07.2016.
  */
-public class Job {
-    public String job_id;
-    public String title;
-
-
-
-    public String employer;
-    public String description;
-    public String created_at;
-    public String country;
-    public String city;
-    public String latitude;
-    public String longitude;
-    public Integer user;
+public class Job implements Serializable {
+    private String job_id;
+    private String title;
+    private String employer;
+    private String description;
+    private String created_at;
+    private String country;
+    private String city;
+    private String latitude;
+    private String longitude;
+    private Integer user;
 
     public Job() {
 
@@ -76,5 +78,22 @@ public class Job {
     public void setEmployer(String employer) {
         this.employer = employer;
     }
-
+//
+//    @Override
+//    public int describeContents() {
+//        return 0;
+//    }
+//
+//    @Override
+//    public void writeToParcel(Parcel parcel, int i) {
+//        parcel.writeString(title);
+//        parcel.writeString(description);
+//        parcel.writeString(country);
+//        parcel.writeString(city);
+//        parcel.writeString(latitude);
+//        parcel.writeString(longitude);
+//        parcel.writeInt(user);
+//        parcel.writeString(job_id);
+//        parcel.writeString(employer);
+//    }
 }
