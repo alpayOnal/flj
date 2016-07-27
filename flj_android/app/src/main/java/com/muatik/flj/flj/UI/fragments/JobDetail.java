@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.muatik.flj.flj.R;
-import com.muatik.flj.flj.UI.BusManager;
 import com.muatik.flj.flj.UI.entities.Job;
 
 /**

@@ -5,7 +5,6 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -13,12 +12,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.muatik.flj.flj.R;
-import com.muatik.flj.flj.UI.BusManager;
+import com.muatik.flj.flj.UI.utilities.BusManager;
 import com.muatik.flj.flj.UI.adapters.EndlessRecyclerOnScrollListener;
 import com.muatik.flj.flj.UI.adapters.JobsRecyclerViewAdapter;
 import com.muatik.flj.flj.UI.entities.Job;
@@ -118,7 +118,7 @@ public class JobList extends Fragment {
 
 
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.jobs_fragment, container, false);
+        return inflater.inflate(R.layout.jobs_list_content, container, false);
     }
 
     void prepareToolbar() {
@@ -139,7 +139,7 @@ public class JobList extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         // PREPARING LIST VIEW
@@ -176,6 +176,24 @@ public class JobList extends Fragment {
 
         bus.register(this);
         bus.post(new EventFragmentState("onViewCreated"));
+
+//        ((Button) view.findViewById(R.id.alarm_suggestion_not_now)).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//              view.findViewById(R.id.alarm_suggestion).setVisibility(View.GONE);
+//            }
+//        });
+//
+//        ((Button) view.findViewById(R.id.alarm_suggestion_yes)).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(getContext(), "You will get notified about new '"
+//                        + jobFilter.keyword
+//                        + "' jobs in "
+//                        + jobFilter.location, Toast.LENGTH_LONG).show();
+//                view.findViewById(R.id.alarm_suggestion).setVisibility(View.GONE);
+//            }
+//        });
     }
 
     @Override

@@ -1,30 +1,25 @@
 package com.muatik.flj.flj.UI.activities;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.muatik.flj.flj.R;
-import com.muatik.flj.flj.UI.BusManager;
-import com.muatik.flj.flj.UI.adapters.JobViewHolder;
-import com.muatik.flj.flj.UI.entities.Job;
+import com.muatik.flj.flj.UI.entities.Alarms;
+import com.muatik.flj.flj.UI.entities.SearchHistory;
+import com.muatik.flj.flj.UI.fragments.SearchForm;
+import com.muatik.flj.flj.UI.utilities.BusManager;
+import com.muatik.flj.flj.UI.views.*;
 import com.muatik.flj.flj.UI.entities.JobFilter;
 import com.muatik.flj.flj.UI.fragments.*;
 import com.muatik.flj.flj.UI.fragments.JobList;
-import com.muatik.flj.flj.UI.views.SearchForm;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -53,18 +48,22 @@ public class Main extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-//        onSearchSubmitted(new Search.EventOnSubmit(new JobFilter("", "istanbul")));
-        showFragment(new Search());
+        SearchHistory.init(getApplicationContext());
+        Alarms.init(getApplicationContext());
+
+//        onSearchSubmitted(new SearchForm.EventOnSubmit(new JobFilter("", "istanbul")));
+        showFragment(new SearchForm());
         bus.register(this);
     }
 
 
 
     @Subscribe
-    public void onSearchSubmitted(Search.EventOnSubmit event) {
+    public void onSearchSubmitted(SearchForm.EventOnSubmit event) {
         JobList jobList = new JobList();
         Bundle bundle = new Bundle();
         bundle.putSerializable("jobFilter", event.filter);
+        SearchHistory.insert(event.filter);
         jobList.setArguments(bundle);
         showFragment(jobList);
     }
@@ -104,7 +103,7 @@ public class Main extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.menu_item_search) {
-            showFragment(new Search());
+            showFragment(new SearchForm());
         }
 
         return super.onOptionsItemSelected(item);
@@ -121,13 +120,13 @@ public class Main extends AppCompatActivity
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
-
+            showFragment(new SearchHistoryManager());
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
-            showFragment(new Search());
+            showFragment(new SearchForm());
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -141,6 +140,12 @@ public class Main extends AppCompatActivity
                 .replace(R.id.main_content, fragment)
                 .addToBackStack(null)
                 .commit();
-
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SearchHistory.save();
+    }
+
 }

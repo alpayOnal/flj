@@ -1,7 +1,5 @@
 package com.muatik.flj.flj.UI.entities;
 
-import com.muatik.flj.flj.UI.fragments.Search;
-
 import java.io.Serializable;
 
 /**

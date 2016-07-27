@@ -15,14 +15,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.muatik.flj.flj.R;
-import com.muatik.flj.flj.UI.BusManager;
+import com.muatik.flj.flj.UI.entities.SearchHistory;
+import com.muatik.flj.flj.UI.utilities.BusManager;
 import com.muatik.flj.flj.UI.entities.JobFilter;
 import com.squareup.otto.Bus;
 
 /**
  * Created by muatik on 25.07.2016.
  */
-public class Search extends Fragment {
+public class SearchForm extends Fragment {
 
     static public class EventOnSubmit {
         public JobFilter filter;
@@ -38,9 +39,9 @@ public class Search extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        toolbar.setTitle("Search jobs");
+        toolbar.setTitle("SearchForm jobs");
         toolbar.setSubtitle(null);
-        return inflater.inflate(R.layout.search_activity_content, container, false);
+        return inflater.inflate(R.layout.search_form_activity_content, container, false);
     }
 
     public class PagerAdapter extends FragmentStatePagerAdapter {
@@ -104,9 +105,10 @@ public class Search extends Fragment {
     }
 
     public void onSubmit() {
-        bus.post(new EventOnSubmit(new JobFilter(
+        JobFilter filter = new JobFilter(
                 keywordBox.getText().toString(),
-                locationBox.getText().toString())));
+                locationBox.getText().toString());
+        bus.post(new EventOnSubmit(filter));
     }
 
 

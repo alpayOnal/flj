@@ -1,4 +1,4 @@
-package com.muatik.flj.flj.UI.adapters;
+package com.muatik.flj.flj.UI.views;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
