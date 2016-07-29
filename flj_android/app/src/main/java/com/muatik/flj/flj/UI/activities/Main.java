@@ -1,5 +1,6 @@
 package com.muatik.flj.flj.UI.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -57,15 +58,16 @@ public class Main extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        AccountManager.signin("muatik", "123456");
+        AccountManager.signin("amuatik", "123456");
+
         Alarms.init(getApplicationContext());
         SearchHistory.init(getApplicationContext());
 //        Alarms.init(getApplicationContext());
 
-//        onSearchSubmitted(new SearchForm.EventOnSubmit(new JobFilter("", "istanbul")));
-        showFragment(new AlarmManager());
+        onSearchSubmitted(new SearchForm.EventOnSubmit(new JobFilter("php", "turkey", "istanbul")));
+//        showFragment(new SearchForm());
 
-        bus.register(this);
+//        bus.register(this);
     }
 
 
@@ -101,7 +103,11 @@ public class Main extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            int count = getSupportFragmentManager().getBackStackEntryCount();
+
+            if (count > 1) {
+                getSupportFragmentManager().popBackStack();
+            }
         }
     }
 
@@ -143,7 +149,7 @@ public class Main extends AppCompatActivity
         } else if (id == R.id.nav_manage) {
             showFragment(new AlarmManager());
         } else if (id == R.id.nav_share) {
-
+            startActivity(new Intent(getApplication(), GoogleSignin.class));
         } else if (id == R.id.nav_send) {
 
         }
@@ -167,4 +173,15 @@ public class Main extends AppCompatActivity
         SearchHistory.commit();
     }
 
+    @Override
+    protected void onStop() {
+        BusManager.get().unregister(this);
+        super.onStop();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        BusManager.get().register(this);
+    }
 }

@@ -3,7 +3,6 @@ package com.muatik.flj.flj.UI.fragments;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,8 +13,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.Toast;
 
 import com.muatik.flj.flj.R;
 import com.muatik.flj.flj.UI.RESTful.API;
@@ -33,18 +30,16 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.GET;
-import retrofit2.http.Query;
 
 /**
  * Created by muatik on 22.07.2016.
  */
-public class JobList extends Fragment {
+
+public class JobList extends MyFragment {
 
     /** EVENTS */
     public static String STATE_onViewCreated = "onViewCreated";
+    private AlarmSuggestion alarmSuggestion;
 
     public class EventFragmentState {
         public String state;
@@ -76,9 +71,8 @@ public class JobList extends Fragment {
     ArrayList<Job> jobs;
     RecyclerView listView;
     Handler delayedRequest ;
-
     SwipeRefreshLayout swipeRefreshLayout;
-
+    boolean isSugesstionGone = false;
     /**
      * specify next job list page's maximum job id.
      * all jobs to be listed in the next page will be older
@@ -98,7 +92,7 @@ public class JobList extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-
+        Log.e("FLJ", "jobList onCreateView --------------");
         // if jobFilter is null, then the view is being created and this means
         // there is not list history to be kept, savedState must be empty.
         if (jobFilter == null)
@@ -108,12 +102,21 @@ public class JobList extends Fragment {
         if (jobFilter == null)
             throw new RuntimeException("joblist fragment needs job filter as an argument");
 
-        final AlarmSuggestion alarmSuggestion = new AlarmSuggestion();
+        if (!isSugesstionGone)
+            showAlarmSuggestion();
 
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.jobs_list_content, container, false);
+    }
+
+    void showAlarmSuggestion() {
+
+        alarmSuggestion = new AlarmSuggestion();
         alarmSuggestion.setListener(new AlarmSuggestion.Listener() {
             @Override
             public void onClose() {
-                getFragmentManager().beginTransaction().remove(alarmSuggestion).commit();
+                getChildFragmentManager().beginTransaction().remove(alarmSuggestion).commit();
+                isSugesstionGone = true;
             }
 
             @Override
@@ -121,15 +124,12 @@ public class JobList extends Fragment {
                 return jobFilter;
             }
         });
-
-        getFragmentManager()
+        getChildFragmentManager()
                 .beginTransaction()
                 .replace(R.id.alarm_suggestion_fragment, alarmSuggestion)
                 .commit();
-
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.jobs_list_content, container, false);
     }
+
 
     void prepareToolbar() {
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
@@ -151,7 +151,7 @@ public class JobList extends Fragment {
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        Log.e("FLJ", "jobList onViewCreated --------------");
         // PREPARING LIST VIEW
         jobs = new ArrayList<Job>();
         adapter = new JobsRecyclerViewAdapter(getContext(), jobs);
@@ -188,6 +188,12 @@ public class JobList extends Fragment {
         bus.post(new EventFragmentState("onViewCreated"));
 
 
+    }
+
+    @Override
+    public void onPause() {
+        getChildFragmentManager().beginTransaction().remove(alarmSuggestion).commit();
+        super.onPause();
     }
 
     @Override
@@ -303,7 +309,8 @@ public class JobList extends Fragment {
 
         if (new_jobs.size() < pageLength)
             infiniteScroller.setDontListen(true);
-
     }
+
+
 
 }

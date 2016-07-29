@@ -23,7 +23,7 @@ import com.squareup.otto.Bus;
 /**
  * Created by muatik on 25.07.2016.
  */
-public class SearchForm extends Fragment {
+public class SearchForm extends MyFragment {
 
     static public class EventOnSubmit {
         public JobFilter filter;
@@ -99,7 +99,7 @@ public class SearchForm extends Fragment {
 
         final ViewPager viewPager = (ViewPager) view.findViewById(R.id.pager);
         final PagerAdapter adapter = new PagerAdapter
-                (getFragmentManager(), tabLayout.getTabCount());
+                (getChildFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
     }

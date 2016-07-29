@@ -12,11 +12,15 @@ import com.muatik.flj.flj.R;
 /**
  * Created by muatik on 7/28/16.
  */
-public class AlarmManager extends Fragment {
+public class AlarmManager extends MyFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.alarm_manager_content, container, false);
+        View view = inflater.inflate(R.layout.alarm_manager_content, container, false);
+        getChildFragmentManager().beginTransaction()
+                .add(R.id.alarmlist, new AlarmList())
+                .commit();
+        return view;
     }
 
 

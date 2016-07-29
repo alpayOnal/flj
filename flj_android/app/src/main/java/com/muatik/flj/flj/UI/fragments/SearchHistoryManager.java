@@ -12,7 +12,7 @@ import com.muatik.flj.flj.R;
 /**
  * Created by muatik on 27.07.2016.
  */
-public class SearchHistoryManager  extends Fragment{
+public class SearchHistoryManager  extends MyFragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
