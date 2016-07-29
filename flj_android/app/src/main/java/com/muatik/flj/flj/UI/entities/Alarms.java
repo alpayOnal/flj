@@ -3,24 +3,48 @@ package com.muatik.flj.flj.UI.entities;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.muatik.flj.flj.UI.RESTful.API;
 import com.muatik.flj.flj.UI.utilities.BusManager;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by muatik on 27.07.2016.
  */
 public class Alarms {
 
-    final public static class EventOnInsert {
+    private static Context context;
+
+    public static class EventDataChanged {}
+    public static class EventOnInsert {
         public Alarm alarm;
         public EventOnInsert(Alarm alarm) {
             this.alarm = alarm;
         }
     }
+    public static class EventOnBulkInsert {}
+    public static class EventOnFetchFailure {}
+    public static class EventOnDelete {
+        public Alarm alarm;
+        public int position;
+        public EventOnDelete(Alarm alarm, int position) {
+            this.alarm = alarm;
+            this.position = position;
+        }
+    }
+
+
+    public static class ReachedMaximumAlarm extends Throwable {}
+
 
     public static final int MAX_LENGTH = 20;
     private static final String PREFERENCE_NAME = "alarms";
@@ -29,48 +53,94 @@ public class Alarms {
     private static SharedPreferences prefs;
 
     public static void init(Context context) {
-        prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        Gson gson = new Gson();
-        String json = prefs.getString(PREFERENCE_NAME, "");
-        Alarm[] alarms = gson.fromJson(json, Alarm[].class);
-        if (alarms != null) {
-            for (Alarm i : alarms)
-                insert(i, false);
-            trim();
-        }
+        Alarms.context = context;
+        refresh();
     }
 
-    public static void insert(Alarm alarm) {
+    public static void refresh() {
+        API.authorized.getAlarms().enqueue(new Callback<List<Alarm>>() {
+            @Override
+            public void onResponse(Call<List<Alarm>> call, Response<List<Alarm>> response) {
+                if (response.isSuccessful()) {
+                    // data variable should keep the same instance,
+                    // so data = response.body is not allowed. otherwise adapters may fail.
+                    data.clear();
+                    data.addAll(response.body());
+                    BusManager.get().post(new EventDataChanged());
+                    BusManager.get().post(new EventOnBulkInsert());
+                } else {
+                    this.onFailure(call, new Exception(
+                            String.format("Alarms cannot be fetched. %s", response.message())));
+                }
+            }
+            @Override
+            public void onFailure(Call<List<Alarm>> call, Throwable t) {
+                Toast.makeText(context, t.getMessage(), Toast.LENGTH_LONG ).show();
+                BusManager.get().post(new EventOnFetchFailure());
+            }
+        });
+    }
+
+    public static void insert(Alarm alarm) throws ReachedMaximumAlarm {
         insert(alarm, true);
     }
 
-    public static void insert(Alarm alarm, Boolean atBegining) {
-        if (atBegining) {
-            data.add(0, alarm);
-            if (data.size() > MAX_LENGTH)
-                data.remove(MAX_LENGTH);
-        } else {
-            data.add(alarm);
-        }
-        BusManager.get().post(new EventOnInsert(alarm));
+    public static void insert(final Alarm alarm, final Boolean atBegining) throws ReachedMaximumAlarm {
+        if (data.size() > MAX_LENGTH)
+            throw new ReachedMaximumAlarm();
+
+        Call<Alarm> call = API.authorized.createAlarm(alarm);
+        call.enqueue(new Callback<Alarm>() {
+            @Override
+            public void onResponse(Call<Alarm> call, Response<Alarm> response) {
+                if (response.code() == API.HTTP_POST_SUCCESS) {
+                    alarm.setId(response.body().getId());
+                    if (atBegining) {
+                        data.add(0, alarm);
+                    } else {
+                        data.add(alarm);
+                    }
+                    BusManager.get().post(new EventDataChanged());
+                    BusManager.get().post(new EventOnInsert(alarm));
+                }
+                else
+                    this.onFailure(call, new Exception(response.code() + " - " +response.message()));
+            }
+            @Override
+            public void onFailure(Call<Alarm> call, Throwable t) {
+                Log.d("FLJ", "alarm post failure: " + t.getMessage());
+            }
+        });
+
+
+
     }
 
-    public static void trim() {
-        data = data.subList(0, MAX_LENGTH > data.size() ? data.size() : MAX_LENGTH);
+    public static void delete(final Alarm alarm) {
+        API.authorized.deleteAlarm(alarm.getId()).enqueue(new API.BriefCallback<Void>() {
+            @Override
+            public void onSuccess(Call<Void> call, Response<Void> response) {
+                int position = removeFromList(alarm);
+                BusManager.get().post(new EventOnDelete(alarm, position));
+                refresh();
+            }
+        });
+    }
+
+    private static int removeFromList(Alarm alarm) {
+        for (int i = 0; i < data.size(); i++) {
+            if (data.get(i).getId() == alarm.getId()) {
+                data.remove(i);
+                return i;
+            }
+        }
+        return -1;
     }
 
     public static List<Alarm> getAll() {
         return data;
     }
 
-    public static void save() {
-        Gson gson = new Gson();
-        String json = gson.toJson(data);
-        prefs.edit().putString(PREFERENCE_NAME, json).commit();
-    }
 
-    public static void clear() {
-        data.clear();
-        save();
-    }
+
 }

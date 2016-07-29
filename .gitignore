@@ -69,3 +69,5 @@ configs/*
 
 # virtualenv
 venv
+
+.DS_store

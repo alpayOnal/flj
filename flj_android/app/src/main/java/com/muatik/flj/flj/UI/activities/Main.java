@@ -10,8 +10,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.muatik.flj.flj.R;
+import com.muatik.flj.flj.UI.RESTful.API;
+import com.muatik.flj.flj.UI.entities.Account;
+import com.muatik.flj.flj.UI.entities.AccountManager;
+import com.muatik.flj.flj.UI.entities.Alarm;
 import com.muatik.flj.flj.UI.entities.Alarms;
 import com.muatik.flj.flj.UI.entities.SearchHistory;
 import com.muatik.flj.flj.UI.fragments.SearchForm;
@@ -22,6 +27,10 @@ import com.muatik.flj.flj.UI.fragments.*;
 import com.muatik.flj.flj.UI.fragments.JobList;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by muatik on 25.07.2016.
@@ -48,11 +57,14 @@ public class Main extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        SearchHistory.init(getApplicationContext());
+        AccountManager.signin("muatik", "123456");
         Alarms.init(getApplicationContext());
+        SearchHistory.init(getApplicationContext());
+//        Alarms.init(getApplicationContext());
 
 //        onSearchSubmitted(new SearchForm.EventOnSubmit(new JobFilter("", "istanbul")));
-        showFragment(new SearchForm());
+        showFragment(new AlarmManager());
+
         bus.register(this);
     }
 
@@ -75,6 +87,11 @@ public class Main extends AppCompatActivity
         bundle.putSerializable("job", event.job);
         jobDetail.setArguments(bundle);
         showFragment(jobDetail);
+    }
+
+    @Subscribe
+    public void onSignedIn(AccountManager.onSuccessfulSignIn event) {
+        Toast.makeText(this, "Welcome: " + event.account.getUsername(), Toast.LENGTH_LONG).show();
     }
 
 
@@ -116,17 +133,19 @@ public class Main extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            // Handle the camera action
+//            Account.Manager.signin("kamil", "412");
+            AccountManager.signin("muatik", "123456");
+            Alarms.init(getApplicationContext());
         } else if (id == R.id.nav_gallery) {
-
+            showFragment(new SearchForm());
         } else if (id == R.id.nav_slideshow) {
             showFragment(new SearchHistoryManager());
         } else if (id == R.id.nav_manage) {
-
+            showFragment(new AlarmManager());
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
-            showFragment(new SearchForm());
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -145,7 +164,7 @@ public class Main extends AppCompatActivity
     @Override
     protected void onPause() {
         super.onPause();
-        SearchHistory.save();
+        SearchHistory.commit();
     }
 
 }

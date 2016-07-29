@@ -61,7 +61,7 @@ public class SearchHistory {
         return data;
     }
 
-    public static void save() {
+    public static void commit() {
         Gson gson = new Gson();
         String json = gson.toJson(data);
         prefs.edit().putString("search_history", json).commit();
@@ -69,6 +69,6 @@ public class SearchHistory {
 
     public static void clear() {
         data.clear();
-        save();
+        commit();
     }
 }

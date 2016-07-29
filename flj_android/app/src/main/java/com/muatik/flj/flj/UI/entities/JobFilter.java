@@ -13,9 +13,10 @@ public class JobFilter implements Serializable {
         }
     }
 
-    public String keyword, location;
-    public JobFilter(String keyword, String location) {
+    public String keyword, country, city;
+    public JobFilter(String keyword, String country, String city) {
         this.keyword = keyword;
-        this.location = location;
+        this.city = city;
+        this.country = country;
     }
 }

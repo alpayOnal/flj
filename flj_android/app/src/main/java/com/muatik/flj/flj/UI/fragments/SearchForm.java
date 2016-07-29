@@ -107,6 +107,7 @@ public class SearchForm extends Fragment {
     public void onSubmit() {
         JobFilter filter = new JobFilter(
                 keywordBox.getText().toString(),
+                "Germany", // country
                 locationBox.getText().toString());
         bus.post(new EventOnSubmit(filter));
     }

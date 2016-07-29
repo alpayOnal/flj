@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.muatik.flj.flj.R;
+import com.muatik.flj.flj.UI.RESTful.API;
 import com.muatik.flj.flj.UI.utilities.BusManager;
 import com.muatik.flj.flj.UI.adapters.EndlessRecyclerOnScrollListener;
 import com.muatik.flj.flj.UI.adapters.JobsRecyclerViewAdapter;
@@ -93,15 +94,6 @@ public class JobList extends Fragment {
     private String sinceId;
 
 
-    public interface FLJ_ENDPOINT {
-        @GET("posts/")
-        Call<List<Job>> getJobs(
-                @Query("keyword") String keyword,
-                @Query("maxId") String maxId,
-                @Query("sinceId") String sinceId
-        );
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -116,6 +108,24 @@ public class JobList extends Fragment {
         if (jobFilter == null)
             throw new RuntimeException("joblist fragment needs job filter as an argument");
 
+        final AlarmSuggestion alarmSuggestion = new AlarmSuggestion();
+
+        alarmSuggestion.setListener(new AlarmSuggestion.Listener() {
+            @Override
+            public void onClose() {
+                getFragmentManager().beginTransaction().remove(alarmSuggestion).commit();
+            }
+
+            @Override
+            public JobFilter getJobFilter() {
+                return jobFilter;
+            }
+        });
+
+        getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.alarm_suggestion_fragment, alarmSuggestion)
+                .commit();
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.jobs_list_content, container, false);
@@ -129,7 +139,7 @@ public class JobList extends Fragment {
         } else {
             toolbar.setTitle(jobFilter.keyword);
         }
-        toolbar.setSubtitle("Jobs in " + jobFilter.location);
+        toolbar.setSubtitle("Jobs in " + jobFilter.city);
     }
 
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -177,23 +187,7 @@ public class JobList extends Fragment {
         bus.register(this);
         bus.post(new EventFragmentState("onViewCreated"));
 
-//        ((Button) view.findViewById(R.id.alarm_suggestion_not_now)).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//              view.findViewById(R.id.alarm_suggestion).setVisibility(View.GONE);
-//            }
-//        });
-//
-//        ((Button) view.findViewById(R.id.alarm_suggestion_yes)).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(getContext(), "You will get notified about new '"
-//                        + jobFilter.keyword
-//                        + "' jobs in "
-//                        + jobFilter.location, Toast.LENGTH_LONG).show();
-//                view.findViewById(R.id.alarm_suggestion).setVisibility(View.GONE);
-//            }
-//        });
+
     }
 
     @Override
@@ -276,23 +270,16 @@ public class JobList extends Fragment {
     }
 
     private void fetchData() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.2.25:8000/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        FLJ_ENDPOINT apiService = retrofit.create(FLJ_ENDPOINT.class);
-
         Call<List<Job>> call;
-        call = apiService.getJobs(jobFilter.keyword, maxId, sinceId);
-
+        call = API.anonymous.getJobs(jobFilter.keyword, maxId, sinceId);
         call.enqueue(new Callback<List<Job>>() {
             @Override
             public void onResponse(Call<List<Job>> call, Response<List<Job>> response) {
-                populateJobList(response.body());
-                onFetchDataDone();
+                if (response.code() == 200) {
+                    populateJobList(response.body());
+                    onFetchDataDone();
+                }
             }
-
             @Override
             public void onFailure(Call<List<Job>> call, Throwable t) {
                 // @TODO: show an error message to user

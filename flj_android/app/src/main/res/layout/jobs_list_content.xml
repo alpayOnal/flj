@@ -6,14 +6,10 @@
 
     <!--Alarm Section-->
     <FrameLayout
+        android:id="@+id/alarm_suggestion_fragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <fragment
-            android:id="@+id/alarm_suggestion_fragment"
-            class="com.muatik.flj.flj.UI.fragments.AlarmSuggestion"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </FrameLayout>
+        android:layout_height="wrap_content" />
+
 
     <!--Job post list-->
     <android.support.v4.widget.SwipeRefreshLayout
