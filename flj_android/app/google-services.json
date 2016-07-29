@@ -1,0 +1,165 @@
+{
+  "project_info": {
+    "project_number": "581547777628",
+    "project_id": "android-1377"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:581547777628:android:eacefff8a09a60a5",
+        "android_client_info": {
+          "package_name": "com.example.SocialLogin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "581547777628-jueq6r70aq8vvae646j1g2jcuscc8v6s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.SocialLogin",
+            "certificate_hash": "E2451CBD37BA0D8C204A3CB9AEC01033BC69E043"
+          }
+        },
+        {
+          "client_id": "581547777628-a6fgn9injd3ffkvmk88c83bdpcv0fopd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaoxCbmXcTUt8A0kfFRp8ZWbLgZHR1vD8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:581547777628:android:b41ab4dcd303578b",
+        "android_client_info": {
+          "package_name": "com.example.alpay.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "581547777628-aelncsiitjd80n2jp0dou4q22oi66bkt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.alpay.myapplication",
+            "certificate_hash": "D7C62CC36E512439F13E643AF57186448A6C1A47"
+          }
+        },
+        {
+          "client_id": "581547777628-a6fgn9injd3ffkvmk88c83bdpcv0fopd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaoxCbmXcTUt8A0kfFRp8ZWbLgZHR1vD8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:581547777628:android:954c3dda3ab07628",
+        "android_client_info": {
+          "package_name": "com.example.alpay.googlelogin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "581547777628-7hfe31na5c9789m6etin39n2qqctj8qd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.alpay.googlelogin",
+            "certificate_hash": "D7C62CC36E512439F13E643AF57186448A6C1A47"
+          }
+        },
+        {
+          "client_id": "581547777628-a6fgn9injd3ffkvmk88c83bdpcv0fopd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaoxCbmXcTUt8A0kfFRp8ZWbLgZHR1vD8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:581547777628:android:ac2451affb86b2c4",
+        "android_client_info": {
+          "package_name": "com.muatik.flj.flj"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "581547777628-c9qbripc49kvp76klh8purkbcrqpu1rc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.muatik.flj.flj",
+            "certificate_hash": "D7C62CC36E512439F13E643AF57186448A6C1A47"
+          }
+        },
+        {
+          "client_id": "581547777628-a6fgn9injd3ffkvmk88c83bdpcv0fopd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaoxCbmXcTUt8A0kfFRp8ZWbLgZHR1vD8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

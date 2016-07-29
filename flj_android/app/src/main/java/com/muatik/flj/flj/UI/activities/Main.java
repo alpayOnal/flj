@@ -120,7 +120,8 @@ public class Main extends AppCompatActivity
             Intent signin = new Intent(this,SignIn.class);
             startActivity(signin);
         } else if (id == R.id.nav_gallery) {
-
+            Intent googlelogin = new Intent(this,GoogleLogin.class);
+            startActivity(googlelogin);
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {

@@ -10,7 +10,10 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
         <activity
             android:name=".UI.activities.Main"
             android:label="@string/app_name"
@@ -21,7 +24,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".UI.activities.SignIn"></activity>
+        <activity android:name=".UI.activities.SignIn" />
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity android:name=".UI.activities.GoogleLogin"></activity>
     </application>
 
 </manifest>

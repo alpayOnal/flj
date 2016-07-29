@@ -37,107 +37,100 @@ import java.util.StringTokenizer;
 
 
 public class SignIn extends AppCompatActivity {
-    CallbackManager mFacebookCallbackManager;
-    LoginButton mFacebookSignInButton;
-    Profile fbprofile = null;
-
-    User user;
-
-    public class User {
-        public String name;
-        public String fname;
-        public String lname;
-
-        public String email;
-
-        public String facebookID;
-
-        public String gender;
-    }
-
+    Context thisContext;
+    LoginButton fbLoginButton;
+    CallbackManager fbCallbackManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FacebookSdk.sdkInitialize(getApplicationContext());
-
-        try {
-            PackageInfo info = getPackageManager().getPackageInfo(
-                    "com.muatik.flj.flj",  // replace with your unique package name
-                    PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-
-        } catch (NoSuchAlgorithmException e) {
-
-        }
-
-        mFacebookCallbackManager = CallbackManager.Factory.create();
-        mFacebookSignInButton = (LoginButton)findViewById(R.id.fb_sign_in_button);
-       
-        //mFacebookSignInButton.registerCallback(mFacebookCallbackManager, mCallBack);
+        FacebookSdk.sdkInitialize(getApplicationContext());     //this row must be BEFORE setContentView()
         setContentView(R.layout.sign_in_activity);
+        // facebooklogin
+        Profile profile = Profile.getCurrentProfile().getCurrentProfile();
+        if (profile != null) {
+            Log.d("aaa","logged in");
+            // user has logged in
+        } else {
+            Log.d("aaa","not logged in");
+            // user has not logged in
+        }
 
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        mFacebookCallbackManager.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    public View onCreateView(String name, Context context, AttributeSet attrs) {
-        return super.onCreateView(name, context, attrs);
-    }
-
-    private FacebookCallback<LoginResult> mCallBack = new FacebookCallback<LoginResult>() {
-        @Override
-        public void onSuccess(LoginResult loginResult) {
-            // App code
-            GraphRequest request = GraphRequest.newMeRequest(
-                    loginResult.getAccessToken(),
-                    new GraphRequest.GraphJSONObjectCallback() {
-                        @Override
-                        public void onCompleted(
-                                JSONObject object,
-                                GraphResponse response) {
-
-//                            Log.e("response: ", response + "");
-//                            try {
-//                                user = new User();
-//                                user.facebookID = object.getString("id").toString();
-//                                user.email = object.getString("email").toString();
-//                                user.name = object.getString("name").toString();
-//                                user.gender = object.getString("gender").toString();
-//                                user.fname = object.getString("firstname").toString();
-//                                user.lname = object.getString("lastname").toString();
-//                                Log.d("FLJ facebook user", user.toString());
+//        BEGIN OF KEYHASH CODE (once retrieved the keyhash you can remove this code)
+//        try{
+//            PackageInfo info = getPackageManager().getPackageInfo(
+//                    "com.example.alpay.myapplication", PackageManager.GET_SIGNATURES);
+//            for (Signature signature : info.signatures) {
+//                MessageDigest md = MessageDigest.getInstance("SHA");
+//                md.update(signature.toByteArray());
+//                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+//                //This line will log the KeyHash you have to put in your facebook app settings in the facebook developer panel
 //
-//                            }catch (Exception e){
-//                                e.printStackTrace();
-//                            }
-//                            Toast.makeText(getApplicationContext(),"welcome "+user.name,Toast.LENGTH_LONG).show();
-                        }
+//            }
+//        } catch (PackageManager.NameNotFoundException e) {
+//
+//        } catch (NoSuchAlgorithmException e) {
+//
+//        }
+//        // END OF KEYHASH CODE
 
-                    });
+        fbLoginButton = (LoginButton) findViewById(R.id.facebook_login);
+        fbLoginButton.setReadPermissions(Arrays.asList("public_profile, email"));
+        fbCallbackManager = CallbackManager.Factory.create();
+        // If using in a fragment
+        // fbLoginButton.setFragment(thisContext);
+        // Other app specific specialization
 
-            Bundle parameters = new Bundle();
-            parameters.putString("fields", "id,name,email,gender, birthday");
-            request.setParameters(parameters);
-            request.executeAsync();
-        }
+        // Callback registration
+        fbLoginButton.registerCallback(fbCallbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                // App code
+                GraphRequest request = GraphRequest.newMeRequest(
+                        loginResult.getAccessToken(),
+                        new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(
+                                    JSONObject object,
+                                    GraphResponse response) {
 
-        @Override
-        public void onCancel() {
-        }
+                                Log.v("LoginActivity", response.toString());
 
-        @Override
-        public void onError(FacebookException e) {
-        }
-    };
+                                try {
+                                    Log.v("Name:", response.getJSONObject().get("name").toString());
+                                    Toast.makeText(getApplicationContext(), "Welcome " + response.getJSONObject().get("name").toString() +
+                                                    "\n" + response.getJSONObject().get("email").toString(),
+                                            Toast.LENGTH_LONG).show();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "id,name,email");
+                request.setParameters(parameters);
+                request.executeAsync();
+            }
+
+            @Override
+            public void onCancel() {
+                // App code
+                Toast.makeText(thisContext, "Cancel!", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onError(FacebookException exception) {
+                // App code
+                Toast.makeText(thisContext, "Facebook error!", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        fbCallbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
 }

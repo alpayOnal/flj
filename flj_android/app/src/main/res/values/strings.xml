@@ -10,5 +10,13 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="facebook_app_id">2102740319951150</string>
+    <string name="server_client_id">581547777628-c9qbripc49kvp76klh8purkbcrqpu1rc.apps.googleusercontent.com</string>
+
+
+    <!-- Sign-in status messages -->
+    <string name="signed_in_fmt">Signed in as: %s</string>
+    <string name="signed_in">Signed in</string>
+    <string name="signing_in">Signing in…</string>
+    <string name="signed_out">Signed out</string>
 
 </resources>
