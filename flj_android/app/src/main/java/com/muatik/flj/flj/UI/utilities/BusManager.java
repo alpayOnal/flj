@@ -1,4 +1,4 @@
-package com.muatik.flj.flj.UI;
+package com.muatik.flj.flj.UI.utilities;
 
 import com.squareup.otto.Bus;
 

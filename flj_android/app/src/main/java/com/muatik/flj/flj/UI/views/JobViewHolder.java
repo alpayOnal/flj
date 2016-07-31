@@ -1,4 +1,4 @@
-package com.muatik.flj.flj.UI.adapters;
+package com.muatik.flj.flj.UI.views;
 
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.muatik.flj.flj.R;
-import com.muatik.flj.flj.UI.BusManager;
+import com.muatik.flj.flj.UI.utilities.BusManager;
 import com.muatik.flj.flj.UI.entities.Job;
 
 import java.text.ParseException;

@@ -7,9 +7,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.muatik.flj.flj.R;
-import com.muatik.flj.flj.UI.BusManager;
-
-import org.w3c.dom.Text;
+import com.muatik.flj.flj.UI.utilities.BusManager;
 
 /**
  * Created by muatik on 25.07.2016.

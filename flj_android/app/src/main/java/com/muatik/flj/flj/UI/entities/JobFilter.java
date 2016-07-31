@@ -1,7 +1,5 @@
 package com.muatik.flj.flj.UI.entities;
 
-import com.muatik.flj.flj.UI.fragments.Search;
-
 import java.io.Serializable;
 
 /**
@@ -15,9 +13,10 @@ public class JobFilter implements Serializable {
         }
     }
 
-    public String keyword, location;
-    public JobFilter(String keyword, String location) {
+    public String keyword, country, city = "";
+    public JobFilter(String keyword, String country, String city) {
         this.keyword = keyword;
-        this.location = location;
+        this.city = city;
+        this.country = country;
     }
 }

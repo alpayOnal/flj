@@ -43,7 +43,7 @@ class AlarmList(generics.ListCreateAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        return Alarm.objects.filter(user=user.id)
+        return Alarm.objects.filter(user=user.id).order_by("-updated_at")
 
 
 class AlarmDetail(generics.RetrieveUpdateDestroyAPIView):

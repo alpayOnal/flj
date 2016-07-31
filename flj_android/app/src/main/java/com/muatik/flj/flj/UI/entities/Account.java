@@ -1,83 +1,42 @@
 package com.muatik.flj.flj.UI.entities;
 
+import android.util.Log;
+
+import com.muatik.flj.flj.UI.RESTful.API;
+import com.muatik.flj.flj.UI.utilities.BusManager;
+
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
- * Created by alpay on 10/9/15.
+ * Created by muatik on 7/28/16.
  */
 public class Account implements Serializable {
-    private String createdAt;
-    private String email;
-    private String fname;
-    private String gcmId;
-    private String id;
-    private String lname;
-    private ArrayList<Alarm> alarms = new ArrayList<Alarm>();
-    private HashMap<String, Object> jobs = new HashMap<String, Object>();
 
-    public String getCreatedAt() {
-        return createdAt;
+    private int userId;
+    private String username;
+    private String email;
+    private String password;
+
+    public Account(int userId, String username, String email, String password) {
+        this.userId = userId;
+        this.username = username;
+        this.email = email;
+        this.password = password;
     }
 
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
+    public String getUsername() {
+        return username;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getFname() {
-        return fname;
-    }
-
-    public void setFname(String fname) {
-        this.fname = fname;
-    }
-
-    public String getGcmId() {
-        return gcmId;
-    }
-
-    public void setGcmId(String gcmId) {
-        this.gcmId = gcmId;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getLname() {
-        return lname;
-    }
-
-    public void setLname(String lname) {
-        this.lname = lname;
-    }
-
-    public ArrayList<Alarm> getAlarms() {
-        return alarms;
-    }
-
-    public void setAlarms(ArrayList<Alarm> alarms) {
-        this.alarms = alarms;
-    }
-
-    public HashMap<String, Object> getJobs() {
-        return jobs;
-    }
-
-    public void setJobs(HashMap<String, Object> jobs) {
-        this.jobs = jobs;
+    public String getPassword() {
+        return password;
     }
 }

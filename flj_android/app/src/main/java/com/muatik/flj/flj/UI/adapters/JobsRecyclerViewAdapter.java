@@ -7,6 +7,9 @@ import android.view.ViewGroup;
 
 import com.muatik.flj.flj.R;
 import com.muatik.flj.flj.UI.entities.Job;
+import com.muatik.flj.flj.UI.views.JobProgressViewHolder;
+import com.muatik.flj.flj.UI.views.JobViewHolder;
+
 import java.util.List;
 
 

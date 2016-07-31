@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:orientation="vertical"
     android:layout_marginTop="5dp"
-    android:padding="6dp" >
-
+    android:padding="6dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
     <ImageView
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp"
         android:id="@+id/history_item_icon"
-        android:src="@drawable/ic_history_black_18dp"
+        android:src="@drawable/ic_notifications_none_black_18dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
@@ -18,7 +18,8 @@
         android:layout_toEndOf="@id/history_item_icon"
         android:orientation="vertical"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout">
         <TextView
             style="@style/TextAppearance.AppCompat.Menu"
             android:id="@+id/history_keyword"
@@ -30,5 +31,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
-
+    <ImageView
+        android:id="@+id/alarm_item_menu"
+        android:padding="9dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/linearLayout"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/ic_more_vert_black_24dp"
+        android:onClick="showPopup" />
 </RelativeLayout>
