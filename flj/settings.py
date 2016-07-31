@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     "posts.apps.PostsConfig",
+    "users.apps.UsersConfig",
     "rest_framework_swagger",
     "debug_toolbar",
     'django.contrib.admin',
@@ -136,10 +137,21 @@ STATIC_URL = '/static/'
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
-    )
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        "users.backends.TokenAuthREST",
+    ),
+
 }
 
 AUTH_PROFILE_MODULE = 'posts.models.UserProfile'
+
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    "users.backends.TokenAuth"
+]
 
 GEOPOSITION_GOOGLE_MAPS_API_KEY = "ff"
 

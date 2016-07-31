@@ -17,7 +17,8 @@ class StarredJobsSerializer(serializers.ModelSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ("created_at", "gcm_id")
+        fields = ("created_at", "gcm_id", "token")
+        read_only_fields = ("token", )
 
 
 class UserSerializer(serializers.ModelSerializer):
