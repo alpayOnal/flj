@@ -1,5 +1,7 @@
 package com.muatik.flj.flj.UI.entities;
 
+import android.util.Log;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,5 +26,13 @@ public class Alarm extends JobFilter {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public boolean isSame(Alarm alarm) {
+        boolean equal = (
+                        keyword.toLowerCase().equals(alarm.keyword.toLowerCase()) &&
+                        country.toLowerCase().equals(alarm.country.toLowerCase()) &&
+                        city.toLowerCase().equals(alarm.city.toLowerCase()));
+        return equal;
     }
 }

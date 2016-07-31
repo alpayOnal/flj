@@ -22,7 +22,7 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchHistoryList extends Fragment {
+public class SearchHistoryList extends MyFragment {
 
     class ItemHolder extends BaseViewHolder {
         TextView keyword;

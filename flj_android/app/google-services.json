@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1003848116347",
+    "project_id": "fljobs-1469805409257"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1003848116347:android:ac2451affb86b2c4",
+        "android_client_info": {
+          "package_name": "com.muatik.flj.flj"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1003848116347-soo903np2a6ti6qal469o1tcpn5svnam.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.muatik.flj.flj",
+            "certificate_hash": "AF5907CA064F46CB83F62AE036761DFFD439C2B6"
+          }
+        },
+        {
+          "client_id": "1003848116347-qh913er1hcfc1f4v5m538b89582o7njf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMjShqczptcgzdF3EoB0oG_i-ZIvLVi4g"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

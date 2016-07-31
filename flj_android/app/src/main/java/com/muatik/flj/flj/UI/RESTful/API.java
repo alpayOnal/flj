@@ -3,19 +3,19 @@ package com.muatik.flj.flj.UI.RESTful;
 import android.util.Base64;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.muatik.flj.flj.UI.entities.Account;
 import com.muatik.flj.flj.UI.entities.Alarm;
 import com.muatik.flj.flj.UI.entities.Job;
+import com.muatik.flj.flj.UI.entities.StarredJob;
 
 import java.io.IOException;
 import java.util.List;
 
-import okhttp3.Authenticator;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import okhttp3.Route;
 import okio.Buffer;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -23,8 +23,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
+import retrofit2.http.Field;
 import retrofit2.http.GET;
-import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -57,15 +57,19 @@ public class API {
     }
 
 
-
-
     abstract public static class BriefCallback<T> implements Callback<T> {
         @Override
         public void onResponse(Call<T> call, retrofit2.Response<T> response) {
             if (response.isSuccessful()) {
                 onSuccess(call, response);
             } else {
-                this.onFailure(call, new Exception(response.code() + " - " + response.message()));
+                Exception e;
+                // @TODO: string.xml
+                if (response.code() == 403)
+                    e = new Exception(response.code() + " - Please login. ");
+                else
+                    e = new Exception(response.code() + " - " + response.message());
+                this.onFailure(call, e);
             }
         }
 
@@ -100,10 +104,25 @@ public class API {
         }
     }
 
-    static class AuthInterceptor implements Interceptor {
 
-        @Override public Response intercept(Interceptor.Chain chain) throws IOException {
 
+
+    /** AUTHENTICATION INTERCEPTORS AND HELPERS */
+    public static abstract  class AuthHeaderGenerator {
+        abstract public Request injectHeaders(Request request);
+    }
+
+    public static class BasicAuth extends AuthHeaderGenerator {
+        private String username;
+        private String password;
+
+        public BasicAuth(String username, String password) {
+            this.username = username;
+            this.password = password;
+        }
+
+        @Override
+        public Request injectHeaders(Request request) {
             // concatenate username and password with colon for authentication
             String credentials = username + ":" + password;
 
@@ -111,11 +130,45 @@ public class API {
             final String basic =
                     "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
 
-            Request request = chain.request().newBuilder()
+            return request.newBuilder()
                     .addHeader("Authorization", basic).build();
+        }
+    }
+
+    public static class GoogleSignin extends AuthHeaderGenerator {
+        private String email;
+        private String credential;
+
+        public GoogleSignin(String email, String credential) {
+            this.email = email;
+            this.credential = credential;
+        }
+
+        @Override
+        public Request injectHeaders(Request request) {
+            final String x_credential = String.format("%s:%s", new String[]{email, credential});
+            return request.newBuilder()
+                    .addHeader("X-CREDENTIAL", x_credential).build();
+        }
+    }
+
+    static AuthHeaderGenerator authHeaderGenerator;
+
+    public static void setAuthHeaderInterceptor(AuthHeaderGenerator generator) {
+        authHeaderGenerator= generator;
+    }
+
+    static class AuthInterceptor implements Interceptor {
+        @Override public Response intercept(Interceptor.Chain chain) throws IOException {
+            Request request = chain.request();
+            if (authHeaderGenerator !=null)
+                request = authHeaderGenerator.injectHeaders(request);
             return chain.proceed(request);
         }
     }
+    /** ENF OF AUTHENTICATION INTERCEPTORS AND HELPERS */
+
+
 
 
     static OkHttpClient client = new OkHttpClient().newBuilder()
@@ -136,6 +189,9 @@ public class API {
                 @Query("maxId") String maxId,
                 @Query("sinceId") String sinceId
         );
+
+        @POST("auth/google")
+        Call<Gson> getCredential(@Field("token") String token);
     }
 
     /**
@@ -153,17 +209,20 @@ public class API {
 
         @DELETE("alarms/{alarmId}/")
         Call<Void> deleteAlarm(@Path("alarmId") int alarmId);
+
+        @POST("starredjobs/")
+        Call<StarredJob> starJob(@Body StarredJob starredJob);
     }
 
 
 
     public static Retrofit anonymousRetrofit = new Retrofit.Builder()
-            .baseUrl("http://192.168.2.90:8000/")
+            .baseUrl("http://192.168.2.25:8000/")
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 
     public static Retrofit authorizedRetrofit = new Retrofit.Builder()
-            .baseUrl("http://192.168.2.90:8000/")
+            .baseUrl("http://192.168.2.25:8000/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build();

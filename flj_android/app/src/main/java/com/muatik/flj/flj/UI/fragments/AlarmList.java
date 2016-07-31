@@ -34,7 +34,7 @@ import retrofit2.Response;
 /**
  * Created by muatik on 7/26/16.
  */
-public class AlarmList extends Fragment {
+public class AlarmList extends MyFragment {
 
 
     // @TODO: Alarm ItemHolder ve SearchHistory ItemHolder tek bir yerde toplanabilir.
@@ -141,11 +141,12 @@ public class AlarmList extends Fragment {
     }
 
     @Subscribe
-    public void onDataChanged(Alarms.EventOnDelete event) {
+    public void onAlarmDeleted(Alarms.EventOnDelete event) {
         adapter.notifyItemRemoved(event.position);
     }
+
     @Subscribe
-    public void onDataChanged2(Alarms.EventDataChanged event) {
+    public void onDataChanged(Alarms.EventDataChanged event) {
         adapter.notifyDataSetChanged();
     }
 
