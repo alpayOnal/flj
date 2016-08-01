@@ -159,6 +159,7 @@ public class Main extends AppCompatActivity
         } else if (id == R.id.nav_share) {
             startActivity(new Intent(getApplication(), GoogleSignin.class));
         } else if (id == R.id.nav_send) {
+            startActivity(new Intent(getApplication(), Login.class));
 
         }
 
