@@ -1,4 +1,6 @@
 from django.conf.urls import url
+
+from posts import googleSignin
 from posts import user_views, job_post_view
 from rest_framework.urlpatterns import format_suffix_patterns
 
@@ -11,6 +13,7 @@ urlpatterns = [
     url(r'^starredjobs/(?P<job>[0-9]+)/$', user_views.StarredJobDetail.as_view()),
     url(r'^alarms/$', user_views.AlarmList.as_view()),
     url(r'^alarms/(?P<pk>[0-9]+)/$', user_views.AlarmDetail.as_view()),
+    url(r'^users/verifyGoogleSignin/$', googleSignin.verify),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

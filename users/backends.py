@@ -6,12 +6,12 @@ class TokenAuth(object):
     Token based django authenticator
     """
 
-    def authenticate(self, username=None, token=None, **kwargs):
+    def authenticate(self, username=None, credential=None, **kwargs):
         UserModel = get_user_model()
         try:
             user = UserModel._default_manager.get_by_natural_key(username)
             if (
-                        user.userprofile.check_token(token) and
+                        user.userprofile.check_credential(credential) and
                         self.user_can_authenticate(user)
             ):
                 return user
@@ -52,7 +52,7 @@ class TokenAuthREST(TokenAuth):
             credential = request.META['HTTP_X_CREDENTIAL']
             user = UserModel._default_manager.get_by_natural_key(username)
             if (
-                        user.userprofile.check_token(credential) and
+                        user.userprofile.check_credential(credential) and
                         self.user_can_authenticate(user)
             ):
                 return user, None

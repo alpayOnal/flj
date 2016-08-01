@@ -17,8 +17,8 @@ class StarredJobsSerializer(serializers.ModelSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ("created_at", "gcm_id", "token")
-        read_only_fields = ("token", )
+        fields = ("created_at", "gcm_id", "credential", "picture")
+        read_only_fields = ("credential", )
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -28,7 +28,8 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("id", "username", "email", "password", "userprofile")
+        fields = ("id", "first_name", "last_name", "username", "email",
+                  "password", "userprofile")
 
     def create(self, validated_data):
         profile_data = validated_data.pop("userprofile")

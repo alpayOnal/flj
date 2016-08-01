@@ -14,13 +14,15 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     gcm_id = models.CharField(max_length=200, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    token = models.CharField(max_length=100, blank=True)
+    picture = models.CharField(max_length=255, blank=True)
+    credential = models.CharField(max_length=100, blank=True)
 
-    def check_token(self, token):
-        return self.token == token
+    def check_credential(self, credential):
+        return self.credential == credential
 
 
 class JobPost(models.Model):
+    # @TODO: email must be lowercase too. check it out.
     STATE_INACTIVE = 0
     STATE_ACTIVE = 1
     STATES = [

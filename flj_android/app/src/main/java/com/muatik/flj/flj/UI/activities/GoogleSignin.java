@@ -45,6 +45,7 @@ public class GoogleSignin extends AppCompatActivity  implements
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
+                .requestIdToken("223265251589-b1ojj9mj6pitskb9oh0rksifg3qijje5.apps.googleusercontent.com")
                 .build();
         // [END configure_signin]
 
@@ -119,8 +120,10 @@ public class GoogleSignin extends AppCompatActivity  implements
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
             updateUI(true);
-            Log.d("---", result.getSignInAccount().getEmail());
-            Log.d("---", result.getSignInAccount().getDisplayName());
+            Log.e("---", result.getSignInAccount().getIdToken());
+            Log.e("---", result.getSignInAccount().getPhotoUrl().toString());
+            Log.e("---", result.getSignInAccount().getEmail());
+            Log.e("---", result.getSignInAccount().getDisplayName());
         } else {
             // Signed out, show unauthenticated UI.
             updateUI(false);

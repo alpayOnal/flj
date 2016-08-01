@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "1003848116347",
-    "project_id": "fljobs-1469805409257"
+    "project_number": "223265251589",
+    "project_id": "firebase-fljob"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1003848116347:android:ac2451affb86b2c4",
+        "mobilesdk_app_id": "1:223265251589:android:ac2451affb86b2c4",
         "android_client_info": {
           "package_name": "com.muatik.flj.flj"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1003848116347-soo903np2a6ti6qal469o1tcpn5svnam.apps.googleusercontent.com",
+          "client_id": "223265251589-23rojg19po4s9th4juuls4m4p4ujn12d.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.muatik.flj.flj",
-            "certificate_hash": "AF5907CA064F46CB83F62AE036761DFFD439C2B6"
+            "certificate_hash": "83810DF0970B1AC5B660B85BBA6BE85F39B2A77A"
           }
         },
         {
-          "client_id": "1003848116347-qh913er1hcfc1f4v5m538b89582o7njf.apps.googleusercontent.com",
+          "client_id": "223265251589-b1ojj9mj6pitskb9oh0rksifg3qijje5.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDMjShqczptcgzdF3EoB0oG_i-ZIvLVi4g"
+          "current_key": "AIzaSyBIHIMgLv4Sq9bAJ7b_sMTW-8DYl17F-8A"
         }
       ],
       "services": {
