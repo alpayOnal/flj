@@ -51,7 +51,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class Login extends AppCompatActivity implements
-        GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.OnConnectionFailedListener, View.OnClickListener  {
     Context thisContext;
     LoginButton fbLoginButton;
     CallbackManager fbCallbackManager;
@@ -60,16 +60,18 @@ public class Login extends AppCompatActivity implements
 
     private GoogleApiClient googleApiClient;
 
-    @BindView(R.id.google_signin)  Button google_signin;
-    @BindView(R.id.google_signout)  Button google_signout;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //this row must be BEFORE setContentView()
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
+        ButterKnife.bind(this);
+
         //google login
+
+        findViewById(R.id.google_signin).setOnClickListener(this);
+        findViewById(R.id.google_signout).setOnClickListener(this);
 
         // [START configure_signin]
         // Configure sign-in to request the user's ID, email address, and basic
@@ -88,7 +90,7 @@ public class Login extends AppCompatActivity implements
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
-        SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
+        SignInButton signInButton = (SignInButton) findViewById(R.id.google_signin);
         signInButton.setSize(SignInButton.SIZE_STANDARD);
         signInButton.setScopes(gso.getScopeArray());
         // end of google login
@@ -174,14 +176,8 @@ public class Login extends AppCompatActivity implements
         }
     }
 
-    @Override
-    public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
-        View view = super.onCreateView(parent, name, context, attrs);
-        ButterKnife.bind(this, view);
-        return view;
-    }
 
-    @Override
+      @Override
     public void onStart() {
         super.onStart();
 
@@ -252,10 +248,9 @@ public class Login extends AppCompatActivity implements
 
     private void updateGoogleLoginUI(boolean signedIn) {
         if (signedIn) {
-            google_signin.setVisibility(View.GONE);
+            findViewById(R.id.google_signout).setVisibility(View.GONE);
         } else {
-
-            google_signout.setVisibility(View.VISIBLE);
+            findViewById(R.id.google_signin).setVisibility(View.VISIBLE);
         }
     }
 
@@ -273,4 +268,17 @@ public class Login extends AppCompatActivity implements
     public void onConnectionFailed(ConnectionResult connectionResult) {
         Log.d("FLJ-googlelogin", "onConnectionFailed:" + connectionResult);
     }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.google_signin:
+                googleSignIn();
+                break;
+            case R.id.google_signout:
+                googleSignOut();
+                break;
+        }
+    }
+
 }
