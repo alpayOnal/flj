@@ -57,21 +57,21 @@ public class Login extends AppCompatActivity {
         }
 
         //BEGIN OF KEYHASH CODE (once retrieved the keyhash you can remove this code)
-        try{
-            PackageInfo info = getPackageManager().getPackageInfo(
-                    "com.muatik.flj.flj", PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-                //This line will log the KeyHash you have to put in your facebook app settings in the facebook developer panel
-
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-
-        } catch (NoSuchAlgorithmException e) {
-
-        }
+//        try{
+//            PackageInfo info = getPackageManager().getPackageInfo(
+//                    "com.muatik.flj.flj", PackageManager.GET_SIGNATURES);
+//            for (Signature signature : info.signatures) {
+//                MessageDigest md = MessageDigest.getInstance("SHA");
+//                md.update(signature.toByteArray());
+//                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+//                //This line will log the KeyHash you have to put in your facebook app settings in the facebook developer panel
+//
+//            }
+//        } catch (PackageManager.NameNotFoundException e) {
+//
+//        } catch (NoSuchAlgorithmException e) {
+//
+//        }
         // END OF KEYHASH CODE
 
         fbLoginButton = (LoginButton) findViewById(R.id.facebook_login);
@@ -86,8 +86,11 @@ public class Login extends AppCompatActivity {
             @Override
             public void onSuccess(LoginResult loginResult) {
 
-
-                Log.v("AccessToken:", loginResult.getAccessToken().toString());
+                Log.v("token:",        "User ID: "
+                                + loginResult.getAccessToken().getUserId()
+                                + "\n" +
+                                "Auth Token: "
+                                + loginResult.getAccessToken().getToken());
 
                 // App code
                 GraphRequest request = GraphRequest.newMeRequest(
@@ -102,8 +105,11 @@ public class Login extends AppCompatActivity {
 
                                 try {
                                     Log.v("Name:", response.getJSONObject().get("name").toString());
+
                                     Toast.makeText(getApplicationContext(), "Welcome " + response.getJSONObject().get("name").toString() +
                                                     "\n" + response.getJSONObject().get("email").toString(),
+
+
                                             Toast.LENGTH_LONG).show();
                                 } catch (JSONException e) {
                                     e.printStackTrace();
