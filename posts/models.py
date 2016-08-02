@@ -1,3 +1,5 @@
+import random
+
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -17,8 +19,11 @@ class UserProfile(models.Model):
     picture = models.CharField(max_length=255, blank=True)
     credential = models.CharField(max_length=100, blank=True)
 
+    def generate_credential(self):
+        return random.randint(100000, 10000000)
+
     def check_credential(self, credential):
-        return self.credential == credential
+        return str(self.credential) == str(credential)
 
 
 class JobPost(models.Model):
