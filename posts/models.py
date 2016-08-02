@@ -1,7 +1,9 @@
 import random
 
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
+import hashlib
 
 
 class LowerCaseCharField(models.CharField):
@@ -20,10 +22,47 @@ class UserProfile(models.Model):
     credential = models.CharField(max_length=100, blank=True)
 
     def generate_credential(self):
-        return random.randint(100000, 10000000)
+        rand_chunk = random.randint(100000, 10000000)
+        credential = hashlib.md5()
+        credential.update("{}{}{}".format(
+            self.id, self.created_at, rand_chunk).encode("UTF-8"))
+        return credential.hexdigest()
 
     def check_credential(self, credential):
         return str(self.credential) == str(credential)
+
+    @classmethod
+    def getOrCreateUser(cls, username, email, first_name, last_name, picture):
+        """
+        find user associated with username and updates its data or create a user
+
+        :param username:
+        :param email:
+        :param first_name:
+        :param last_name:
+        :param picture:
+        :return: User
+        """
+        try:
+            user = User.objects.get(username=username)
+            profile = user.userprofile
+            credential = profile.credential
+        except ObjectDoesNotExist:
+            user = User()
+            user.email = email
+            user.username = username
+            profile = UserProfile()
+            credential = profile.generate_credential()
+
+        user.first_name = first_name
+        user.last_name = last_name
+        user.save()
+
+        profile.credential = credential
+        profile.picture = picture
+        profile.user = user
+        profile.save()
+        return user
 
 
 class JobPost(models.Model):

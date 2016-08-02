@@ -1,14 +1,19 @@
-import random
-
 import requests
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import User
 
 from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
-from django.core.exceptions import ObjectDoesNotExist
 
 from posts.models import UserProfile
+
+
+def redirectToUser(http_request, user):
+    # because getUser needs authentication, login process is here.
+    user = authenticate(
+        username=user.username,
+        credential=user.userprofile.credential)
+    login(http_request, user)
+    return redirect("getUser", user.id)
 
 
 @csrf_exempt
@@ -33,34 +38,19 @@ def verifyGoogleSignin(http_request):
     family_name = data["family_name"]
     picture = data["picture"]
 
-    try:
-        user = User.objects.get(email=email)
-        userprofile = user.userprofile
-        credential = userprofile.credential
-    except ObjectDoesNotExist:
-        user = User()
-        user.email = email
-        user.username = email
-        userprofile = UserProfile()
-        credential = userprofile.generate_credential()
-
-    user.first_name = given_name
-    user.last_name = family_name
-    user.save()
-
-    userprofile.credential = credential
-    userprofile.picture = picture
-    userprofile.user = user
-    userprofile.save()
-
-    # because getUser needs authentication, login process is here.
-    user = authenticate(username=email, credential=credential)
-    login(http_request, user)
-    return redirect("getUser", 1)
+    user = UserProfile.getOrCreateUser(
+        username=email,
+        email=email,
+        first_name=given_name,
+        last_name=family_name,
+        picture=picture
+    )
+    return redirectToUser(http_request, user)
 
 
 @csrf_exempt
 def verifyFacebookSignin(http_request):
+
     token = http_request.POST["token"]
     fbProfileId = http_request.POST["profileId"]
     url = "https://graph.facebook.com/{}?fields=id," \
@@ -70,31 +60,16 @@ def verifyFacebookSignin(http_request):
     data = requests.get(url).json()
     nameParts = data["name"].split(" ")
     email = data["email"]
-    given_name = nameParts[0]
-    family_name = nameParts[1] if len(nameParts) > 1 else ""
+    first_name = nameParts[0]
+    last_name = nameParts[1] if len(nameParts) > 1 else ""
     picture = data["picture"]["data"]["url"]
 
-    try:
-        user = User.objects.get(email=email)
-        userprofile = user.userprofile
-        credential = userprofile.credential
-    except ObjectDoesNotExist:
-        user = User()
-        user.email = email
-        user.username = email
-        userprofile = UserProfile()
-        credential = userprofile.generate_credential()
+    user = UserProfile.getOrCreateUser(
+        username=email,
+        email=email,
+        first_name=first_name,
+        last_name=last_name,
+        picture=picture
+        )
 
-    user.first_name = given_name
-    user.last_name = family_name
-    user.save()
-
-    userprofile.credential = credential
-    userprofile.picture = picture
-    userprofile.user = user
-    userprofile.save()
-
-    # because getUser needs authentication, login process is here.
-    user = authenticate(username=email, credential=credential)
-    login(http_request, user)
-    return redirect("getUser", user.id)
+    return redirectToUser(http_request, user)
