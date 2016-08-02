@@ -6,6 +6,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageInstaller;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
@@ -13,6 +14,8 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -60,6 +63,19 @@ public class Login extends AppCompatActivity implements
 
     private GoogleApiClient googleApiClient;
 
+    @BindView(R.id.signup_name)  EditText etUsername_signup;
+    @BindView(R.id.signup_email) EditText etEmail_signup;
+    @BindView(R.id.signup_password) EditText etPassword_signup;
+
+    @BindView(R.id.signin_email) EditText etEmail_signin;
+    @BindView(R.id.signin_password) EditText etPassword_signin;
+    @BindView(R.id.signin) Button btSignin;
+    @BindView(R.id.signup) Button btSignup;
+    @BindView(R.id.link_signup)  TextView linkSignup;
+    @BindView(R.id.link_login)  TextView linkLogin;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,7 +107,10 @@ public class Login extends AppCompatActivity implements
                 .build();
 
         SignInButton signInButton = (SignInButton) findViewById(R.id.google_signin);
-        signInButton.setSize(SignInButton.SIZE_STANDARD);
+        signInButton.setSize(SignInButton.SIZE_WIDE);
+        signInButton.setEnabled(true);
+        signInButton.setColorScheme(SignInButton.COLOR_DARK);
+
         signInButton.setScopes(gso.getScopeArray());
         // end of google login
 
@@ -281,4 +300,27 @@ public class Login extends AppCompatActivity implements
         }
     }
 
+
+    // form signin and signup
+    @OnClick(R.id.signin)
+    public void formSignin() {
+        Log.d("FLJ", etEmail_signin.getText() +"-" + etPassword_signin.getText() );
+    }
+
+    @OnClick(R.id.signup)
+    public void formSignup() {
+        Log.d("FLJ", etUsername_signup.getText() +"-" +etEmail_signup.getText() +"-" + etPassword_signup.getText());
+    }
+
+    @OnClick(R.id.link_signup)
+    public void link_signup() {
+        findViewById(R.id.signin_layout).setVisibility(View.GONE);
+        findViewById(R.id.signup_layout).setVisibility(View.VISIBLE);
+    }
+
+    @OnClick(R.id.link_login)
+    public void link_login() {
+        findViewById(R.id.signin_layout).setVisibility(View.VISIBLE);
+        findViewById(R.id.signup_layout).setVisibility(View.GONE);
+    }
 }

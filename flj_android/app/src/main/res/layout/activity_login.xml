@@ -16,6 +16,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+
             android:orientation="vertical">
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -42,8 +45,8 @@
                     android:layout_height="wrap_content">
                     <com.google.android.gms.common.SignInButton
                         android:id="@+id/google_signin"
-                        android:layout_width="221dp"
-                        android:layout_height="50dp"
+                        android:layout_width="255dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginBottom="5dp"
                         android:layout_marginTop="5dp"
                         android:layout_gravity="center"
@@ -55,7 +58,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="sign_out"
+                        android:text="Sign out Google"
                         android:visibility="gone"
                         tools:visibility="visible"/>
                 </LinearLayout>
@@ -63,8 +66,8 @@
                 <com.facebook.login.widget.LoginButton
                     android:id="@+id/facebook_login"
                     android:background="@color/com_facebook_blue"
-                    android:layout_width="221dp"
-                    android:layout_height="50dp"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
                     android:layout_marginTop="5dp"
                     android:layout_gravity="center"
@@ -75,59 +78,124 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/signin_layout"
                 android:layout_weight="0.5"
                 android:orientation="vertical">
-
-                <EditText
-                    android:id="@+id/username"
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="-2dp"
-                    android:padding="10dp"
-                    android:hint="Email"
-                    android:textColorHint="#bbbbbb"
-                    android:drawableLeft="@drawable/user"/>
-                <EditText
-                    android:id="@+id/email"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp">
+                    <EditText
+                        android:id="@+id/signin_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="-2dp"
+                        android:padding="10dp"
+                        android:hint="Email"
+                        android:textColorHint="#bbbbbb"
+                        android:drawableLeft="@drawable/email"/>
+                </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="-2dp"
-                    android:padding="10dp"
-                    android:hint="Email"
-                    android:textColorHint="#bbbbbb"
-                    android:drawableLeft="@drawable/email"/>
-                <EditText
-                    android:id="@+id/password"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp">
+                    <EditText
+                        android:id="@+id/signin_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="-2dp"
+                        android:padding="10dp"
+                        android:hint="Password"
+                        android:textColorHint="#cccccc"
+                        android:inputType="textPassword"
+                        android:drawableLeft="@drawable/password"/>
+                </android.support.design.widget.TextInputLayout>
+                <Button
+                    android:id="@+id/signin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="-2dp"
-                    android:padding="10dp"
-                    android:hint="Password"
-                    android:textColorHint="#cccccc"
-                    android:inputType="textPassword"
-                    android:drawableLeft="@drawable/password"/>
-                <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="24dp"
+                    android:padding="12dp"
+                    android:layout_margin="4dp"
+                    android:text="Sign in" />
+                <TextView android:id="@+id/link_signup"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp"
+                    android:text="No account yet? Create one"
                     android:gravity="center"
-                    android:orientation="horizontal">
+                    android:textSize="16dip"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/signup_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:visibility="gone"
+                android:orientation="vertical">
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp">
+                    <EditText
+                        android:id="@+id/signup_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="-2dp"
+                        android:padding="10dp"
+                        android:hint="Name"
+                        android:textColorHint="#bbbbbb"
+                        android:drawableLeft="@drawable/user"/>
+                </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp">
+                    <EditText
+                        android:id="@+id/signup_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="-2dp"
+                        android:padding="10dp"
+                        android:hint="Email"
+                        android:textColorHint="#bbbbbb"
+                        android:drawableLeft="@drawable/email"/>
+                </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp">
+                    <EditText
+                        android:id="@+id/signup_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="-2dp"
+                        android:padding="10dp"
+                        android:hint="Password"
+                        android:textColorHint="#cccccc"
+                        android:inputType="textPassword"
+                        android:drawableLeft="@drawable/password"/>
+                </android.support.design.widget.TextInputLayout>
                     <Button
-                        android:id="@+id/signin"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/signup"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="10dp"
                         android:layout_margin="4dp"
-                        android:text="Sign in"
-                        />
-                    <Button
-                        android:id="@+id/sigup"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:layout_margin="4dp"
-                        android:text="Sign up"
-                        />
-                </LinearLayout>
+                        android:text="Sign up"/>
+                <TextView android:id="@+id/link_login"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp"
+                    android:text="Already a member? Login"
+                    android:gravity="center"
+                    android:textSize="16dip"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
