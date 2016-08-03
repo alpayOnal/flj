@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.muatik.flj.flj.R;
 import com.muatik.flj.flj.UI.RESTful.API;
+import com.muatik.flj.flj.UI.entities.AccountManager;
 import com.muatik.flj.flj.UI.entities.Alarms;
 import com.muatik.flj.flj.UI.utilities.BusManager;
 import com.muatik.flj.flj.UI.adapters.RecyclerViewAdapter;
@@ -98,7 +99,7 @@ public class AlarmList extends MyFragment {
     List<Alarm> data;
     RecyclerView listView;
     RecyclerViewAdapter<Alarm> adapter;
-;
+
 
     @Nullable
     @Override
@@ -149,5 +150,6 @@ public class AlarmList extends MyFragment {
     public void onDataChanged(Alarms.EventDataChanged event) {
         adapter.notifyDataSetChanged();
     }
+
 
 }

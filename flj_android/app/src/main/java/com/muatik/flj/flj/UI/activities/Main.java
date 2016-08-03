@@ -3,6 +3,7 @@ package com.muatik.flj.flj.UI.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.multidex.MultiDex;
 import android.support.v4.app.Fragment;
@@ -16,13 +17,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.google.android.gms.common.api.Api;
-import com.google.gson.Gson;
 import com.muatik.flj.flj.R;
-import com.muatik.flj.flj.UI.RESTful.API;
-import com.muatik.flj.flj.UI.entities.Account;
 import com.muatik.flj.flj.UI.entities.AccountManager;
-import com.muatik.flj.flj.UI.entities.Alarm;
 import com.muatik.flj.flj.UI.entities.Alarms;
 import com.muatik.flj.flj.UI.entities.SearchHistory;
 import com.muatik.flj.flj.UI.fragments.SearchForm;
@@ -33,10 +29,6 @@ import com.muatik.flj.flj.UI.fragments.*;
 import com.muatik.flj.flj.UI.fragments.JobList;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by muatik on 25.07.2016.
@@ -63,8 +55,8 @@ public class Main extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        AccountManager.signin("amuatik", "123456");
-
+//        AccountManager.signinBasicAuth("amuatik", "123456");
+        Log.e("FLJ", "main opening");
         Alarms.init(getApplicationContext());
         SearchHistory.init(getApplicationContext());
 //        Alarms.init(getApplicationContext());
@@ -103,7 +95,7 @@ public class Main extends AppCompatActivity
     }
 
     @Subscribe
-    public void onSignedIn(AccountManager.onSuccessfulSignIn event) {
+    public void onSignedIn(AccountManager.EventSuccessfulSignIn event) {
         Toast.makeText(this, "Welcome: " + event.account.getUsername(), Toast.LENGTH_LONG).show();
     }
 
@@ -150,8 +142,8 @@ public class Main extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-//            Account.Manager.signin("kamil", "412");
-            AccountManager.signin("muatik", "123456");
+//            Account.Manager.signinBasicAuth("kamil", "412");
+            AccountManager.signinBasicAuth("muatik", "123456");
             Alarms.init(getApplicationContext());
         } else if (id == R.id.nav_gallery) {
             showFragment(new SearchForm());
@@ -190,6 +182,7 @@ public class Main extends AppCompatActivity
     @Override
     protected void onStop() {
         BusManager.get().unregister(this);
+        AccountManager.saveState(PreferenceManager.getDefaultSharedPreferences(this));
         super.onStop();
     }
 

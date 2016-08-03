@@ -103,17 +103,25 @@ public class API {
         }
     }
 
-
-
-
     /** AUTHENTICATION INTERCEPTORS AND HELPERS */
     public static abstract  class AuthHeaderGenerator {
+        public static String name = "AuthHeaderGenerator";
+
+        public String getName() {
+            return name;
+        }
+
         abstract public Request injectHeaders(Request request);
     }
 
     public static class BasicAuth extends AuthHeaderGenerator {
+        public final String name = "BasicAuth";
         private String username;
         private String password;
+
+        public String getName() {
+            return name;
+        }
 
         public BasicAuth(String username, String password) {
             this.username = username;
@@ -135,6 +143,7 @@ public class API {
     }
 
     public static class GoogleSignin extends AuthHeaderGenerator {
+        public final String name = "GoogleSignin";
         private String username;
         private String credential;
 
@@ -152,6 +161,7 @@ public class API {
     }
 
     public static class FacebookSignin extends AuthHeaderGenerator {
+        public final String name = "FacebookSignin";
         private String username;
         private String credential;
 

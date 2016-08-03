@@ -2,15 +2,9 @@ package com.muatik.flj.flj.UI.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageInstaller;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
-import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.AttributeSet;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -18,15 +12,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.Profile;
-import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
@@ -40,18 +29,17 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.muatik.flj.flj.R;
+import com.muatik.flj.flj.UI.entities.AccountManager;
+import com.muatik.flj.flj.UI.utilities.BusManager;
+import com.squareup.otto.Subscribe;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
-import java.util.StringTokenizer;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 
 public class Login extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener, View.OnClickListener  {
@@ -73,17 +61,9 @@ public class Login extends AppCompatActivity implements
     @BindView(R.id.signup) Button btSignup;
     @BindView(R.id.link_signup)  TextView linkSignup;
     @BindView(R.id.link_login)  TextView linkLogin;
+    private Unbinder unbinder;
 
-
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        //this row must be BEFORE setContentView()
-        FacebookSdk.sdkInitialize(getApplicationContext());
-        setContentView(R.layout.activity_login);
-        ButterKnife.bind(this);
-
+    void prepareGoogle() {
         //google login
 
         findViewById(R.id.google_signin).setOnClickListener(this);
@@ -113,72 +93,72 @@ public class Login extends AppCompatActivity implements
 
         signInButton.setScopes(gso.getScopeArray());
         // end of google login
+    }
 
-        // facebooklogin
-        Profile profile = Profile.getCurrentProfile().getCurrentProfile();
-        if (profile != null) {
-            Log.d("aaa","logged in");
-            // user has logged in
-        } else {
-            Log.d("aaa","not logged in");
-            // user has not logged in
+    private void showApp() {
+        startActivity(new Intent(this, Main.class));
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        AccountManager.loadState(PreferenceManager.getDefaultSharedPreferences(this));
+        if (AccountManager.isAuthenticated()) {
+            showApp();
         }
 
+        //this row must be BEFORE setContentView()
+        FacebookSdk.sdkInitialize(getApplicationContext());
+
+        setContentView(R.layout.activity_login);
+        unbinder = ButterKnife.bind(this);
+
+        prepareGoogle();
+        prepareFacebookLogin();
+        BusManager.get().register(this);
+    }
+
+    private void prepareFacebookLogin() {
+//        Profile profile = Profile.getCurrentProfile().getCurrentProfile();
+//        if (profile != null) {
+//            Log.d("aaa","logged in");
+//        } else {
+//            // user has not logged in
+//        }
+
+        List<String> permissions = Arrays.asList("public_profile, email");
         fbLoginButton = (LoginButton) findViewById(R.id.facebook_login);
-        fbLoginButton.setReadPermissions(Arrays.asList("public_profile, email"));
+        fbLoginButton.setReadPermissions(permissions);
         fbCallbackManager = CallbackManager.Factory.create();
         fbLoginButton.registerCallback(fbCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-
-                Log.v("token:",        "User ID: "
-                                + loginResult.getAccessToken().getUserId()
-                                + "\n" +
-                                "Auth Token: "
-                                + loginResult.getAccessToken().getToken());
-
-                // App code
-                GraphRequest request = GraphRequest.newMeRequest(
-                        loginResult.getAccessToken(),
-                        new GraphRequest.GraphJSONObjectCallback() {
-                            @Override
-                            public void onCompleted(
-                                    JSONObject object,
-                                    GraphResponse response) {
-
-                                Log.v("LoginActivity", response.toString());
-
-                                try {
-                                    Log.v("Name:", response.getJSONObject().get("name").toString());
-
-                                    Toast.makeText(getApplicationContext(), "Welcome " + response.getJSONObject().get("name").toString() +
-                                                    "\n" + response.getJSONObject().get("email").toString(),
-
-
-                                            Toast.LENGTH_LONG).show();
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
-                Bundle parameters = new Bundle();
-                parameters.putString("fields", "id,name,email");
-                request.setParameters(parameters);
-                request.executeAsync();
+                String profileId = loginResult.getAccessToken().getUserId();
+                String token = loginResult.getAccessToken().getToken();
+                Log.e("FLJ", "login fb onSuccess");
+                AccountManager.signinViaFacebook(profileId, token);
             }
 
             @Override
-            public void onCancel() {
-                // App code
-                Toast.makeText(thisContext, "Cancel!", Toast.LENGTH_LONG).show();
-            }
+            public void onCancel() {}
 
             @Override
-            public void onError(FacebookException exception) {
-                // App code
-                Toast.makeText(thisContext, "Facebook error!", Toast.LENGTH_LONG).show();
-            }
+            public void onError(FacebookException exception) {}
         });
+    }
+
+    @Subscribe
+    public void onSuccessfulSignIn(AccountManager.EventSuccessfulSignIn event) {
+        Log.e("FLJ", "login onSuccessfulSignIn");
+        showApp();
+    }
+
+    @Override
+    protected void onDestroy() {
+        unbinder.unbind();
+        BusManager.get().unregister(this);
+        super.onDestroy();
     }
 
     @Override
@@ -301,10 +281,13 @@ public class Login extends AppCompatActivity implements
     }
 
 
-    // form signin and signup
+    // form signinBasicAuth and signup
     @OnClick(R.id.signin)
     public void formSignin() {
         Log.d("FLJ", etEmail_signin.getText() +"-" + etPassword_signin.getText() );
+        AccountManager.signinBasicAuth(
+                etEmail_signin.getText().toString(),
+                etPassword_signin.getText().toString());
     }
 
     @OnClick(R.id.signup)
