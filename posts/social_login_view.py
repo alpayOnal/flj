@@ -1,10 +1,10 @@
 import requests
 from django.contrib.auth import authenticate, login
-
+from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
-
 from posts.models import UserProfile
+from posts.serializers import UserSerializer
 
 
 def redirectToUser(http_request, user):
@@ -45,7 +45,7 @@ def verifyGoogleSignin(http_request):
         last_name=family_name,
         picture=picture
     )
-    return redirectToUser(http_request, user)
+    return JsonResponse(UserSerializer(user).data)
 
 
 @csrf_exempt
@@ -72,4 +72,4 @@ def verifyFacebookSignin(http_request):
         picture=picture
         )
 
-    return redirectToUser(http_request, user)
+    return JsonResponse(UserSerializer(user).data)

@@ -3,7 +3,6 @@ package com.muatik.flj.flj.UI.RESTful;
 import android.util.Base64;
 import android.util.Log;
 
-import com.google.gson.Gson;
 import com.muatik.flj.flj.UI.entities.Account;
 import com.muatik.flj.flj.UI.entities.Alarm;
 import com.muatik.flj.flj.UI.entities.Job;
@@ -24,6 +23,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -45,7 +45,6 @@ public class API {
     }
 
     private static String bodyToString(final Request request){
-
         try {
             final Request copy = request.newBuilder().build();
             final Buffer buffer = new Buffer();
@@ -104,17 +103,25 @@ public class API {
         }
     }
 
-
-
-
     /** AUTHENTICATION INTERCEPTORS AND HELPERS */
     public static abstract  class AuthHeaderGenerator {
+        public static String name = "AuthHeaderGenerator";
+
+        public String getName() {
+            return name;
+        }
+
         abstract public Request injectHeaders(Request request);
     }
 
     public static class BasicAuth extends AuthHeaderGenerator {
+        public final String name = "BasicAuth";
         private String username;
         private String password;
+
+        public String getName() {
+            return name;
+        }
 
         public BasicAuth(String username, String password) {
             this.username = username;
@@ -136,19 +143,39 @@ public class API {
     }
 
     public static class GoogleSignin extends AuthHeaderGenerator {
-        private String email;
+        public final String name = "GoogleSignin";
+        private String username;
         private String credential;
 
-        public GoogleSignin(String email, String credential) {
-            this.email = email;
+        public GoogleSignin(String username, String credential) {
+            this.username = username;
             this.credential = credential;
         }
 
         @Override
         public Request injectHeaders(Request request) {
-            final String x_credential = String.format("%s:%s", new String[]{email, credential});
+            final String x_credential = String.format("%s:%s", new String[]{username, credential});
             return request.newBuilder()
                     .addHeader("X-CREDENTIAL", x_credential).build();
+        }
+    }
+
+    public static class FacebookSignin extends AuthHeaderGenerator {
+        public final String name = "FacebookSignin";
+        private String username;
+        private String credential;
+
+        public FacebookSignin(String username, String credential) {
+            this.username = username;
+            this.credential = credential;
+        }
+
+        @Override
+        public Request injectHeaders(Request request) {
+            return request.newBuilder()
+                    .addHeader("X-USERNAME", username)
+                    .addHeader("X-CREDENTIAL", credential)
+                    .build();
         }
     }
 
@@ -190,8 +217,13 @@ public class API {
                 @Query("sinceId") String sinceId
         );
 
-        @POST("auth/google")
-        Call<Gson> getCredential(@Field("token") String token);
+        @POST("users/verifyGoogleSignin/")
+        Call<Account> verifyGoogleSignin(@Field("token") String token);
+
+        @FormUrlEncoded
+        @POST("users/verifyFacebookSignin/")
+        Call<Account> verifyFacebookSignin(
+                @Field("profileId") String profileId, @Field("token") String token);
     }
 
     /**
