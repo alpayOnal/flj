@@ -162,9 +162,10 @@ public class Main extends AppCompatActivity
         } else if (id == R.id.nav_share) {
             startActivity(new Intent(getApplication(), GoogleSignin.class));
         } else if (id == R.id.nav_send) {
-            AccountManager.signinViaFacebook(
-                    "10208001818737951",
-                    "EAAd4bmHTWS4BAJCx2dGUhJ6dZAtjwuLacxWOOrEzsfsqlODZAZCUpprAjuzo8CZBhSi87IyK1c4bXiqNF50EYmzPmsJkaaaRlUXtBcUbbRyPiyitKPFsOx6GoZAUibDcGYGuBSj7XkYt8Cg4KIn6DzVDaWDQhcMK3RougKMxKO1xFR7WqAPz5MeePfFO4OexZAo7FbK11dxwZDZD");
+//            AccountManager.signinViaFacebook(
+//                    "10208001818737951",
+//                    "EAAd4bmHTWS4BAJCx2dGUhJ6dZAtjwuLacxWOOrEzsfsqlODZAZCUpprAjuzo8CZBhSi87IyK1c4bXiqNF50EYmzPmsJkaaaRlUXtBcUbbRyPiyitKPFsOx6GoZAUibDcGYGuBSj7XkYt8Cg4KIn6DzVDaWDQhcMK3RougKMxKO1xFR7WqAPz5MeePfFO4OexZAo7FbK11dxwZDZD");
+            startActivity(new Intent(getApplication(), Login.class));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
