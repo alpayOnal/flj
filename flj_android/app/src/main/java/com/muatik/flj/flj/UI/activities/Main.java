@@ -11,10 +11,13 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.Api;
+import com.google.gson.Gson;
 import com.muatik.flj.flj.R;
 import com.muatik.flj.flj.UI.RESTful.API;
 import com.muatik.flj.flj.UI.entities.Account;
@@ -159,7 +162,9 @@ public class Main extends AppCompatActivity
         } else if (id == R.id.nav_share) {
             startActivity(new Intent(getApplication(), GoogleSignin.class));
         } else if (id == R.id.nav_send) {
-
+            AccountManager.signinViaFacebook(
+                    "10208001818737951",
+                    "EAAd4bmHTWS4BAJCx2dGUhJ6dZAtjwuLacxWOOrEzsfsqlODZAZCUpprAjuzo8CZBhSi87IyK1c4bXiqNF50EYmzPmsJkaaaRlUXtBcUbbRyPiyitKPFsOx6GoZAUibDcGYGuBSj7XkYt8Cg4KIn6DzVDaWDQhcMK3RougKMxKO1xFR7WqAPz5MeePfFO4OexZAo7FbK11dxwZDZD");
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

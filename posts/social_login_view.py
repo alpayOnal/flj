@@ -3,12 +3,16 @@ import random
 import requests
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
+from django.http import HttpResponse
+from django.http import JsonResponse
 
 from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.response import Response
 
 from posts.models import UserProfile
+from posts.serializers import UserSerializer
 
 
 @csrf_exempt
@@ -56,7 +60,8 @@ def verifyGoogleSignin(http_request):
     # because getUser needs authentication, login process is here.
     user = authenticate(username=email, credential=credential)
     login(http_request, user)
-    return redirect("getUser", 1)
+    # return redirect("getUser", 1)
+    return JsonResponse(UserSerializer(user).data)
 
 
 @csrf_exempt
@@ -66,7 +71,7 @@ def verifyFacebookSignin(http_request):
     url = "https://graph.facebook.com/{}?fields=id," \
           "name,birthday,email,gender,hometown,location," \
           "picture&access_token={}".format(fbProfileId, token)
-
+    print(url)
     data = requests.get(url).json()
     nameParts = data["name"].split(" ")
     email = data["email"]
@@ -97,4 +102,4 @@ def verifyFacebookSignin(http_request):
     # because getUser needs authentication, login process is here.
     user = authenticate(username=email, credential=credential)
     login(http_request, user)
-    return redirect("getUser", user.id)
+    return JsonResponse(UserSerializer(user).data)

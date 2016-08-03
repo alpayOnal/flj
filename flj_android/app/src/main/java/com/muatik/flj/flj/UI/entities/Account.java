@@ -21,6 +21,8 @@ public class Account implements Serializable {
     private String email;
     private String password;
 
+    public UserProfile userprofile;
+
     public Account(int userId, String username, String email, String password) {
         this.userId = userId;
         this.username = username;
@@ -38,5 +40,29 @@ public class Account implements Serializable {
 
     public String getPassword() {
         return password;
+    }
+
+    public class UserProfile {
+
+        private String created_at;
+        private String gcm_id;
+        private String picture;
+        private String credential;
+
+        public String getCreated_at() {
+            return created_at;
+        }
+
+        public String getGcm_id() {
+            return gcm_id;
+        }
+
+        public String getPicture() {
+            return picture;
+        }
+
+        public String getCredential() {
+            return credential;
+        }
     }
 }

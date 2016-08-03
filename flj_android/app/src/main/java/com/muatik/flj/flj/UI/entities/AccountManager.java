@@ -54,20 +54,40 @@ public class AccountManager {
         });
     }
 
-    public static void signinViaGoogle(String token, String email, String displayname) {
-//        BusManager.get().post(new onSuccessfulSignIn(authenticated));
-//        BusManager.get().post(new onSignInCompleted());
-//        BusManager.get().post(new onSignInFailure());
-        API.anonymous.getCredential(token).enqueue(new API.BriefCallback<Gson>() {
+    public static void signinViaGoogle(String token) {
+        API.anonymous.verifyGoogleSignin(token).enqueue(new API.BriefCallback<Account>() {
             @Override
-            public void onSuccess(Call<Gson> call, Response<Gson> response) {
+            public void onSuccess(Call<Account> call, Response<Account> response) {
                 String credential = "";
                 String email = "";
                 API.setAuthHeaderInterceptor(new API.GoogleSignin(email, credential));
-//                authenticated = response.body();
-//                API.setBasicAuth(username, password);
-//                BusManager.get().post(new onSuccessfulSignIn(authenticated));
-//                BusManager.get().post(new onSignInCompleted());
+                API.setAuthHeaderInterceptor(new API.GoogleSignin(email, credential));
+                BusManager.get().post(new onSuccessfulSignIn(authenticated));
+                BusManager.get().post(new onSignInCompleted());
+            }
+            @Override
+            public void onFailure(Call<Account> call, Throwable t) {
+                BusManager.get().post(new onSignInFailure());
+                BusManager.get().post(new onSignInCompleted());
+            }
+        });
+    }
+
+    public static void signinViaFacebook(String profileId, String token) {
+        API.anonymous.verifyFacebookSignin(profileId, token).enqueue(new API.BriefCallback<Account>() {
+            @Override
+            public void onSuccess(Call<Account> call, Response<Account> response) {
+                Account account = response.body();
+                API.setAuthHeaderInterceptor(new API.FacebookSignin(
+                        account.getEmail(),
+                        account.userprofile.getCredential()));
+                BusManager.get().post(new onSuccessfulSignIn(authenticated));
+                BusManager.get().post(new onSignInCompleted());
+            }
+            @Override
+            public void onFailure(Call<Account> call, Throwable t) {
+                BusManager.get().post(new onSignInFailure());
+                BusManager.get().post(new onSignInCompleted());
             }
         });
     }
@@ -75,6 +95,5 @@ public class AccountManager {
     public static boolean isAuthenticated() {
         return authenticated != null;
     }
-
 
 }
