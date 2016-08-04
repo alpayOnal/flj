@@ -224,13 +224,16 @@ public class API {
         @POST("users/verifyFacebookSignin/")
         Call<Account> verifyFacebookSignin(
                 @Field("profileId") String profileId, @Field("token") String token);
+
+        @POST("users/")
+        Call<Account> basicAuthSignUp(@Body Account account);
     }
 
     /**
      * This endpoint requires basic authentication.
      */
     public interface AuthorizedENDPOIT {
-        @GET("users/1/")
+        @GET("users/3/")
         Call<Account> getAuthenticatedUser();
 
         @POST("alarms/")
@@ -249,12 +252,12 @@ public class API {
 
 
     public static Retrofit anonymousRetrofit = new Retrofit.Builder()
-            .baseUrl("http://192.168.2.25:8000/")
+            .baseUrl("http://192.168.2.249:8000/")
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 
     public static Retrofit authorizedRetrofit = new Retrofit.Builder()
-            .baseUrl("http://192.168.2.25:8000/")
+            .baseUrl("http://192.168.2.249:8000/                                                ")
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build();

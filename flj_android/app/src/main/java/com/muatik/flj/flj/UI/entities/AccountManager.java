@@ -7,6 +7,8 @@ import com.google.gson.Gson;
 import com.muatik.flj.flj.UI.RESTful.API;
 import com.muatik.flj.flj.UI.utilities.BusManager;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -128,5 +130,32 @@ public class AccountManager {
                 authenticator = gson.fromJson(authenticator_json, API.FacebookSignin.class);
         }
         API.setAuthHeaderInterceptor(authenticator);
+    }
+
+    public static void signupBasicAuth(Account account) {
+
+        Call<Account> call;
+        call = API.anonymous.basicAuthSignUp(account);
+        call.enqueue(new Callback<Account>() {
+            @Override
+            public void onResponse(Call<Account> call, Response<Account> response) {
+                if (response.isSuccessful()) {
+                    Log.d("basic-auth","signup-success" + response.body());
+                    authenticator_type = "BasicAuth";
+                    authenticated = response.body();
+                    BusManager.get().post(new EventSuccessfulSignIn(authenticated));
+                    BusManager.get().post(new onSignInCompleted());
+                }else{
+                    Log.d("basic-auth","signup-error" + response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Account> call, Throwable t) {
+                Log.d("basic-auth","signup-failure" + t.getMessage());
+                BusManager.get().post(new EventSignInFailure());
+                BusManager.get().post(new onSignInCompleted());
+            }
+        });
     }
 }
