@@ -64,37 +64,6 @@ public class Login extends AppCompatActivity implements
     @BindView(R.id.link_login)  TextView linkLogin;
     private Unbinder unbinder;
 
-    void prepareGoogle() {
-        //google login
-
-        findViewById(R.id.google_signin).setOnClickListener(this);
-        findViewById(R.id.google_signout).setOnClickListener(this);
-
-        // [START configure_signin]
-        // Configure sign-in to request the user's ID, email address, and basic
-        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .requestIdToken("223265251589-b1ojj9mj6pitskb9oh0rksifg3qijje5.apps.googleusercontent.com")
-                .build();
-        // [END configure_signin]
-
-        // [START build_client]
-        // Build a GoogleApiClient with access to the Google Sign-In API and the
-        // options specified by gso.
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-
-        SignInButton signInButton = (SignInButton) findViewById(R.id.google_signin);
-        signInButton.setSize(SignInButton.SIZE_WIDE);
-        signInButton.setEnabled(true);
-        signInButton.setColorScheme(SignInButton.COLOR_DARK);
-
-        signInButton.setScopes(gso.getScopeArray());
-        // end of google login
-    }
 
     private void showApp() {
         startActivity(new Intent(this, Main.class));
@@ -104,7 +73,7 @@ public class Login extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        AccountManager.loadState(PreferenceManager.getDefaultSharedPreferences(this));
+        AccountManager.init(PreferenceManager.getDefaultSharedPreferences(this));
         if (AccountManager.isAuthenticated()) {
             showApp();
         }
@@ -141,7 +110,6 @@ public class Login extends AppCompatActivity implements
                 AccountManager.signinViaFacebook(profileId, token);
 
             }
-
             @Override
             public void onCancel() {}
 
@@ -150,12 +118,49 @@ public class Login extends AppCompatActivity implements
         });
     }
 
+
+    void prepareGoogle() {
+        //google login
+
+        findViewById(R.id.google_signin).setOnClickListener(this);
+        findViewById(R.id.google_signout).setOnClickListener(this);
+
+        // [START configure_signin]
+        // Configure sign-in to request the user's ID, email address, and basic
+        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .requestIdToken("223265251589-b1ojj9mj6pitskb9oh0rksifg3qijje5.apps.googleusercontent.com")
+                .build();
+        // [END configure_signin]
+
+        // [START build_client]
+        // Build a GoogleApiClient with access to the Google Sign-In API and the
+        // options specified by gso.
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+
+        SignInButton signInButton = (SignInButton) findViewById(R.id.google_signin);
+        signInButton.setSize(SignInButton.SIZE_WIDE);
+        signInButton.setEnabled(true);
+        signInButton.setColorScheme(SignInButton.COLOR_DARK);
+
+        signInButton.setScopes(gso.getScopeArray());
+        // end of google login
+    }
+
     @Subscribe
     public void onSuccessfulSignIn(AccountManager.EventSuccessfulSignIn event) {
         Log.e("FLJ", "login onSuccessfulSignIn");
-        AccountManager.saveState(PreferenceManager.getDefaultSharedPreferences(
-                getApplicationContext()));
+        AccountManager.saveState();
         showApp();
+    }
+
+    @Subscribe
+    public void onSignout(AccountManager.EventSignout event) {
+        Log.e("FLJ", "login onSignout");
     }
 
     @Override
@@ -190,7 +195,7 @@ public class Login extends AppCompatActivity implements
             // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
             // and the GoogleSignInResult will be available instantly.
             GoogleSignInResult result = opr.get();
-            handleGoogleSignInResult(result);
+            //handleGoogleSignInResult(result);
         } else {
             // If the user has not previously signed in on this device or the sign-in has expired,
             // this asynchronous branch will attempt to sign in the user silently.  Cross-device
@@ -209,18 +214,10 @@ public class Login extends AppCompatActivity implements
     private void handleGoogleSignInResult(GoogleSignInResult result) {
         Log.d("flj-googlelogin", "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
-            // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
             updateGoogleLoginUI(true);
             AccountManager.signinViaGoogle(result.getSignInAccount().getIdToken());
-
-//            Log.e("---", result.getSignInAccount().getIdToken());
-//            Log.e("---", result.getSignInAccount().getPhotoUrl().toString());
-//            Log.e("---", result.getSignInAccount().getEmail());
-//            Log.e("---", result.getSignInAccount().getDisplayName());
-//
         } else {
-            // Signed out, show unauthenticated UI.
             updateGoogleLoginUI(false);
         }
     }
@@ -303,12 +300,13 @@ public class Login extends AppCompatActivity implements
 
     @OnClick(R.id.signup)
     public void formSignup() {
-
-        Account account  = new Account(
-                0,
-                etUsername_signup.getText().toString(),
-                etEmail_signup.getText().toString(),
-                etPassword_signup.getText().toString());
+        String username = etEmail_signup.getText().toString();
+        String email = etEmail_signup.getText().toString();
+        String password = etPassword_signup.getText().toString();
+        int userId = 0;
+        Account.UserProfile userprofile = new Account.UserProfile();
+        Account account  = new Account(userId, username, email, password);
+        account.userprofile = userprofile;
 
         AccountManager.signupBasicAuth(account);
         Log.d("FLJ", etUsername_signup.getText() +"-" +etEmail_signup.getText() +"-" + etPassword_signup.getText());

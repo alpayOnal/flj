@@ -156,7 +156,8 @@ public class API {
         public Request injectHeaders(Request request) {
             final String x_credential = String.format("%s:%s", new String[]{username, credential});
             return request.newBuilder()
-                    .addHeader("X-CREDENTIAL", x_credential).build();
+                    .addHeader("X-USERNAME", username)
+                    .addHeader("X-CREDENTIAL", credential).build();
         }
     }
 
@@ -197,12 +198,6 @@ public class API {
 
 
 
-
-    static OkHttpClient client = new OkHttpClient().newBuilder()
-            .addInterceptor(new LoggingInterceptor())
-            .addInterceptor(new AuthInterceptor())
-            .build();
-
     /**
      * This endpoints exposes APIS that do not require authentication.
      */
@@ -217,6 +212,7 @@ public class API {
                 @Query("sinceId") String sinceId
         );
 
+        @FormUrlEncoded
         @POST("users/verifyGoogleSignin/")
         Call<Account> verifyGoogleSignin(@Field("token") String token);
 
@@ -233,7 +229,7 @@ public class API {
      * This endpoint requires basic authentication.
      */
     public interface AuthorizedENDPOIT {
-        @GET("users/3/")
+        @GET("users/me/")
         Call<Account> getAuthenticatedUser();
 
         @POST("alarms/")
@@ -249,17 +245,29 @@ public class API {
         Call<StarredJob> starJob(@Body StarredJob starredJob);
     }
 
+    private static final String HOST = "http://192.168.2.25:8000/";
 
+
+
+    static OkHttpClient anonymousClient = new OkHttpClient().newBuilder()
+            .addInterceptor(new LoggingInterceptor())
+            .build();
+
+    static OkHttpClient authorizedClient = new OkHttpClient().newBuilder()
+            .addInterceptor(new LoggingInterceptor())
+            .addInterceptor(new AuthInterceptor())
+            .build();
 
     public static Retrofit anonymousRetrofit = new Retrofit.Builder()
-            .baseUrl("http://192.168.2.249:8000/")
+            .baseUrl(HOST)
+            .client(anonymousClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 
     public static Retrofit authorizedRetrofit = new Retrofit.Builder()
-            .baseUrl("http://192.168.2.249:8000/                                                ")
+            .baseUrl(HOST)
             .addConverterFactory(GsonConverterFactory.create())
-            .client(client)
+            .client(authorizedClient)
             .build();
 
 

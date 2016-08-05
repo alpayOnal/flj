@@ -42,7 +42,7 @@ public class Account implements Serializable {
         return password;
     }
 
-    public class UserProfile {
+    public static class UserProfile {
 
         private String created_at;
         private String gcm_id;

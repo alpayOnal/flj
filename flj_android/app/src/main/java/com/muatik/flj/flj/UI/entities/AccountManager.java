@@ -27,10 +27,20 @@ public class AccountManager {
         }
     }
     private static class EventSignInFailure {}
+    public static class EventSignout {}
 
     private static Account authenticated;
     private static String authenticator_type;
     private static API.AuthHeaderGenerator authenticator;
+    private static SharedPreferences prefs;
+
+    public static void init(SharedPreferences prefs) {
+        // not to lose static values, init once.
+        if (AccountManager.prefs == null) {
+            AccountManager.prefs = prefs;
+            loadState();
+        }
+    }
 
     public static void signinBasicAuth(final String username, final String password) {
         authenticator = new API.BasicAuth(username, password);
@@ -60,9 +70,9 @@ public class AccountManager {
         API.anonymous.verifyGoogleSignin(token).enqueue(new API.BriefCallback<Account>() {
             @Override
             public void onSuccess(Call<Account> call, Response<Account> response) {
-                String credential = "";
-                String email = "";
                 authenticated = response.body();
+                String email = authenticated.getEmail();
+                String credential = authenticated.userprofile.getCredential();
                 authenticator_type = "GoogleSignin";
                 authenticator = new API.GoogleSignin(email, credential);
                 API.setAuthHeaderInterceptor(authenticator);
@@ -98,11 +108,20 @@ public class AccountManager {
         });
     }
 
+
+    public static void signout() {
+        authenticated = null;
+        authenticator = null;
+        authenticator_type = null;
+        BusManager.get().post(new EventSignout());
+    }
+
+
     public static boolean isAuthenticated() {
         return authenticated != null;
     }
 
-    public static void saveState(SharedPreferences prefs) {
+    public static void saveState() {
         Gson gson = new Gson();
         prefs.edit()
                 .putString("_accountManager_account", gson.toJson(authenticated))
@@ -111,7 +130,7 @@ public class AccountManager {
                 .commit();
     }
 
-    public static void loadState(SharedPreferences prefs) {
+    public static void loadState() {
         Gson gson = new Gson();
         authenticated = gson.fromJson(
                 prefs.getString("_accountManager_account", null),
