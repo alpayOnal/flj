@@ -1,4 +1,9 @@
 from django.contrib.auth.models import User
+from rest_framework import viewsets
+from rest_framework.decorators import list_route
+from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.response import Response
+
 from posts.models import StarredJob, Alarm
 from posts.permissions import IsSelf, IsOwner
 from posts.serializers import UserProfileSerializer, UserSerializer, \
@@ -8,6 +13,19 @@ from rest_framework import permissions
 
 # @TODO: switch to generics.CreateAPIView
 from rest_framework.permissions import IsAuthenticated
+
+
+class UserAuthentication(viewsets.ModelViewSet):
+    """
+    this is used to verify whether authentication is valid or not.
+    some clients want to know if authentication is valid, so they
+    request a url looks like `/users/me`.
+    """
+    @list_route()
+    def me(self, request, *args, **kwargs):
+        if request.user.is_authenticated():
+            return Response(UserSerializer(request.user).data)
+        raise AuthenticationFailed()
 
 
 class UserList(generics.ListCreateAPIView):

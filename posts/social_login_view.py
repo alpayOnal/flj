@@ -1,5 +1,6 @@
 import requests
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
+from django.http import HttpResponseForbidden
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
@@ -15,6 +16,13 @@ def redirectToUser(http_request, user):
     login(http_request, user)
     return redirect("getUser", user.id)
 
+
+@csrf_exempt
+def verifyBasicAuth(http_request):
+    if http_request.user.is_authenticated():
+        return JsonResponse(UserSerializer(http_request.user).data)
+    else:
+        return HttpResponseForbidden("patlak")
 
 @csrf_exempt
 def verifyGoogleSignin(http_request):

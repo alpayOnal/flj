@@ -4,8 +4,10 @@ from posts import social_login_view
 from posts import user_views, job_post_view
 from rest_framework.urlpatterns import format_suffix_patterns
 
+
 urlpatterns = [
     url(r'^users/$', user_views.UserList.as_view()),
+    url(r'^users/me/$', user_views.UserAuthentication.as_view({"get": "me"}), name="getUser"),
     url(r'^users/(?P<pk>[0-9]+)/$', user_views.UserDetail.as_view(), name="getUser"),
     url(r'^posts/$', job_post_view.JobPosts.as_view()),
     url(r'^posts/(?P<pk>[0-9]+)/$', job_post_view.JobPostDetail.as_view()),
