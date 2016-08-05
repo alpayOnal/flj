@@ -29,6 +29,7 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.muatik.flj.flj.R;
+import com.muatik.flj.flj.UI.entities.Account;
 import com.muatik.flj.flj.UI.entities.AccountManager;
 import com.muatik.flj.flj.UI.utilities.BusManager;
 import com.squareup.otto.Subscribe;
@@ -138,6 +139,7 @@ public class Login extends AppCompatActivity implements
                 String token = loginResult.getAccessToken().getToken();
                 Log.e("FLJ", "login fb onSuccess");
                 AccountManager.signinViaFacebook(profileId, token);
+
             }
 
             @Override
@@ -151,6 +153,8 @@ public class Login extends AppCompatActivity implements
     @Subscribe
     public void onSuccessfulSignIn(AccountManager.EventSuccessfulSignIn event) {
         Log.e("FLJ", "login onSuccessfulSignIn");
+        AccountManager.saveState(PreferenceManager.getDefaultSharedPreferences(
+                getApplicationContext()));
         showApp();
     }
 
@@ -208,10 +212,13 @@ public class Login extends AppCompatActivity implements
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
             updateGoogleLoginUI(true);
-            Log.e("---", result.getSignInAccount().getIdToken());
-            Log.e("---", result.getSignInAccount().getPhotoUrl().toString());
-            Log.e("---", result.getSignInAccount().getEmail());
-            Log.e("---", result.getSignInAccount().getDisplayName());
+            AccountManager.signinViaGoogle(result.getSignInAccount().getIdToken());
+
+//            Log.e("---", result.getSignInAccount().getIdToken());
+//            Log.e("---", result.getSignInAccount().getPhotoUrl().toString());
+//            Log.e("---", result.getSignInAccount().getEmail());
+//            Log.e("---", result.getSignInAccount().getDisplayName());
+//
         } else {
             // Signed out, show unauthenticated UI.
             updateGoogleLoginUI(false);
@@ -247,9 +254,12 @@ public class Login extends AppCompatActivity implements
 
     private void updateGoogleLoginUI(boolean signedIn) {
         if (signedIn) {
-            findViewById(R.id.google_signout).setVisibility(View.GONE);
+            findViewById(R.id.google_signout).setVisibility(View.VISIBLE);
+            findViewById(R.id.google_signin).setVisibility(View.GONE);
+
         } else {
             findViewById(R.id.google_signin).setVisibility(View.VISIBLE);
+            findViewById(R.id.google_signout).setVisibility(View.GONE);
         }
     }
 
@@ -290,8 +300,17 @@ public class Login extends AppCompatActivity implements
                 etPassword_signin.getText().toString());
     }
 
+
     @OnClick(R.id.signup)
     public void formSignup() {
+
+        Account account  = new Account(
+                0,
+                etUsername_signup.getText().toString(),
+                etEmail_signup.getText().toString(),
+                etPassword_signup.getText().toString());
+
+        AccountManager.signupBasicAuth(account);
         Log.d("FLJ", etUsername_signup.getText() +"-" +etEmail_signup.getText() +"-" + etPassword_signup.getText());
     }
 
