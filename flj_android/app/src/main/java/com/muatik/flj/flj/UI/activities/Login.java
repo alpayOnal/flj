@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +17,7 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
@@ -34,6 +36,8 @@ import com.muatik.flj.flj.UI.entities.AccountManager;
 import com.muatik.flj.flj.UI.utilities.BusManager;
 import com.squareup.otto.Subscribe;
 
+import org.w3c.dom.Text;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -50,18 +54,12 @@ public class Login extends AppCompatActivity implements
 
     private static final int RC_SIGN_IN = 9001;
 
-    private GoogleApiClient googleApiClient;
+    private static GoogleApiClient googleApiClient;
 
-    @BindView(R.id.signup_name)  EditText etUsername_signup;
-    @BindView(R.id.signup_email) EditText etEmail_signup;
-    @BindView(R.id.signup_password) EditText etPassword_signup;
-
-    @BindView(R.id.signin_email) EditText etEmail_signin;
-    @BindView(R.id.signin_password) EditText etPassword_signin;
+    @BindView(R.id.input_email) EditText emailText;
+    @BindView(R.id.input_password) EditText passwordText;
     @BindView(R.id.signin) Button btSignin;
     @BindView(R.id.signup) Button btSignup;
-    @BindView(R.id.link_signup)  TextView linkSignup;
-    @BindView(R.id.link_login)  TextView linkLogin;
     private Unbinder unbinder;
 
 
@@ -78,11 +76,12 @@ public class Login extends AppCompatActivity implements
             showApp();
         }
 
-        //this row must be BEFORE setContentView()
         FacebookSdk.sdkInitialize(getApplicationContext());
+
 
         setContentView(R.layout.activity_login);
         unbinder = ButterKnife.bind(this);
+
 
         prepareGoogle();
         prepareFacebookLogin();
@@ -90,12 +89,6 @@ public class Login extends AppCompatActivity implements
     }
 
     private void prepareFacebookLogin() {
-//        Profile profile = Profile.getCurrentProfile().getCurrentProfile();
-//        if (profile != null) {
-//            Log.d("aaa","logged in");
-//        } else {
-//            // user has not logged in
-//        }
 
         List<String> permissions = Arrays.asList("public_profile, email");
         fbLoginButton = (LoginButton) findViewById(R.id.facebook_login);
@@ -106,9 +99,7 @@ public class Login extends AppCompatActivity implements
             public void onSuccess(LoginResult loginResult) {
                 String profileId = loginResult.getAccessToken().getUserId();
                 String token = loginResult.getAccessToken().getToken();
-                Log.e("FLJ", "login fb onSuccess");
                 AccountManager.signinViaFacebook(profileId, token);
-
             }
             @Override
             public void onCancel() {}
@@ -120,35 +111,24 @@ public class Login extends AppCompatActivity implements
 
 
     void prepareGoogle() {
-        //google login
-
         findViewById(R.id.google_signin).setOnClickListener(this);
-        findViewById(R.id.google_signout).setOnClickListener(this);
 
-        // [START configure_signin]
-        // Configure sign-in to request the user's ID, email address, and basic
-        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
-                .requestIdToken("223265251589-b1ojj9mj6pitskb9oh0rksifg3qijje5.apps.googleusercontent.com")
+                .requestIdToken(String.valueOf(R.string.google_client_id))
                 .build();
-        // [END configure_signin]
 
-        // [START build_client]
-        // Build a GoogleApiClient with access to the Google Sign-In API and the
-        // options specified by gso.
         googleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
+
         SignInButton signInButton = (SignInButton) findViewById(R.id.google_signin);
         signInButton.setSize(SignInButton.SIZE_WIDE);
         signInButton.setEnabled(true);
         signInButton.setColorScheme(SignInButton.COLOR_DARK);
-
         signInButton.setScopes(gso.getScopeArray());
-        // end of google login
     }
 
     @Subscribe
@@ -161,6 +141,14 @@ public class Login extends AppCompatActivity implements
     @Subscribe
     public void onSignout(AccountManager.EventSignout event) {
         Log.e("FLJ", "login onSignout");
+        if (googleApiClient != null) {
+            if (googleApiClient.isConnected()) {
+                Auth.GoogleSignInApi.signOut(googleApiClient);
+                googleApiClient.disconnect();
+            }
+        }
+        LoginManager.getInstance().logOut();
+        showApp();
     }
 
     @Override
@@ -174,51 +162,20 @@ public class Login extends AppCompatActivity implements
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleGoogleSignInResult(result);
         }else{
-            //facebook callback
             fbCallbackManager.onActivityResult(requestCode, resultCode, data);
         }
     }
 
-
-      @Override
-    public void onStart() {
-        super.onStart();
-
-        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(googleApiClient);
-
-        if (opr.isDone()) {
-            // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
-            // and the GoogleSignInResult will be available instantly.
-            GoogleSignInResult result = opr.get();
-            //handleGoogleSignInResult(result);
-        } else {
-            // If the user has not previously signed in on this device or the sign-in has expired,
-            // this asynchronous branch will attempt to sign in the user silently.  Cross-device
-            // single sign-on will occur in this branch.
-            opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
-                @Override
-                public void onResult(GoogleSignInResult googleSignInResult) {
-                    Toast.makeText(getApplicationContext(), "" + googleSignInResult.getStatus(), Toast.LENGTH_LONG).show();
-                    handleGoogleSignInResult(googleSignInResult);
-                }
-            });
-        }
-    }
-
-    // [START handleSignInResult]
     private void handleGoogleSignInResult(GoogleSignInResult result) {
         Log.d("flj-googlelogin", "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
             GoogleSignInAccount acct = result.getSignInAccount();
-            updateGoogleLoginUI(true);
             AccountManager.signinViaGoogle(result.getSignInAccount().getIdToken());
         } else {
-            updateGoogleLoginUI(false);
         }
     }
 
@@ -233,31 +190,9 @@ public class Login extends AppCompatActivity implements
                 new ResultCallback<Status>() {
                     @Override
                     public void onResult(Status status) {
-                        updateGoogleLoginUI(false);
+
                     }
                 });
-    }
-
-    private void googleRevokeAccess() {
-        Auth.GoogleSignInApi.revokeAccess(googleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-                        updateGoogleLoginUI(false);
-                    }
-                });
-    }
-
-
-    private void updateGoogleLoginUI(boolean signedIn) {
-        if (signedIn) {
-            findViewById(R.id.google_signout).setVisibility(View.VISIBLE);
-            findViewById(R.id.google_signin).setVisibility(View.GONE);
-
-        } else {
-            findViewById(R.id.google_signin).setVisibility(View.VISIBLE);
-            findViewById(R.id.google_signout).setVisibility(View.GONE);
-        }
     }
 
     @OnClick(R.id.google_signin)
@@ -265,13 +200,9 @@ public class Login extends AppCompatActivity implements
         googleSignIn();
     }
 
-    @OnClick(R.id.google_signout)
-    public void google_signout(View view) {
-        googleSignOut();
-    }
-
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
+        Toast.makeText(getApplicationContext(), "Google sign in failed. Please try again.", Toast.LENGTH_LONG).show();
         Log.d("FLJ-googlelogin", "onConnectionFailed:" + connectionResult);
     }
 
@@ -281,46 +212,49 @@ public class Login extends AppCompatActivity implements
             case R.id.google_signin:
                 googleSignIn();
                 break;
-            case R.id.google_signout:
-                googleSignOut();
-                break;
         }
     }
 
-
-    // form signinBasicAuth and signup
     @OnClick(R.id.signin)
     public void formSignin() {
-        Log.d("FLJ", etEmail_signin.getText() +"-" + etPassword_signin.getText() );
-        AccountManager.signinBasicAuth(
-                etEmail_signin.getText().toString(),
-                etPassword_signin.getText().toString());
+        String email = emailText.getText().toString();
+        String password = passwordText.getText().toString();
+        if (validateBasicAuthForn())
+            AccountManager.signinBasicAuth(email, password);
     }
 
 
     @OnClick(R.id.signup)
     public void formSignup() {
-        String username = etEmail_signup.getText().toString();
-        String email = etEmail_signup.getText().toString();
-        String password = etPassword_signup.getText().toString();
+        String email = emailText.getText().toString();
+        String password = passwordText.getText().toString();
         int userId = 0;
         Account.UserProfile userprofile = new Account.UserProfile();
-        Account account  = new Account(userId, username, email, password);
+        Account account  = new Account(userId, email, email, password);
         account.userprofile = userprofile;
-
-        AccountManager.signupBasicAuth(account);
-        Log.d("FLJ", etUsername_signup.getText() +"-" +etEmail_signup.getText() +"-" + etPassword_signup.getText());
+        if (validateBasicAuthForn())
+            AccountManager.signupBasicAuth(account);
     }
 
-    @OnClick(R.id.link_signup)
-    public void link_signup() {
-        findViewById(R.id.signin_layout).setVisibility(View.GONE);
-        findViewById(R.id.signup_layout).setVisibility(View.VISIBLE);
+
+    public boolean validateBasicAuthForn() {
+
+        String email = emailText.getText().toString();
+        String password = passwordText.getText().toString();
+
+        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Toast.makeText(getApplicationContext(),
+                    "Enter a valid email addres.", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
+            Toast.makeText(getApplicationContext(),
+                    "Between 4 and 10 alphanumeric characters.", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        return true;
     }
 
-    @OnClick(R.id.link_login)
-    public void link_login() {
-        findViewById(R.id.signin_layout).setVisibility(View.VISIBLE);
-        findViewById(R.id.signup_layout).setVisibility(View.GONE);
-    }
 }

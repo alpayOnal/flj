@@ -61,10 +61,10 @@ public class GoogleSignin extends AppCompatActivity  implements
         // [END build_client]
 
         // [START customize_button]
-        // Customize sign-in button. The sign-in button can be displayed in
+        // Customize sign-in signin_button. The sign-in signin_button can be displayed in
         // multiple sizes and color schemes. It can also be contextually
-        // rendered based on the requested scopes. For example. a red button may
-        // be displayed when Google+ scopes are requested, but a white button
+        // rendered based on the requested scopes. For example. a red signin_button may
+        // be displayed when Google+ scopes are requested, but a white signin_button
         // may be displayed when only basic profile is requested. Try adding the
         // Scopes.PLUS_LOGIN scope to the GoogleSignInOptions to see the
         // difference.

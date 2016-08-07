@@ -42,6 +42,10 @@ public class AccountManager {
         }
     }
 
+    public static Account getAuthenticatedAccount() {
+        return authenticated;
+    }
+
     public static void signinBasicAuth(final String username, final String password) {
         authenticator = new API.BasicAuth(username, password);
         API.setAuthHeaderInterceptor(authenticator);

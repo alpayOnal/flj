@@ -2,6 +2,7 @@ package com.muatik.flj.flj.UI.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
@@ -15,6 +16,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.muatik.flj.flj.R;
@@ -30,6 +34,10 @@ import com.muatik.flj.flj.UI.fragments.JobList;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 /**
  * Created by muatik on 25.07.2016.
  */
@@ -39,10 +47,13 @@ public class Main extends AppCompatActivity
     private Bus bus = BusManager.get();
     private JobFilter currentJobFilter;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -54,6 +65,18 @@ public class Main extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        View headerLayout = navigationView.getHeaderView(0);
+
+        TextView accountName = (TextView) headerLayout.findViewById(R.id.account_name);
+        TextView accountEmail = (TextView) headerLayout.findViewById(R.id.account_email);
+        ImageView accountImage = (ImageView) headerLayout.findViewById(R.id.account_image);
+
+        accountName.setText(AccountManager.getAuthenticatedAccount().getUsername());
+        accountEmail.setText(AccountManager.getAuthenticatedAccount().getEmail());
+        accountImage.setImageURI(Uri.parse(AccountManager.getAuthenticatedAccount().userprofile.getPicture()));
+
+
+
 
 //        AccountManager.signinBasicAuth("amuatik", "123456");
         Log.e("FLJ", "main opening");
@@ -97,7 +120,12 @@ public class Main extends AppCompatActivity
     @Subscribe
     public void onSignedIn(AccountManager.EventSuccessfulSignIn event) {
         Toast.makeText(this, "Welcome: " + event.account.getUsername(), Toast.LENGTH_LONG).show();
+        //accountEmail.setText(AccountManager.getAuthenticatedAccount().getEmail());
+        //accountName.setText(AccountManager.getAuthenticatedAccount().getUsername());
+        //accountImage.setImageURI(Uri.parse(AccountManager.getAuthenticatedAccount().userprofile.getPicture()));
     }
+
+
 
 
     @Override
@@ -124,7 +152,7 @@ public class Main extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
+        // automatically handle clicks on the Home/Up signin_button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
