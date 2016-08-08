@@ -53,5 +53,6 @@ dependencies {
     compile 'com.android.support:support-v4:24.1.1'
     compile 'com.facebook.android:facebook-android-sdk:4.+'
     compile 'com.google.android.gms:play-services:8.3.0'
+    compile 'de.hdodenhof:circleimageview:2.1.0'
 //    compile 'com.google.android.gms:play-services-auth:9.2.1'
 }

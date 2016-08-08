@@ -147,10 +147,13 @@ public class AccountManager {
         switch (authenticator_type) {
             case "BasicAuth":
                 authenticator = gson.fromJson(authenticator_json, API.BasicAuth.class);
+                break;
             case "GoogleSignin":
                 authenticator = gson.fromJson(authenticator_json, API.GoogleSignin.class);
+                break;
             case "FacebookSignin":
                 authenticator = gson.fromJson(authenticator_json, API.FacebookSignin.class);
+                break;
         }
         API.setAuthHeaderInterceptor(authenticator);
     }

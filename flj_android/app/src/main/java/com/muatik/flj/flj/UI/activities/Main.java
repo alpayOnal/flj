@@ -2,7 +2,10 @@ package com.muatik.flj.flj.UI.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
@@ -34,6 +37,10 @@ import com.muatik.flj.flj.UI.fragments.JobList;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -53,7 +60,6 @@ public class Main extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -66,28 +72,14 @@ public class Main extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View headerLayout = navigationView.getHeaderView(0);
+        MainNavProfile.init(headerLayout);
 
-        TextView accountName = (TextView) headerLayout.findViewById(R.id.account_name);
-        TextView accountEmail = (TextView) headerLayout.findViewById(R.id.account_email);
-        ImageView accountImage = (ImageView) headerLayout.findViewById(R.id.account_image);
-
-        accountName.setText(AccountManager.getAuthenticatedAccount().getUsername());
-        accountEmail.setText(AccountManager.getAuthenticatedAccount().getEmail());
-        accountImage.setImageURI(Uri.parse(AccountManager.getAuthenticatedAccount().userprofile.getPicture()));
-
-
-
-
-//        AccountManager.signinBasicAuth("amuatik", "123456");
-        Log.e("FLJ", "main opening");
         Alarms.init(getApplicationContext());
         SearchHistory.init(getApplicationContext());
-//        Alarms.init(getApplicationContext());
 
         onSearchSubmitted(new SearchForm.EventOnSubmit(new JobFilter("php", "turkey", "istanbul")));
 //        showFragment(new SearchForm());
 
-//        bus.register(this);
     }
 
     @Override
@@ -171,8 +163,6 @@ public class Main extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
 //            Account.Manager.signinBasicAuth("kamil", "412");
-            AccountManager.signinBasicAuth("muatik", "123456");
-            Alarms.init(getApplicationContext());
         } else if (id == R.id.nav_gallery) {
             showFragment(new SearchForm());
         } else if (id == R.id.nav_slideshow) {

@@ -17,11 +17,14 @@ import retrofit2.Response;
 public class Account implements Serializable {
 
     private int userId;
+    private String first_name;
+    private String last_name;
     private String username;
     private String email;
     private String password;
 
     public UserProfile userprofile;
+    private int firstName;
 
     public Account(int userId, String username, String email, String password) {
         this.userId = userId;
@@ -40,6 +43,21 @@ public class Account implements Serializable {
 
     public String getPassword() {
         return password;
+    }
+
+    public String getDisplayName() {
+        if (first_name != null && first_name.length() > 0) {
+            return first_name + " " + last_name;
+        }
+        return "";
+    }
+
+    public String getFirstName() {
+        return first_name;
+    }
+
+    public String getLast_name() {
+        return first_name;
     }
 
     public static class UserProfile {
