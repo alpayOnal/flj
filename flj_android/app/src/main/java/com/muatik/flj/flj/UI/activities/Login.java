@@ -70,7 +70,7 @@ public class Login extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        // @TODO: burada kayitli login bilgilerinin gecerli olup olmadigi sunucuda sorgulanmali
         AccountManager.init(PreferenceManager.getDefaultSharedPreferences(this));
         if (AccountManager.isAuthenticated()) {
             showApp();

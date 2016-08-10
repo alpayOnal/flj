@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -15,6 +16,7 @@ import com.muatik.flj.flj.UI.entities.AccountManager;
 import com.muatik.flj.flj.UI.entities.Job;
 import com.muatik.flj.flj.UI.entities.StarredJob;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
@@ -28,6 +30,8 @@ public class JobDetail extends MyFragment {
 
     private Job job;
     private Unbinder unbinder;
+    @BindView(R.id.job_title) TextView view_job_title;
+    @BindView(R.id.job_description) TextView view_job_description;
 
     @Nullable
     @Override
@@ -37,6 +41,10 @@ public class JobDetail extends MyFragment {
         job = (Job) bundle.getSerializable("job");
         Toast.makeText(getContext(),job.getTitle(), Toast.LENGTH_LONG).show();
         unbinder = ButterKnife.bind(this, view);
+
+        view_job_title.setText(job.getTitle());
+        view_job_description.setText(job.getDescription());
+
         return view;
     }
 
@@ -45,27 +53,27 @@ public class JobDetail extends MyFragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
-    @OnClick(R.id.toggle_star)
-    void toggleStar(ToggleButton button) {
-
-        if (!AccountManager.isAuthenticated()) {
-            Toast.makeText(getContext(), "git login ol", Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        boolean starred = button.isChecked();
-        Toast.makeText(getContext(), "ischecked " + starred, Toast.LENGTH_LONG).show();
-//        StarredJobs.star(job);
-//        StarredJobs.unstar(job);
-//        StarredJob.isStarred(job);
-//        StarredJob.getAll();
-//        StarredJob starredJob = new StarredJob(job);
-//        API.authorized.starJob(starredJob).enqueue(new API.BriefCallback<StarredJob>() {
-//            @Override
-//            public void onSuccess(Call<StarredJob> call, Response<StarredJob> response) {
-//                Toast.makeText(getContext(), "success" , Toast.LENGTH_LONG).show();
-//            }
-//        });
-    }
+//    @OnClick(R.id.toggle_star)
+//    void toggleStar(ToggleButton button) {
+//
+//        if (!AccountManager.isAuthenticated()) {
+//            Toast.makeText(getContext(), "git login ol", Toast.LENGTH_LONG).show();
+//            return;
+//        }
+//
+//        boolean starred = button.isChecked();
+//        Toast.makeText(getContext(), "ischecked " + starred, Toast.LENGTH_LONG).show();
+////        StarredJobs.star(job);
+////        StarredJobs.unstar(job);
+////        StarredJob.isStarred(job);
+////        StarredJob.getAll();
+////        StarredJob starredJob = new StarredJob(job);
+////        API.authorized.starJob(starredJob).enqueue(new API.BriefCallback<StarredJob>() {
+////            @Override
+////            public void onSuccess(Call<StarredJob> call, Response<StarredJob> response) {
+////                Toast.makeText(getContext(), "success" , Toast.LENGTH_LONG).show();
+////            }
+////        });
+//    }
 
 }

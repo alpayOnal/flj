@@ -1,10 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <ToggleButton
-        android:id="@+id/toggle_star"
-        android:text="selam"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-</LinearLayout>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="fill_parent"
+    android:layout_width="fill_parent">
+    <LinearLayout
+        android:orientation="vertical" android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <TextView
+            android:padding="14dp"
+            android:textSize="18sp"
+            android:textColor="#222"
+            android:id="@+id/job_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
+        <TextView
+            style="@style/TextAppearance.AppCompat.Body1"
+            android:text="Focused on large scale enhancements to the existing Bingo product, including new systems built using SOA technologies, new game engines, application performance tuning and scalability, and integrations with external systems belonging to new customers
+
+    The ideal candidate:
+
+    * Coming with Core Java experience
+    * 3 years experience in a similar position.
+    * Conversant with Spring or Hibernate
+    * J2ee skills and some web services experience
+    "
+            android:paddingLeft="14dp"
+            android:paddingRight="14dp"
+            android:paddingBottom="14dp"
+            android:id="@+id/job_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/grey_400" />
+
+        <LinearLayout
+            android:padding="10dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_marginBottom="8dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="Employer: "
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/TextAppearance.AppCompat.Body1" />
+                <TextView
+                    android:text="Google Microsoft LTD. STI"
+                    android:textStyle="bold"
+                    android:id="@+id/job_employer"
+                    android:textSize="13sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginBottom="8dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Body1"
+                    android:text="Location: "
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:text="Istanbul, Turkey"
+                    android:textStyle="bold"
+                    android:id="@+id/job_location"
+                    android:textSize="13sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginBottom="8dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    style="@style/TextAppearance.AppCompat.Body1"
+                    android:text="Posted: "
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:text="Istanbul, Turkey"
+                    android:textStyle="bold"
+                    android:id="@+id/job_created_at"
+                    android:textSize="13sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:layout_margin="14dp"
+                style="@style/Base.Widget.AppCompat.Button.Small"
+                android:text="Save"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" />
+            <Button
+                android:layout_margin="14dp"
+                style="@style/Base.Widget.AppCompat.Button.Colored"
+                android:text="Apply"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
