@@ -142,7 +142,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
         "posts.backends.TokenAuthREST",
     ),
-
+    "EXCEPTION_HANDLER": "posts.helpers.my_exception_handler",
 }
 
 AUTH_PROFILE_MODULE = 'posts.models.UserProfile'

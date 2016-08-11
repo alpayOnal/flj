@@ -6,10 +6,9 @@ from rest_framework.response import Response
 
 from posts.models import StarredJob, Alarm
 from posts.permissions import IsSelf, IsOwner
-from posts.serializers import UserProfileSerializer, UserSerializer, \
+from posts.serializers import UserSerializer, \
     StarredJobsSerializer, AlarmSerializer
 from rest_framework import generics
-from rest_framework import permissions
 
 # @TODO: switch to generics.CreateAPIView
 from rest_framework.permissions import IsAuthenticated

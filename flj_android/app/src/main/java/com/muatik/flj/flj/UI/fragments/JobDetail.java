@@ -3,6 +3,7 @@ package com.muatik.flj.flj.UI.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +17,18 @@ import com.muatik.flj.flj.UI.entities.AccountManager;
 import com.muatik.flj.flj.UI.entities.Job;
 import com.muatik.flj.flj.UI.entities.StarredJob;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import retrofit2.Call;
 import retrofit2.Response;
+
+import static com.muatik.flj.flj.UI.views.JobViewHolder.capitalize;
 
 /**
  * Created by muatik on 26.07.2016.
@@ -30,8 +37,13 @@ public class JobDetail extends MyFragment {
 
     private Job job;
     private Unbinder unbinder;
+
     @BindView(R.id.job_title) TextView view_job_title;
     @BindView(R.id.job_description) TextView view_job_description;
+    @BindView(R.id.job_created_at) TextView view_job_created_at;
+    @BindView(R.id.job_location) TextView view_job_location;
+    @BindView(R.id.job_employer) TextView view_job_employer;
+
 
     @Nullable
     @Override
@@ -44,7 +56,17 @@ public class JobDetail extends MyFragment {
 
         view_job_title.setText(job.getTitle());
         view_job_description.setText(job.getDescription());
+        view_job_location.setText(String.format("%s, %s", new String[]{
+                capitalize(job.getCity()), capitalize(job.getCountry())}));
+        view_job_employer.setText(job.getEmployer());
 
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        try {
+            Date d = format.parse(job.getCreated_at());
+            view_job_created_at.setText(d.toString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         return view;
     }
 

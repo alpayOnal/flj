@@ -30,6 +30,7 @@ public class AccountManager {
         }
     }
 
+
     public static class EventSignInFailure {
         public Throwable throwableException;
         public String errorMessage;
@@ -41,6 +42,10 @@ public class AccountManager {
             this.throwableException = throwableException;
             this.errorMessage = errorMessage;
         }
+    }
+
+    private static class APIError {
+        public String error;
     }
 
     public static class EventSignout {}
@@ -62,6 +67,45 @@ public class AccountManager {
         return authenticated;
     }
 
+    static void handleAPIFailure(Call<Account> call, Throwable t, Response<Account> response) {
+        Log.d("FLJ", "alarm post failure: " + t.getMessage());
+
+        if (response != null){
+            ResponseBody body = response.errorBody();
+            try {
+                BusManager.get().post(new EventSignInFailure(t, body.string()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else {
+            BusManager.get().post(new EventSignInFailure(t, t.getMessage()));
+        }
+
+    }
+
+
+    public static void signupBasicAuth(Account account) {
+
+        Call<Account> call;
+        call = API.anonymous.basicAuthSignUp(account);
+        call.enqueue(new API.BriefCallback<Account>() {
+
+            @Override
+            public void onFailure(Call<Account> call, Throwable t, Response<Account> response) {
+                handleAPIFailure(call, t, response);
+                BusManager.get().post(new onSignInCompleted());
+            }
+
+            public void onSuccess(Call<Account> call, Response<Account> response) {
+                Log.d("basic-auth","signup-success" + response.body());
+                authenticator_type = "BasicAuth";
+                authenticated = response.body();
+                BusManager.get().post(new EventSuccessfulSignIn(authenticated));
+                BusManager.get().post(new onSignInCompleted());
+            }
+        });
+    }
+
     public static void signinBasicAuth(final String username, final String password) {
         authenticator = new API.BasicAuth(username, password);
         API.setAuthHeaderInterceptor(authenticator);
@@ -69,19 +113,7 @@ public class AccountManager {
         call.enqueue(new API.BriefCallback<Account>() {
             @Override
             public void onFailure(Call<Account> call, Throwable t, Response<Account> response) {
-                Log.d("FLJ", "alarm post failure: " + t.getMessage());
-
-                if (response != null){
-                    ResponseBody body = response.errorBody();
-                    try {
-                        BusManager.get().post(new EventSignInFailure(t, body.string()));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }else {
-                    BusManager.get().post(new EventSignInFailure(t, t.getMessage()));
-                }
-
+                handleAPIFailure(call, t, response);
                 BusManager.get().post(new onSignInCompleted());
             }
 
@@ -111,18 +143,7 @@ public class AccountManager {
 
             @Override
             public void onFailure(Call<Account> call, Throwable t, Response<Account> response) {
-
-                if (response != null){
-                    ResponseBody body = response.errorBody();
-                    try {
-                        BusManager.get().post(new EventSignInFailure(t, body.string()));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }else {
-                    BusManager.get().post(new EventSignInFailure(t, t.getMessage()));
-                }
-
+                handleAPIFailure(call, t, response);
                 BusManager.get().post(new onSignInCompleted());
             }
         });
@@ -144,23 +165,11 @@ public class AccountManager {
 
             @Override
             public void onFailure(Call<Account> call, Throwable t, Response<Account> response) {
-
-                if (response != null){
-                    ResponseBody body = response.errorBody();
-                    try {
-                        BusManager.get().post(new EventSignInFailure(t, body.string()));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }else {
-                    BusManager.get().post(new EventSignInFailure(t, t.getMessage()));
-                }
-
+                handleAPIFailure(call, t, response);
                 BusManager.get().post(new onSignInCompleted());
             }
         });
     }
-
 
     public static void signout() {
         authenticated = null;
@@ -206,40 +215,5 @@ public class AccountManager {
         }
         API.setAuthHeaderInterceptor(authenticator);
     }
-
-    public static void signupBasicAuth(Account account) {
-
-        Call<Account> call;
-        call = API.anonymous.basicAuthSignUp(account);
-        call.enqueue(new API.BriefCallback<Account>() {
-
-            @Override
-            public void onFailure(Call<Account> call, Throwable t, Response<Account> response) {
-
-                if (response != null){
-                    ResponseBody body = response.errorBody();
-                    try {
-                        BusManager.get().post(new EventSignInFailure(t, body.string()));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }else {
-                    BusManager.get().post(new EventSignInFailure(t, t.getMessage()));
-                }
-                BusManager.get().post(new onSignInCompleted());
-            }
-
-
-
-            public void onSuccess(Call<Account> call, Response<Account> response) {
-                Log.d("basic-auth","signup-success" + response.body());
-                authenticator_type = "BasicAuth";
-                authenticated = response.body();
-                BusManager.get().post(new EventSuccessfulSignIn(authenticated));
-                BusManager.get().post(new onSignInCompleted());
-            }
-        });
-    }
-
 
 }

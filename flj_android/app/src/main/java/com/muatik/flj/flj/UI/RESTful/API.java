@@ -250,7 +250,7 @@ public class API {
         Call<StarredJob> starJob(@Body StarredJob starredJob);
     }
 
-    private static final String HOST = "http://192.168.2.249:8000/";
+    private static final String HOST = "http://192.168.2.25:8000/";
 
 
 
