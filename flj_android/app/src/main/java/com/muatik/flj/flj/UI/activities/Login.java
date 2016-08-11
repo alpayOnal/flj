@@ -139,6 +139,12 @@ public class Login extends AppCompatActivity implements
     }
 
     @Subscribe
+    public void onFailureSignIn(AccountManager.EventSignInFailure event) {
+        Log.e("FLJ", "login onFailureSignIn");
+        Toast.makeText(getApplicationContext(),event.errorMessage.toString(), Toast.LENGTH_LONG).show();
+    }
+
+    @Subscribe
     public void onSignout(AccountManager.EventSignout event) {
         Log.e("FLJ", "login onSignout");
         if (googleApiClient != null) {

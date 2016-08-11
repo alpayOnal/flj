@@ -8,9 +8,11 @@ import android.widget.Toast;
 import com.muatik.flj.flj.UI.RESTful.API;
 import com.muatik.flj.flj.UI.utilities.BusManager;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -107,9 +109,14 @@ public class Alarms {
                 BusManager.get().post(new EventDataChanged());
                 BusManager.get().post(new EventOnInsert(alarm));
             }
+
             @Override
-            public void onFailure(Call<Alarm> call, Throwable t) {
+            public void onFailure(Call<Alarm> call, Throwable t, Response<Alarm> response) {
                 Log.d("FLJ", "alarm post failure: " + t.getMessage());
+                if (response != null) {
+                    ResponseBody body = response.errorBody();
+                    Log.d("FLJ", "alarm post failure: " + response.errorBody());
+                }
                 BusManager.get().post(new EventOnInsertFailure(alarm, t));
             }
          });
@@ -119,6 +126,15 @@ public class Alarms {
 
     public static void delete(final Alarm alarm) {
         API.authorized.deleteAlarm(alarm.getId()).enqueue(new API.BriefCallback<Void>() {
+            @Override
+            public void onFailure(Call<Void> call, Throwable t, Response<Void> response) {
+                Log.d("FLJ", "alarm delete failure: " + t.getMessage());
+                if (response != null) {
+                    ResponseBody body = response.errorBody();
+                    Log.d("FLJ", "alarm delete failure: " + response.errorBody());
+                }
+            }
+
             @Override
             public void onSuccess(Call<Void> call, Response<Void> response) {
                 int position = removeFromList(alarm);

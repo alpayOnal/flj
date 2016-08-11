@@ -15,6 +15,7 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import okio.Buffer;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -68,13 +69,17 @@ public class API {
                     e = new Exception(response.code() + " - Please login. ");
                 else
                     e = new Exception(response.code() + " - " + response.message());
-                this.onFailure(call, e);
+
+                this.onFailure(call, e, response);
             }
         }
 
+
+        abstract public void onFailure(Call<T> call, Throwable t, retrofit2.Response<T> response);
+
         @Override
-        public void onFailure(Call<T> call, Throwable t) {
-            Log.d("FLJ", "Failed: " + t.getMessage());
+        public void onFailure(Call<T> call, Throwable t){
+            onFailure(call, t, null);
         }
 
         public abstract void onSuccess(Call<T> call, retrofit2.Response<T> response);
@@ -245,7 +250,7 @@ public class API {
         Call<StarredJob> starJob(@Body StarredJob starredJob);
     }
 
-    private static final String HOST = "http://192.168.2.25:8000/";
+    private static final String HOST = "http://192.168.2.249:8000/";
 
 
 
@@ -273,5 +278,4 @@ public class API {
 
     public static AnonymousENDPOIT anonymous = anonymousRetrofit.create(AnonymousENDPOIT.class);
     public static AuthorizedENDPOIT authorized = authorizedRetrofit.create(AuthorizedENDPOIT.class);
-
 }
