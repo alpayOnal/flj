@@ -70,9 +70,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/signinup_layout"
-                android:layout_weight="0.5"
                 android:orientation="vertical"
-                android:layout_marginTop="25dp">
+                android:layout_marginTop="25dp"
+                android:visibility="visible"
+                >
                     <EditText
                         android:id="@+id/input_email"
                         android:layout_width="match_parent"
@@ -106,16 +107,63 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="10dp"
+                        style="@style/Widget.AppCompat.Button.Colored"
                         android:text="Sign in" />
                     <Button
                         android:id="@+id/signup"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="10dp"
+                        style="@style/Widget.AppCompat.Button.Colored"
                         android:text="Sign up"/>
                 </LinearLayout>
+                <TextView
+                    android:id="@+id/remember_link"
+                    android:text="Remember Password?"
+                    android:textStyle="bold"
+                    android:textColor="#ffffff"
+                    android:gravity="center"
+                    android:layout_marginTop="25dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
             </LinearLayout>
-        </LinearLayout>
+            <LinearLayout
+                android:id="@+id/remember_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="25dp"
+                android:gravity="center"
+                android:visibility="gone">
+                <EditText
+                    android:id="@+id/input_email_rf"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-2dp"
+                    android:padding="10dp"
+                    android:hint="Email"
+                    android:textColorHint="@color/grey_500"
+                    android:background="@drawable/edittext_default_bg"
+                    android:drawableLeft="@drawable/email"/>
+                <Button
+                    android:id="@+id/remember"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:layout_marginTop="15dp"
+                    style="@style/Base.Widget.AppCompat.Button.Colored"
+                    android:text="Remember" />
+                <TextView
+                    android:id="@+id/login_link"
+                    android:text="Login"
+                    android:textStyle="bold"
+                    android:textColor="#ffffff"
+                    android:gravity="center"
+                    android:layout_marginTop="25dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                </LinearLayout>
+            </LinearLayout>
     </ScrollView>
 </LinearLayout>
 

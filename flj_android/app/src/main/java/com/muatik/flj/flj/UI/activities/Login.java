@@ -1,15 +1,18 @@
 package com.muatik.flj.flj.UI.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,7 +49,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-public class Login extends AppCompatActivity implements
+public class Login extends FragmentActivity implements
         GoogleApiClient.OnConnectionFailedListener, View.OnClickListener  {
     Context thisContext;
     LoginButton fbLoginButton;
@@ -60,8 +63,14 @@ public class Login extends AppCompatActivity implements
     @BindView(R.id.input_password) EditText passwordText;
     @BindView(R.id.signin) Button btSignin;
     @BindView(R.id.signup) Button btSignup;
-    private Unbinder unbinder;
+    @BindView(R.id.input_email_rf) EditText emailTextRemember;
+    @BindView(R.id.remember_link) TextView rememberLink;
+    @BindView(R.id.login_link) TextView loginLink;
+    @BindView(R.id.signinup_layout) LinearLayout signinupLayout;
+    @BindView(R.id.remember_layout) LinearLayout rememberLayout;
+    @BindView(R.id.remember) Button remember;
 
+    private Unbinder unbinder;
 
     private void showApp() {
         startActivity(new Intent(this, Main.class));
@@ -108,7 +117,6 @@ public class Login extends AppCompatActivity implements
             public void onError(FacebookException exception) {}
         });
     }
-
 
     void prepareGoogle() {
         findViewById(R.id.google_signin).setOnClickListener(this);
@@ -190,7 +198,6 @@ public class Login extends AppCompatActivity implements
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
-
     private void googleSignOut() {
         Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(
                 new ResultCallback<Status>() {
@@ -229,7 +236,6 @@ public class Login extends AppCompatActivity implements
             AccountManager.signinBasicAuth(email, password);
     }
 
-
     @OnClick(R.id.signup)
     public void formSignup() {
         String email = emailText.getText().toString();
@@ -242,7 +248,6 @@ public class Login extends AppCompatActivity implements
             AccountManager.signupBasicAuth(account);
     }
 
-
     public boolean validateBasicAuthForn() {
 
         String email = emailText.getText().toString();
@@ -254,13 +259,36 @@ public class Login extends AppCompatActivity implements
             return false;
         }
 
-        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
+        if (password.isEmpty() || password.length() < 4 || password.length() > 20) {
             Toast.makeText(getApplicationContext(),
-                    "Between 4 and 10 alphanumeric characters.", Toast.LENGTH_LONG).show();
+                    "Between 4 and 20 alphanumeric characters.", Toast.LENGTH_LONG).show();
             return false;
         }
 
         return true;
+    }
+
+    @OnClick(R.id.remember_link)
+    public void rememberLink() {
+        signinupLayout.setVisibility(View.GONE);
+        rememberLayout.setVisibility(View.VISIBLE);
+    }
+
+    @OnClick(R.id.login_link)
+    public void loginLink() {
+        signinupLayout.setVisibility(View.VISIBLE);
+        rememberLayout.setVisibility(View.GONE);
+    }
+
+    @OnClick(R.id.remember)
+    public void remember() {
+        String email = emailTextRemember.getText().toString();
+        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Toast.makeText(getApplicationContext(),
+                    "Enter a valid email addres.", Toast.LENGTH_LONG).show();
+        } else {
+            Log.d("FLJ-remember", emailTextRemember.getText().toString());
+        }
     }
 
 }
