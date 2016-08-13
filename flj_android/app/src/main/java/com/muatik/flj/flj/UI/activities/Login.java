@@ -3,11 +3,13 @@ package com.muatik.flj.flj.UI.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -135,8 +137,26 @@ public class Login extends FragmentActivity implements
         SignInButton signInButton = (SignInButton) findViewById(R.id.google_signin);
         signInButton.setSize(SignInButton.SIZE_WIDE);
         signInButton.setEnabled(true);
-        signInButton.setColorScheme(SignInButton.COLOR_DARK);
+        signInButton.setColorScheme(SignInButton.COLOR_LIGHT);
         signInButton.setScopes(gso.getScopeArray());
+        setGooglePlusButtonText(signInButton, "Google");
+    }
+
+    protected void setGooglePlusButtonText(SignInButton signInButton, String buttonText) {
+        // Find the TextView that is inside of the SignInButton and set its text
+        for (int i = 0; i < signInButton.getChildCount(); i++) {
+            View v = signInButton.getChildAt(i);
+            if (v instanceof TextView) {
+                TextView tv = (TextView) v;
+                tv.setTextSize(16);
+                tv.setBackgroundResource(R.drawable.google_login);
+                tv.setGravity(Gravity.CENTER);
+                tv.setTextColor(Color.WHITE);
+                tv.setTextSize(16);
+                tv.setText("Sign in with Google");
+                return;
+            }
+        }
     }
 
     @Subscribe
