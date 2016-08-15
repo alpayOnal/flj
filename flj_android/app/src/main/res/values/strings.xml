@@ -11,7 +11,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="facebook_app_id">2102740319951150</string>
     <string name="facebook_login_button">Sign in with Facebook</string>
-    <string name="facebook_logout_button">Sign out Facebok</string>
+    <string name="facebook_logout_button">Sign out Facebook</string>
     <string name="google_client_id">223265251589-b1ojj9mj6pitskb9oh0rksifg3qijje5.apps.googleusercontent.com</string>
     <string name="g_login_button">Google</string>
 
