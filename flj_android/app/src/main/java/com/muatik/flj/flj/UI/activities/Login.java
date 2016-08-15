@@ -149,8 +149,9 @@ public class Login extends FragmentActivity implements
             if (v instanceof TextView) {
                 TextView tv = (TextView) v;
                 tv.setTextSize(16);
-                tv.setBackgroundResource(R.drawable.google_login);
+                tv.setBackgroundResource(R.drawable.sociallogin_google);
                 tv.setGravity(Gravity.CENTER);
+                tv.setWidth(350);
                 tv.setTextColor(Color.WHITE);
                 tv.setTextSize(16);
                 tv.setText("Sign in with Google");

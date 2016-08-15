@@ -77,21 +77,25 @@
                 android:orientation="vertical">
                 <com.google.android.gms.common.SignInButton
                     android:id="@+id/google_signin"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="40dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
                     android:layout_marginBottom="5dp"
                     android:layout_marginTop="5dp"
                     android:visibility="visible"/>
                 <com.facebook.login.widget.LoginButton
                     android:id="@+id/facebook_login"
                     xmlns:facebook="http://schemas.android.com/apk/res-auto"
-                    android:background="@drawable/facebook_login"
+                    android:background="@drawable/sociallogin_facebook"
                     android:backgroundTintMode="src_over"
                     facebook:com_facebook_login_text="@string/facebook_login_button"
                     facebook:com_facebook_logout_text="@string/facebook_logout_button"
                     android:scaleType="centerInside"
-                    android:layout_width="302dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
                     android:paddingLeft="20dp"
@@ -137,8 +141,10 @@
                 </RelativeLayout>
                     <EditText
                         android:id="@+id/input_email"
-                        android:layout_width="342dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
                         android:layout_marginTop="-2dp"
                         android:padding="10dp"
                         android:hint="Email"
@@ -148,8 +154,10 @@
                         android:drawableLeft="@drawable/email"/>
                     <EditText
                         android:id="@+id/input_password"
-                        android:layout_width="342dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
                         android:layout_marginTop="-2dp"
                         android:padding="10dp"
                         android:hint="Password"
@@ -233,6 +241,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
                     android:padding="10dp"
                     android:hint="Email"
                     android:textColorHint="@color/grey_500"
