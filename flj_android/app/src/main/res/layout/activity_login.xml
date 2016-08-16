@@ -87,7 +87,7 @@
                 <com.facebook.login.widget.LoginButton
                     android:id="@+id/facebook_login"
                     xmlns:facebook="http://schemas.android.com/apk/res-auto"
-                    android:background="@drawable/sociallogin_facebook"
+                    android:background="@drawable/login_facebook_background"
                     android:backgroundTintMode="src_over"
                     facebook:com_facebook_login_text="@string/facebook_login_button"
                     facebook:com_facebook_logout_text="@string/facebook_logout_button"
@@ -114,6 +114,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginTop="25dp"
+                    android:layout_marginBottom="4dp"
                     android:orientation="horizontal">
                     <TextView
                         android:id="@+id/tvText1"
@@ -145,9 +146,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
                         android:layout_marginRight="20dp"
-                        android:layout_marginTop="-2dp"
+                        android:layout_marginTop="2dp"
                         android:padding="10dp"
                         android:hint="Email"
+                        android:textSize="15dp"
                         android:textColorHint="@color/grey_500"
                         android:background="@drawable/edittext_default_bg"
 
@@ -161,6 +163,7 @@
                         android:layout_marginTop="-2dp"
                         android:padding="10dp"
                         android:hint="Password"
+                        android:textSize="15dp"
                         android:inputType="textPassword"
                         android:background="@drawable/edittext_default_bg"
                         android:textColorHint="@color/grey_500"
@@ -245,6 +248,7 @@
                     android:layout_marginRight="20dp"
                     android:padding="10dp"
                     android:hint="Email"
+                    android:textSize="15dp"
                     android:textColorHint="@color/grey_500"
                     android:background="@drawable/edittext_default_bg"
                     android:drawableLeft="@drawable/email"/>

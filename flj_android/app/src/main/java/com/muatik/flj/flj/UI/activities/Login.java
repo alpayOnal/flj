@@ -1,19 +1,16 @@
 package com.muatik.flj.flj.UI.activities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,7 +29,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.muatik.flj.flj.R;
@@ -40,8 +36,6 @@ import com.muatik.flj.flj.UI.entities.Account;
 import com.muatik.flj.flj.UI.entities.AccountManager;
 import com.muatik.flj.flj.UI.utilities.BusManager;
 import com.squareup.otto.Subscribe;
-
-import org.w3c.dom.Text;
 
 import java.util.Arrays;
 import java.util.List;
@@ -149,7 +143,7 @@ public class Login extends FragmentActivity implements
             if (v instanceof TextView) {
                 TextView tv = (TextView) v;
                 tv.setTextSize(16);
-                tv.setBackgroundResource(R.drawable.sociallogin_google);
+                tv.setBackgroundResource(R.drawable.login_google_background);
                 tv.setGravity(Gravity.CENTER);
                 tv.setWidth(350);
                 tv.setTextColor(Color.WHITE);
