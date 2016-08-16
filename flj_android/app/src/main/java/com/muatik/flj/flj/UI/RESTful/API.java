@@ -252,8 +252,6 @@ public class API {
 
     private static final String HOST = "http://192.168.1.103:8000/";
 
-
-
     static OkHttpClient anonymousClient = new OkHttpClient().newBuilder()
             .addInterceptor(new LoggingInterceptor())
             .build();

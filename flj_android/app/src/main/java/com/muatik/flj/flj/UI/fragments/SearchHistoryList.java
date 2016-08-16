@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.muatik.flj.flj.R;
+import com.muatik.flj.flj.UI.activities.Main;
 import com.muatik.flj.flj.UI.entities.SearchHistory;
 import com.muatik.flj.flj.UI.utilities.BusManager;
 import com.muatik.flj.flj.UI.adapters.RecyclerViewAdapter;
@@ -37,7 +38,7 @@ public class SearchHistoryList extends MyFragment {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    BusManager.get().post(new SearchForm.EventOnSubmit(jobFilter));
+                    BusManager.get().post(new Main.EventOnSubmit(jobFilter));
                 }
             });
         }

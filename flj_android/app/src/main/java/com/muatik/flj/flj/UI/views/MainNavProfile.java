@@ -25,19 +25,20 @@ public class MainNavProfile {
     static WeakReference<ImageView> profileImage;
 
     public static void init(View headerLayout) {
-        TextView accountName = (TextView) headerLayout.findViewById(R.id.account_name);
-        TextView accountEmail = (TextView) headerLayout.findViewById(R.id.account_email);
-        profileImage = new WeakReference<ImageView>(
-                (ImageView) headerLayout.findViewById(R.id.account_image));
-        accountName.setText(AccountManager.getAuthenticatedAccount().getDisplayName());
-        accountEmail.setText(AccountManager.getAuthenticatedAccount().getEmail());
-
-        try {
-            new LoadProfilePhoto().execute(new URL(
-                    AccountManager.getAuthenticatedAccount().userprofile.getPicture()));
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+//
+//        TextView accountName = (TextView) headerLayout.findViewById(R.id.account_name);
+//        TextView accountEmail = (TextView) headerLayout.findViewById(R.id.account_email);
+//        profileImage = new WeakReference<ImageView>(
+//                (ImageView) headerLayout.findViewById(R.id.account_image));
+//        accountName.setText(AccountManager.getAuthenticatedAccount().getDisplayName());
+//        accountEmail.setText(AccountManager.getAuthenticatedAccount().getEmail());
+//
+//        try {
+//            new LoadProfilePhoto().execute(new URL(
+//                    AccountManager.getAuthenticatedAccount().userprofile.getPicture()));
+//        } catch (MalformedURLException e) {
+//            e.printStackTrace();
+//        }
     }
 
     static class LoadProfilePhoto extends AsyncTask<URL, Bitmap, Bitmap> {

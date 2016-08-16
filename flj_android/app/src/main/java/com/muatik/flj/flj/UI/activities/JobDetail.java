@@ -1,21 +1,11 @@
-package com.muatik.flj.flj.UI.fragments;
+package com.muatik.flj.flj.UI.activities;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.text.format.DateUtils;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import com.muatik.flj.flj.R;
-import com.muatik.flj.flj.UI.RESTful.API;
-import com.muatik.flj.flj.UI.entities.AccountManager;
 import com.muatik.flj.flj.UI.entities.Job;
-import com.muatik.flj.flj.UI.entities.StarredJob;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -23,17 +13,14 @@ import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
-import retrofit2.Call;
-import retrofit2.Response;
 
 import static com.muatik.flj.flj.UI.views.JobViewHolder.capitalize;
 
 /**
  * Created by muatik on 26.07.2016.
  */
-public class JobDetail extends MyFragment {
+public class JobDetail extends AppCompatActivity {
 
     private Job job;
     private Unbinder unbinder;
@@ -45,14 +32,14 @@ public class JobDetail extends MyFragment {
     @BindView(R.id.job_employer) TextView view_job_employer;
 
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.job_detail, container, false);
-        Bundle bundle = getArguments();
-        job = (Job) bundle.getSerializable("job");
-        Toast.makeText(getContext(),job.getTitle(), Toast.LENGTH_LONG).show();
-        unbinder = ButterKnife.bind(this, view);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.job_detail_activity);
+
+        job = (Job) getIntent().getSerializableExtra("job");
+
+        unbinder = ButterKnife.bind(this);
 
         view_job_title.setText(job.getTitle());
         view_job_description.setText(job.getDescription());
@@ -67,13 +54,14 @@ public class JobDetail extends MyFragment {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return view;
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
+
+
+//    @Override
+//    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+//        super.onViewCreated(view, savedInstanceState);
+//    }
 
 //    @OnClick(R.id.toggle_star)
 //    void toggleStar(ToggleButton button) {

@@ -40,7 +40,6 @@ public class AlarmSuggestion extends MyFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view;
         alarm = Alarm.build(listener.getJobFilter());
-        Log.d("flj", "alarm suggestion alarm: " + alarm.toString());
         if (Alarms.exists(alarm)) {
             view = new View(getActivity());
             close();
