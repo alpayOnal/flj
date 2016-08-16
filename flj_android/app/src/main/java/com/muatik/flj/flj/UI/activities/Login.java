@@ -88,6 +88,20 @@ public class Login extends AppCompatActivity implements
         BusManager.get().register(this);
     }
 
+    @Override
+    protected void onStart() {
+        if (AccountManager.isAuthenticated()) {
+            showApp();
+        }
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        AccountManager.saveState();
+        super.onStop();
+    }
+
     private void prepareFacebookLogin() {
 
         List<String> permissions = Arrays.asList("public_profile, email");

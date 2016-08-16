@@ -25,9 +25,9 @@ import com.squareup.otto.Bus;
  */
 public class SearchForm extends MyFragment {
 
-    static public class EventOnSubmit {
+    static public class _EventOnSubmit {
         public JobFilter filter;
-        public EventOnSubmit(JobFilter filter) {
+        public _EventOnSubmit(JobFilter filter) {
             this.filter= filter;
         }
     }
@@ -109,7 +109,7 @@ public class SearchForm extends MyFragment {
                 keywordBox.getText().toString(),
                 "Germany", // country
                 locationBox.getText().toString());
-        bus.post(new EventOnSubmit(filter));
+        bus.post(new _EventOnSubmit(filter));
     }
 
 

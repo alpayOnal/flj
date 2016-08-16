@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.muatik.flj.flj.R;
 import com.muatik.flj.flj.UI.RESTful.API;
+import com.muatik.flj.flj.UI.activities.Main;
 import com.muatik.flj.flj.UI.entities.AccountManager;
 import com.muatik.flj.flj.UI.entities.Alarms;
 import com.muatik.flj.flj.UI.utilities.BusManager;
@@ -57,7 +58,7 @@ public class AlarmList extends MyFragment {
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.alarm_item_menu_search:
-                                BusManager.get().post(new SearchForm.EventOnSubmit(alarm));
+                                BusManager.get().post(new Main.EventOnSubmit(alarm));
                                 return true;
                             case R.id.alarm_item_menu_delete:
                                 delete(alarm);
@@ -79,7 +80,7 @@ public class AlarmList extends MyFragment {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    BusManager.get().post(new SearchForm.EventOnSubmit(alarm));
+                    BusManager.get().post(new Main.EventOnSubmit(alarm));
                 }
             });
 

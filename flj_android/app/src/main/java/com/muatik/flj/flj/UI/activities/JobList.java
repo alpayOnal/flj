@@ -1,28 +1,22 @@
-package com.muatik.flj.flj.UI.fragments;
+package com.muatik.flj.flj.UI.activities;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.muatik.flj.flj.R;
 import com.muatik.flj.flj.UI.RESTful.API;
-import com.muatik.flj.flj.UI.utilities.BusManager;
 import com.muatik.flj.flj.UI.adapters.EndlessRecyclerOnScrollListener;
 import com.muatik.flj.flj.UI.adapters.JobsRecyclerViewAdapter;
 import com.muatik.flj.flj.UI.entities.Job;
+import com.muatik.flj.flj.UI.fragments.AlarmSuggestion;
 import com.muatik.flj.flj.UI.entities.JobFilter;
 import com.muatik.flj.flj.UI.styles.DividerItemDecoration;
-import com.squareup.otto.Bus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,18 +29,18 @@ import retrofit2.Response;
  * Created by muatik on 22.07.2016.
  */
 
-public class JobList extends MyFragment {
+public class JobList extends BaseActivity {
 
-    /** EVENTS */
-    public static String STATE_onViewCreated = "onViewCreated";
+//    /** EVENTS */
+//    public static String STATE_onViewCreated = "onViewCreated";
     private AlarmSuggestion alarmSuggestion;
-
-    public class EventFragmentState {
-        public String state;
-        public EventFragmentState(String state) {
-            this.state = state;
-        }
-    }
+//
+//    public class EventFragmentState {
+//        public String state;
+//        public EventFragmentState(String state) {
+//            this.state = state;
+//        }
+//    }
 
 
     /**
@@ -56,15 +50,9 @@ public class JobList extends MyFragment {
     private static final int REQUEST_DELAY = 1000;
     int pageLength = 7;
 
+    private static final String JOB_LIST_STATE_NAME = "jobList";
+
     private JobFilter jobFilter;
-
-    private Bus bus = BusManager.get();
-
-    /**
-     * holds jobs list as a static variable in order to keep the list as same as it is when
-     * user comes back to this fragment.
-     */
-    public static Bundle savedState;
 
     EndlessRecyclerOnScrollListener infiniteScroller;
     JobsRecyclerViewAdapter adapter;
@@ -89,79 +77,30 @@ public class JobList extends MyFragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        setHasOptionsMenu(true);
-        Log.e("FLJ", "jobList onCreateView --------------");
-        // if jobFilter is null, then the view is being created and this means
-        // there is not list history to be kept, savedState must be empty.
-        if (jobFilter == null)
-            savedState = new Bundle();
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.jobs_list_activity);
 
-        jobFilter = (JobFilter) getArguments().getSerializable("jobFilter");
+        jobFilter = (JobFilter) getIntent().getSerializableExtra("jobFilter");
         if (jobFilter == null)
             throw new RuntimeException("joblist fragment needs job filter as an argument");
+
+
+        init();
+        prepareToolbar();
 
         if (!isSugesstionGone)
             showAlarmSuggestion();
 
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.jobs_list_content, container, false);
-    }
-
-    void showAlarmSuggestion() {
-
-        alarmSuggestion = new AlarmSuggestion();
-        alarmSuggestion.setListener(new AlarmSuggestion.Listener() {
-            @Override
-            public void onClose() {
-                getChildFragmentManager().beginTransaction().remove(alarmSuggestion).commit();
-                isSugesstionGone = true;
-            }
-
-            @Override
-            public JobFilter getJobFilter() {
-                return jobFilter;
-            }
-        });
-        getChildFragmentManager()
-                .beginTransaction()
-                .replace(R.id.alarm_suggestion_fragment, alarmSuggestion)
-                .commit();
-    }
-
-
-    void prepareToolbar() {
-        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        toolbar.setTitle("hlelo");
-        if (jobFilter.keyword == null) {
-
-        } else {
-            toolbar.setTitle(jobFilter.keyword);
-        }
-        toolbar.setSubtitle("Jobs in " + jobFilter.city);
-    }
-
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.job_list_action_bar, menu);
-        prepareToolbar();
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        Log.e("FLJ", "jobList onViewCreated --------------");
-        // PREPARING LIST VIEW
         jobs = new ArrayList<Job>();
-        adapter = new JobsRecyclerViewAdapter(getContext(), jobs);
-        listView = (RecyclerView) getView().findViewById(R.id.posts_list);
-        listView.addItemDecoration(new DividerItemDecoration(getActivity()));
+        adapter = new JobsRecyclerViewAdapter(this, jobs);
+        listView = (RecyclerView) findViewById(R.id.posts_list);
+        listView.addItemDecoration(new DividerItemDecoration(this));
         listView.setAdapter(adapter);
-        listView.setLayoutManager(new LinearLayoutManager(getContext()));
+        listView.setLayoutManager(new LinearLayoutManager(this));
 
         // PREPARING SWIPE REFRESHER
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -170,10 +109,10 @@ public class JobList extends MyFragment {
             }
         });
 
-
-        if(savedState != null && savedState.getSerializable("jobs") != null) {
+        // @TODO: if no any job posts found, show a message saying this.
+        if(savedInstanceState != null && savedInstanceState.getSerializable(JOB_LIST_STATE_NAME) != null) {
             bindInfiniteScroller();
-            populateJobList((ArrayList<Job>) savedState.getSerializable("jobs"));
+            populateJobList((ArrayList<Job>) savedInstanceState.getSerializable(JOB_LIST_STATE_NAME));
         } else {
             swipeRefreshLayout.post(new Runnable() {
                 @Override
@@ -183,24 +122,51 @@ public class JobList extends MyFragment {
             });
             refreshJobList();
         }
-
-        bus.register(this);
-        bus.post(new EventFragmentState("onViewCreated"));
-
-
     }
 
     @Override
-    public void onPause() {
-        getChildFragmentManager().beginTransaction().remove(alarmSuggestion).commit();
-        super.onPause();
+    protected void onSaveInstanceState(Bundle outState) {
+        // removing fragment because fragment cannot bind its listener successfully.
+        // so make it recreated
+        getSupportFragmentManager().beginTransaction().remove(alarmSuggestion).commit();
+
+        // prevent re-fetching job posts from the server.
+        outState.putSerializable(JOB_LIST_STATE_NAME, jobs);
+
+        super.onSaveInstanceState(outState);
     }
 
-    @Override
-    public void onDestroyView() {
-        savedState.putSerializable("jobs", jobs);
-        bus.unregister(this);
-        super.onDestroyView();
+    void showAlarmSuggestion() {
+        alarmSuggestion = new AlarmSuggestion();
+        alarmSuggestion.setListener(new AlarmSuggestion.Listener() {
+            @Override
+            public void onClose() {
+                getSupportFragmentManager().beginTransaction()
+                        .remove(alarmSuggestion).commit();
+                isSugesstionGone = true;
+            }
+
+            @Override
+            public JobFilter getJobFilter() {
+                return jobFilter;
+            }
+        });
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.alarm_suggestion_fragment, alarmSuggestion)
+                .commit();
+    }
+
+    void prepareToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("hlelo");
+        if (jobFilter.keyword == null) {
+
+        } else {
+            toolbar.setTitle(jobFilter.keyword);
+        }
+        toolbar.setSubtitle("Jobs in " + jobFilter.city);
     }
 
     private Job getOldestJob() {
@@ -312,5 +278,13 @@ public class JobList extends MyFragment {
     }
 
 
+//    @Subscribe
+//    public void onJobClicked(JobViewHolder.EventOnJobClicked event) {
+//
+//        Bundle bundle = new Bundle();
+//        bundle.putSerializable("job", event.job);
+//
+//        startActivity(new Intent(this, JobDetail.class), bundle);
+//    }
 
 }

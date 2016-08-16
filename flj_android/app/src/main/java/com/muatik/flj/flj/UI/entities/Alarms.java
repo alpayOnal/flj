@@ -58,10 +58,12 @@ public class Alarms {
     private static final String PREFERENCE_NAME = "alarms";
     private static List<Alarm> data = new ArrayList<Alarm>();
     private static SharedPreferences prefs;
-
+    private static boolean inited = false;
     public static void init(Context context) {
         Alarms.context = context;
-        refresh();
+        if (inited == false)
+            refresh();
+        inited = true;
     }
 
     public static void refresh() {

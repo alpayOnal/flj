@@ -1,11 +1,13 @@
 package com.muatik.flj.flj.UI.views;
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.TextView;
 
 import com.muatik.flj.flj.R;
+import com.muatik.flj.flj.UI.activities.JobDetail;
 import com.muatik.flj.flj.UI.utilities.BusManager;
 import com.muatik.flj.flj.UI.entities.Job;
 
