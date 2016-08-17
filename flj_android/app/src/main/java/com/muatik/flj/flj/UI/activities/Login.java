@@ -34,6 +34,7 @@ import com.google.android.gms.common.api.Status;
 import com.muatik.flj.flj.R;
 import com.muatik.flj.flj.UI.entities.Account;
 import com.muatik.flj.flj.UI.entities.AccountManager;
+import com.muatik.flj.flj.UI.entities.Job;
 import com.muatik.flj.flj.UI.utilities.BusManager;
 import com.squareup.otto.Subscribe;
 
@@ -70,6 +71,10 @@ public class Login extends FragmentActivity implements
 
     private void showApp() {
         startActivity(new Intent(this, Main.class));
+//        startActivity(new Intent(this, JobDetail.class)
+//                .putExtra("job", new Job(
+//                        "Senior Android Developer",
+//                        "2016-08-10T09:37:25.233146Z", "izmit", "turkey")));
     }
 
     @Override

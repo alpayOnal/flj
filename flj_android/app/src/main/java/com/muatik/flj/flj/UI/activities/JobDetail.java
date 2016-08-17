@@ -1,7 +1,6 @@
 package com.muatik.flj.flj.UI.activities;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
 import com.muatik.flj.flj.R;
@@ -12,7 +11,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 import static com.muatik.flj.flj.UI.views.JobViewHolder.capitalize;
@@ -20,7 +18,7 @@ import static com.muatik.flj.flj.UI.views.JobViewHolder.capitalize;
 /**
  * Created by muatik on 26.07.2016.
  */
-public class JobDetail extends AppCompatActivity {
+public class JobDetail extends DetailActivity {
 
     private Job job;
     private Unbinder unbinder;
@@ -31,15 +29,13 @@ public class JobDetail extends AppCompatActivity {
     @BindView(R.id.job_location) TextView view_job_location;
     @BindView(R.id.job_employer) TextView view_job_employer;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.job_detail_activity);
+        init();
 
         job = (Job) getIntent().getSerializableExtra("job");
-
-        unbinder = ButterKnife.bind(this);
 
         view_job_title.setText(job.getTitle());
         view_job_description.setText(job.getDescription());
@@ -54,11 +50,14 @@ public class JobDetail extends AppCompatActivity {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
+        getSupportActionBar().setTitle("");
+        toolbar.setSubtitle(job.getTitle());
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
 
-
-//    @Override
+    //    @Override
 //    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 //        super.onViewCreated(view, savedInstanceState);
 //    }
