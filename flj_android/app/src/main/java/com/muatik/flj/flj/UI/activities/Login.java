@@ -121,10 +121,14 @@ public class Login extends FragmentActivity implements
                 AccountManager.signinViaFacebook(profileId, token);
             }
             @Override
-            public void onCancel() {}
+            public void onCancel() {
+                Log.d("Facebook---","onCancel");
+            }
 
             @Override
-            public void onError(FacebookException exception) {}
+            public void onError(FacebookException exception) {
+                Log.d("Facebook---",exception.getMessage());
+            }
         });
     }
 
