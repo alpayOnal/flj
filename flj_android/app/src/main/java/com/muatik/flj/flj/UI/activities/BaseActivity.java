@@ -1,9 +1,7 @@
 package com.muatik.flj.flj.UI.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -30,11 +28,12 @@ import com.muatik.flj.flj.UI.views.MainNavProfile;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
- * Created by muatik on 8/11/16.
+ * Created by muatik on 17.08.2016.
  */
 public class BaseActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -43,7 +42,7 @@ public class BaseActivity extends AppCompatActivity
     // since otto bus does not support to make the subscriptions for derivative classes, we manually
     // add subscriptions by creating an object. we also unsubscribe using the same object.
     // https://github.com/square/otto/issues/26
-    private Object subscribers = new Object(){
+    protected Object subscribers = new Object(){
         @Subscribe
         public void onSearchSubmitted(Main.EventOnSubmit event) {
             Intent intent = new Intent(BaseActivity.this, JobList.class);
@@ -67,41 +66,23 @@ public class BaseActivity extends AppCompatActivity
         }
     };
 
-    private Unbinder unbinder;
+    protected Unbinder unbinder;
 
+    @BindView(R.id.toolbar)
+    protected Toolbar toolbar;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     protected void init() {
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        unbinder = ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        View headerLayout = navigationView.getHeaderView(0);
-        MainNavProfile.init(headerLayout);
 
         Alarms.init(getApplicationContext());
         SearchHistory.init(getApplicationContext());
     }
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(newBase);
-    }
-
-//    @Subscribe
-//    public void onSignedIn(AccountManager.EventSuccessfulSignIn event) {
-//        Toast.makeText(this, "Welcome: " + event.account.getUsername(), Toast.LENGTH_LONG).show();
-//        //accountEmail.setText(AccountManager.getAuthenticatedAccount().getEmail());
-//        //accountName.setText(AccountManager.getAuthenticatedAccount().getUsername());
-//        //accountImage.setImageURI(Uri.parse(AccountManager.getAuthenticatedAccount().userprofile.getPicture()));
-//    }
 
     @Override
     public void onBackPressed() {
@@ -176,9 +157,14 @@ public class BaseActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onDestroy() {
+        unbinder.unbind();
+        super.onDestroy();
+    }
+
+    @Override
     protected void onStop() {
         Log.i("FLJ", this.getClass().getSimpleName() + " onStop " + System.identityHashCode(this));
-        unbinder.unbind();
         bus.unregister(subscribers);
         super.onStop();
     }
@@ -186,7 +172,6 @@ public class BaseActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         Log.i("FLJ", this.getClass().getSimpleName() + " onStart " + System.identityHashCode(this));
-        unbinder = ButterKnife.bind(this);
         bus.register(subscribers);
         super.onStart();
     }

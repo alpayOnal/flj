@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -22,7 +21,7 @@ import butterknife.OnClick;
 /**
  * Created by muatik on 25.07.2016.
  */
-public class Main extends BaseActivity {
+public class Main extends ActivityWithDrawer {
 
     static public class EventOnSubmit {
         public JobFilter filter;

@@ -7,7 +7,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 
 import com.muatik.flj.flj.R;
 import com.muatik.flj.flj.UI.RESTful.API;
@@ -29,7 +28,7 @@ import retrofit2.Response;
  * Created by muatik on 22.07.2016.
  */
 
-public class JobList extends BaseActivity {
+public class JobList extends ActivityWithDrawer {
 
 //    /** EVENTS */
 //    public static String STATE_onViewCreated = "onViewCreated";
