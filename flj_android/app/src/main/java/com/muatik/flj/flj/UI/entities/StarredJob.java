@@ -8,4 +8,12 @@ public class StarredJob {
     public StarredJob(Job o) {
         job = o.getJob_id();
     }
+
+    public String getId() {
+        return job;
+    }
+
+    public boolean isSame(StarredJob starredJob) {
+        return starredJob.getId().equals(getId());
+    }
 }

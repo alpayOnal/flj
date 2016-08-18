@@ -20,6 +20,7 @@ import com.muatik.flj.flj.UI.entities.Alarms;
 import com.muatik.flj.flj.UI.entities.Job;
 import com.muatik.flj.flj.UI.entities.JobFilter;
 import com.muatik.flj.flj.UI.entities.SearchHistory;
+import com.muatik.flj.flj.UI.entities.StarredJobs;
 import com.muatik.flj.flj.UI.fragments.SearchForm;
 import com.muatik.flj.flj.UI.fragments.SearchHistoryManager;
 import com.muatik.flj.flj.UI.utilities.BusManager;
@@ -80,6 +81,7 @@ public class BaseActivity extends AppCompatActivity
         unbinder = ButterKnife.bind(this);
         setSupportActionBar(toolbar);
 
+        StarredJobs.init(getApplicationContext());
         Alarms.init(getApplicationContext());
         SearchHistory.init(getApplicationContext());
     }
@@ -166,12 +168,14 @@ public class BaseActivity extends AppCompatActivity
     protected void onStop() {
         Log.i("FLJ", this.getClass().getSimpleName() + " onStop " + System.identityHashCode(this));
         bus.unregister(subscribers);
+        bus.unregister(this);
         super.onStop();
     }
 
     @Override
     protected void onStart() {
         Log.i("FLJ", this.getClass().getSimpleName() + " onStart " + System.identityHashCode(this));
+        bus.register(this);
         bus.register(subscribers);
         super.onStart();
     }

@@ -1,9 +1,11 @@
 package com.muatik.flj.flj.UI.entities;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import com.muatik.flj.flj.UI.RESTful.API;
 
 import java.io.Serializable;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Created by muatik on 24.07.2016.
@@ -19,6 +21,9 @@ public class Job implements Serializable {
     private String latitude;
     private String longitude;
     private Integer user;
+    private Integer view_counter;
+    private boolean applicable;
+    private String source_url;
 
     public Job() {
 
@@ -31,12 +36,20 @@ public class Job implements Serializable {
         this.created_at= created_at;
     }
 
+    public void setJob_id(String job_id) {
+        this.job_id = job_id;
+    }
+
     public String getId() {
         return job_id;
     }
 
     public String getTitle() {
         return title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getDescription() {
@@ -71,6 +84,7 @@ public class Job implements Serializable {
         return job_id;
     }
 
+
     public String getEmployer() {
         return employer;
     }
@@ -78,22 +92,46 @@ public class Job implements Serializable {
     public void setEmployer(String employer) {
         this.employer = employer;
     }
-//
-//    @Override
-//    public int describeContents() {
-//        return 0;
-//    }
-//
-//    @Override
-//    public void writeToParcel(Parcel parcel, int i) {
-//        parcel.writeString(title);
-//        parcel.writeString(description);
-//        parcel.writeString(country);
-//        parcel.writeString(city);
-//        parcel.writeString(latitude);
-//        parcel.writeString(longitude);
-//        parcel.writeInt(user);
-//        parcel.writeString(job_id);
-//        parcel.writeString(employer);
-//    }
+
+
+    public Integer getView_counter() {
+        return view_counter;
+    }
+
+    public void setView_counter(Integer view_counter) {
+        this.view_counter = view_counter;
+    }
+
+    public void countView() {
+        API.authorized.countView(getId()).enqueue(new API.BriefCallback<Job>() {
+            @Override
+            public void onFailure(Call<Job> call, Throwable t, Response<Job> response) {
+
+            }
+
+            @Override
+            public void onSuccess(Call<Job> call, Response<Job> response) {
+                Job job = response.body();
+                Job.this.setView_counter(job.getView_counter());
+            }
+        });
+    }
+
+
+    public boolean isApplicable() {
+        return applicable;
+    }
+
+    public void setApplicable(boolean applicable) {
+        this.applicable = applicable;
+    }
+
+    public String getSource_url() {
+        return source_url;
+    }
+
+    public void setSource_url(String source_url) {
+        this.source_url = source_url;
+    }
+
 }

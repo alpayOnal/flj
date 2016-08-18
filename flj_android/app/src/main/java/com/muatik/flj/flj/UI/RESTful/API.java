@@ -27,6 +27,7 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -228,6 +229,7 @@ public class API {
 
         @POST("users/")
         Call<Account> basicAuthSignUp(@Body Account account);
+
     }
 
     /**
@@ -246,11 +248,20 @@ public class API {
         @DELETE("alarms/{alarmId}/")
         Call<Void> deleteAlarm(@Path("alarmId") int alarmId);
 
+        @GET("starredjobs/")
+        Call<List<StarredJob>> getStarredJobs();
+
         @POST("starredjobs/")
         Call<StarredJob> starJob(@Body StarredJob starredJob);
+
+        @DELETE("starredjobs/{starredjobId}/")
+        Call<Void> unstarJob(@Path("starredjobId") String id);
+
+        @PUT("posts/{jobId}/countView/")
+        Call<Job> countView(@Path("jobId") String jobId);
     }
 
-    private static final String HOST = "http://192.168.2.62:8000/";
+    private static final String HOST = "http://192.168.1.103:8000/";
 
     static OkHttpClient anonymousClient = new OkHttpClient().newBuilder()
             .addInterceptor(new LoggingInterceptor())

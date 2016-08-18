@@ -1,5 +1,8 @@
 from django.contrib.gis.measure import D
 from django.db.models import Q
+from rest_framework import viewsets
+from rest_framework.decorators import detail_route
+
 from posts.helpers import JSONResponse
 from posts.models import JobPost
 from posts.permissions import IsOwnerOrReadOnly
@@ -8,7 +11,8 @@ from rest_framework import generics
 from rest_framework import permissions
 from django.contrib.gis.geos import GEOSGeometry
 
-class JobPosts(generics.ListCreateAPIView):
+
+class JobPosts(viewsets.ModelViewSet):
     queryset = JobPost.objects.all()
     serializer_class = JobPostSerializer
     # permission_classes = (IsOwnerOrReadOnly,)
@@ -38,11 +42,19 @@ class JobPosts(generics.ListCreateAPIView):
         #     criteria.append(Q(point__distance_lte=(point, D(m=5))))
         queryset = JobPost.objects\
             .filter(*criteria)\
-            .order_by("-created_at")[:9]
+            .order_by("-created_at")
         return queryset
 
+    @detail_route(methods=["PUT"])
+    def countView(self, request, *args, **kwargs):
+        job = self.get_object()
+        job.countView()
+        job.save()
+        serializer = self.get_serializer(job)
+        return JSONResponse(serializer.data)
 
-class JobPostDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = JobPost.objects.all()
-    serializer_class = JobPostSerializer
+
+# class JobPostDetail(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = JobPost.objects.all()
+#     serializer_class = JobPostSerializer
 

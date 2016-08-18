@@ -12,6 +12,7 @@ public class DetailActivity extends BaseActivity {
     @Override
     protected void init() {
         super.init();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

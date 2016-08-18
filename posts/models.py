@@ -78,14 +78,30 @@ class JobPost(models.Model):
         User, on_delete=models.CASCADE, related_name='job_posts')
     employer = models.CharField(max_length=50, blank=False)
     state = models.SmallIntegerField(choices=STATES, default=STATES[1][0])
+    created_at = models.DateTimeField(auto_now_add=True)
+
     title = models.CharField(max_length=255, blank=False)
     description = models.TextField(blank=False)
-    created_at = models.DateTimeField(auto_now_add=True)
+
     city = LowerCaseCharField(max_length=25, blank=False)
     country = LowerCaseCharField(max_length=25, blank=False)
     longitude = models.FloatField(blank=None)
     latitude = models.FloatField(blank=None)
+
+    # if post is crawled
+    source_url = models.CharField(max_length=10000, blank=True)
+
+    # if eligible for job applications in app
+    # if not, probably end users will be redirected to the source url
+    applicable = models.BooleanField(default=True, blank=True)
+
+    # how many times this record is viewed
+    view_counter = models.IntegerField(default=0, blank=True)
+
     # point = gis_models.PointField()
+
+    def countView(self, addition=1):
+        self.view_counter += addition
 
 
 class StarredJob(models.Model):

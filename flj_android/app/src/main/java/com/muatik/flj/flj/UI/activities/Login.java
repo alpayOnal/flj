@@ -45,7 +45,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-
+// @TODO: klavye acildiginda form yukari kaymali, kaydirilabilir olmali
+// @TODO: emaili yazdiktan sonra klavyede enter kisminda next olmali
+// @TODO: signin ve signup dugmelerine basildiginda loading gorseli
 public class Login extends FragmentActivity implements
         GoogleApiClient.OnConnectionFailedListener, View.OnClickListener  {
     Context thisContext;
@@ -70,11 +72,17 @@ public class Login extends FragmentActivity implements
     private Unbinder unbinder;
 
     private void showApp() {
-        startActivity(new Intent(this, Main.class));
-//        startActivity(new Intent(this, JobDetail.class)
-//                .putExtra("job", new Job(
-//                        "Senior Android Developer",
-//                        "2016-08-10T09:37:25.233146Z", "izmit", "turkey")));
+//        startActivity(new Intent(this, Main.class));
+        Job j = new Job(
+                "Senior Android Developer",
+                "2016-08-10T09:37:25.233146Z", "izmit", "turkey");
+        j.setJob_id("3");
+        j.setView_counter(5);
+        j.setSource_url("http://www.jobsite.co.uk/job/956507596?src=homepage&v96=ssr&jobTile=lv-charlieOne");
+        j.setEmployer("Hepsiburada.com");
+        j.setDescription(
+                "You will be a part of an intense and autonomous team that works on the most challenging projects to create games that amaze millions of people all around the world. Within the agile environment, you will work alongside software engineers, artists, game designers and product managers in a thriving, fun and fast-paced atmosphere.");
+        startActivity(new Intent(this, JobDetail.class).putExtra("job", j));
     }
 
     @Override
