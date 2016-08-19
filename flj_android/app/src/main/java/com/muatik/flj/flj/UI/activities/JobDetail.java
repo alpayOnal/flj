@@ -3,8 +3,10 @@ package com.muatik.flj.flj.UI.activities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,6 +17,8 @@ import com.muatik.flj.flj.UI.entities.Job;
 import com.muatik.flj.flj.UI.entities.StarredJob;
 import com.muatik.flj.flj.UI.entities.StarredJobs;
 import com.squareup.otto.Subscribe;
+
+import org.w3c.dom.Text;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -34,7 +38,7 @@ public class JobDetail extends DetailActivity {
     private Job job;
     private Unbinder unbinder;
 
-    @BindView(R.id.job_title) TextView view_job_title;
+//    @BindView(R.id.job_title) TextView view_job_title;
     @BindView(R.id.job_description) TextView view_job_description;
     @BindView(R.id.job_created_at) TextView view_job_created_at;
     @BindView(R.id.job_location) TextView view_job_location;
@@ -53,7 +57,8 @@ public class JobDetail extends DetailActivity {
     }
 
     protected void bindJob(Job job) {
-        view_job_title.setText(job.getTitle());
+        // @TODO: employer'a tiklandiginda diger is ilanlari
+        // @TODO: lokasyona tiklandiginda haritada goster
         view_job_description.setText(job.getDescription());
         view_job_location.setText(String.format("%s, %s", new String[]{
                 capitalize(job.getCity()), capitalize(job.getCountry())}));
@@ -71,9 +76,9 @@ public class JobDetail extends DetailActivity {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
+        ((TextView) findViewById(R.id.appbar_title)).setText(job.getTitle());
         getSupportActionBar().setTitle("");
-        toolbar.setSubtitle(job.getTitle());
+//        toolbar.setSubtitle(job.getTitle());
         setJobStarState(new StarredJobs.EventDataChanged());
     }
 

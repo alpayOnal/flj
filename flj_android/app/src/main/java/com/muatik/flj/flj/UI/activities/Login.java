@@ -72,17 +72,17 @@ public class Login extends FragmentActivity implements
     private Unbinder unbinder;
 
     private void showApp() {
-//        startActivity(new Intent(this, Main.class));
-        Job j = new Job(
-                "Senior Android Developer",
-                "2016-08-10T09:37:25.233146Z", "izmit", "turkey");
-        j.setJob_id("3");
-        j.setView_counter(5);
-        j.setSource_url("http://www.jobsite.co.uk/job/956507596?src=homepage&v96=ssr&jobTile=lv-charlieOne");
-        j.setEmployer("Hepsiburada.com");
-        j.setDescription(
-                "You will be a part of an intense and autonomous team that works on the most challenging projects to create games that amaze millions of people all around the world. Within the agile environment, you will work alongside software engineers, artists, game designers and product managers in a thriving, fun and fast-paced atmosphere.");
-        startActivity(new Intent(this, JobDetail.class).putExtra("job", j));
+        startActivity(new Intent(this, Main.class));
+//        Job j = new Job(
+//                "Senior or junior Android and python Developer",
+//                "2016-08-10T09:37:25.233146Z", "izmit", "turkey");
+//        j.setJob_id("3");
+//        j.setView_counter(5);
+//        j.setSource_url("http://www.jobsite.co.uk/job/956507596?src=homepage&v96=ssr&jobTile=lv-charlieOne");
+//        j.setEmployer("Hepsiburada.com");
+//        j.setDescription(
+//                "You will be a part of an intense and autonomous team that works on the most challenging projects to create games that amaze millions of people all around the world. Within the agile environment, you will work alongside software engineers, artists, game designers and product managers in a thriving, fun and fast-paced atmosphere.");
+//        startActivity(new Intent(this, JobDetail.class).putExtra("job", j));
     }
 
     @Override
@@ -96,10 +96,8 @@ public class Login extends FragmentActivity implements
 
         FacebookSdk.sdkInitialize(getApplicationContext());
 
-
         setContentView(R.layout.activity_login);
         unbinder = ButterKnife.bind(this);
-
 
         prepareGoogle();
         prepareFacebookLogin();
