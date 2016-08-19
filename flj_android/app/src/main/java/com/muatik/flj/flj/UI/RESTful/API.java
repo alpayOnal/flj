@@ -261,7 +261,7 @@ public class API {
         Call<Job> countView(@Path("jobId") String jobId);
     }
 
-    private static final String HOST = "http://192.168.2.25:8000/";
+    private static final String HOST = "http://192.168.2.62:8000/";
 
     static OkHttpClient anonymousClient = new OkHttpClient().newBuilder()
             .addInterceptor(new LoggingInterceptor())

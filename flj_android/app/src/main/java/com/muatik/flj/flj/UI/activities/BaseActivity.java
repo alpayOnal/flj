@@ -131,9 +131,9 @@ public class BaseActivity extends AppCompatActivity
             showFragment(new SearchHistoryManager());
         } else if (id == R.id.nav_manage) {
             startActivity(new Intent(this, AlarmManager.class));
-        } else if (id == R.id.nav_share) {
-            startActivity(new Intent(getApplication(), GoogleSignin.class));
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_profile) {
+            startActivity(new Intent(getApplication(), Profile.class));
+        } else if (id == R.id.nav_logout) {
             AccountManager.signout();
             startActivity(new Intent(getApplication(), Login.class));
         }

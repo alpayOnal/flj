@@ -18,8 +18,8 @@
             android:name=".UI.activities.Main"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".UI.activities.GoogleSignin" />
-        <activity android:name=".UI.activities.Login"
+        <activity
+            android:name=".UI.activities.Login"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -40,7 +40,7 @@
             android:name="com.facebook.FacebookActivity"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity android:name=".UI.activities.NewJob" />
+        <activity android:name=".UI.activities.Profile" android:theme="@style/AppTheme" />
     </application>
 
 </manifest>
