@@ -1,22 +1,13 @@
 package com.muatik.flj.flj.UI.entities;
 
-import android.util.Log;
-
-import com.muatik.flj.flj.UI.RESTful.API;
-import com.muatik.flj.flj.UI.utilities.BusManager;
-
 import java.io.Serializable;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by muatik on 7/28/16.
  */
 public class Account implements Serializable {
 
-    private int userId;
+    private int id;
     private String first_name;
     private String last_name;
     private String username;
@@ -26,10 +17,18 @@ public class Account implements Serializable {
     public UserProfile userprofile;
     private int firstName;
 
-    public Account(int userId, String username, String email, String password) {
-        this.userId = userId;
+    public Account(int id, String username, String email, String password) {
+        this.id = id;
         this.username = username;
         this.email = email;
+        this.password = password;
+    }
+
+    public Account(String first_name, String last_name, String email, String username, String password) {
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.email = email;
+        this.username = username;
         this.password = password;
     }
 
@@ -58,6 +57,10 @@ public class Account implements Serializable {
 
     public String getLast_name() {
         return first_name;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public static class UserProfile {

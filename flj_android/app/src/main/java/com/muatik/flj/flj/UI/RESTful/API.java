@@ -259,9 +259,12 @@ public class API {
 
         @PUT("posts/{jobId}/countView/")
         Call<Job> countView(@Path("jobId") String jobId);
+
+        @PUT("users/{userId}/")
+        Call<Account> updateAccout(@Path("userId") int userId, @Body Account account);
     }
 
-    private static final String HOST = "http://192.168.2.62:8000/";
+    private static final String HOST = "http://192.168.1.105:8000/";
 
     static OkHttpClient anonymousClient = new OkHttpClient().newBuilder()
             .addInterceptor(new LoggingInterceptor())

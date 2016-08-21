@@ -4,16 +4,13 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.google.gson.internal.Excluder;
 import com.muatik.flj.flj.UI.RESTful.API;
 import com.muatik.flj.flj.UI.utilities.BusManager;
 
 import java.io.IOException;
-import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
@@ -48,7 +45,27 @@ public class AccountManager {
         public String error;
     }
 
+
     public static class EventSignout {}
+
+    public static class EventAccountUpdateFailure {
+
+        public Throwable throwableException;
+        public String errorMessage;
+
+        public EventAccountUpdateFailure(Throwable throwableException, String errorMessage) {
+            this.throwableException = throwableException;
+            this.errorMessage = errorMessage;
+        }
+    }
+
+    public static class EventSuccessfulAccountUpdate {
+        public Account account;
+
+        public EventSuccessfulAccountUpdate(Account account) {
+            this.account = account;
+        }
+    }
 
     private static Account authenticated;
     private static String authenticator_type;
@@ -66,9 +83,13 @@ public class AccountManager {
     public static Account getAuthenticatedAccount() {
         return authenticated;
     }
+    public static Account setAuthenticatedAccount(Account account) {
+        authenticated = account;
+        return authenticated;
+    }
 
     static void handleAPIFailure(Call<Account> call, Throwable t, Response<Account> response) {
-        Log.d("FLJ", "alarm post failure: " + t.getMessage());
+        Log.d("FLJ", "handleAPIFailure : " + t.getMessage());
 
         if (response != null){
             ResponseBody body = response.errorBody();
@@ -123,6 +144,35 @@ public class AccountManager {
                 authenticated = response.body();
                 BusManager.get().post(new EventSuccessfulSignIn(authenticated));
                 BusManager.get().post(new onSignInCompleted());
+            }
+        });
+    }
+
+    public static void updateAccout(Account account) {
+
+        Call<Account> call = API.authorized.updateAccout(authenticated.getId(), account);
+        call.enqueue(new API.BriefCallback<Account>() {
+            @Override
+            public void onFailure(Call<Account> call, Throwable t, Response<Account> response) {
+
+                if (response != null){
+                    ResponseBody body = response.errorBody();
+                    try {
+                        BusManager.get().post(new EventAccountUpdateFailure(t, body.string()));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }else {
+                    BusManager.get().post(new EventAccountUpdateFailure(t, t.getMessage()));
+                }
+
+                BusManager.get().post(new onSignInCompleted());
+            }
+
+            @Override
+            public void onSuccess(Call<Account> call, Response<Account> response) {
+                authenticated = response.body();
+                BusManager.get().post(new EventSuccessfulAccountUpdate(authenticated));
             }
         });
     }

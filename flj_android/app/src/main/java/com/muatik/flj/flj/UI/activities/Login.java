@@ -1,5 +1,6 @@
 package com.muatik.flj.flj.UI.activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,6 +70,8 @@ public class Login extends FragmentActivity implements
     @BindView(R.id.signinup_layout) LinearLayout signinupLayout;
     @BindView(R.id.remember_layout) LinearLayout rememberLayout;
     @BindView(R.id.remember) Button remember;
+    private ProgressDialog loginProgress;
+
 
     private Unbinder unbinder;
 
@@ -97,6 +101,9 @@ public class Login extends FragmentActivity implements
         FacebookSdk.sdkInitialize(getApplicationContext());
 
         setContentView(R.layout.activity_login);
+        loginProgress = new ProgressDialog(this);
+        loginProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
         unbinder = ButterKnife.bind(this);
 
         prepareGoogle();
@@ -187,6 +194,7 @@ public class Login extends FragmentActivity implements
     public void onSuccessfulSignIn(AccountManager.EventSuccessfulSignIn event) {
         Log.e("FLJ", "login onSuccessfulSignIn");
         AccountManager.saveState();
+        loginProgress.cancel();
         showApp();
     }
 
@@ -194,6 +202,7 @@ public class Login extends FragmentActivity implements
     public void onFailureSignIn(AccountManager.EventSignInFailure event) {
         Log.e("FLJ", "login onFailureSignIn");
         Toast.makeText(getApplicationContext(),event.errorMessage.toString(), Toast.LENGTH_LONG).show();
+        loginProgress.cancel();
     }
 
     @Subscribe
@@ -276,8 +285,11 @@ public class Login extends FragmentActivity implements
     public void formSignin() {
         String email = emailText.getText().toString();
         String password = passwordText.getText().toString();
-        if (validateBasicAuthForn())
+        if (validateBasicAuthForn()){
+            loginProgress.setMessage("Waiting for Sign In ...");
+            loginProgress.show();
             AccountManager.signinBasicAuth(email, password);
+        }
     }
 
     @OnClick(R.id.signup)
@@ -288,8 +300,12 @@ public class Login extends FragmentActivity implements
         Account.UserProfile userprofile = new Account.UserProfile();
         Account account  = new Account(userId, email, email, password);
         account.userprofile = userprofile;
-        if (validateBasicAuthForn())
+        if (validateBasicAuthForn()){
+            loginProgress.setMessage("Waiting for Sign Up ...");
+            loginProgress.show();
             AccountManager.signupBasicAuth(account);
+        }
+
     }
 
     public boolean validateBasicAuthForn() {
@@ -299,7 +315,7 @@ public class Login extends FragmentActivity implements
 
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             Toast.makeText(getApplicationContext(),
-                    "Enter a valid email addres.", Toast.LENGTH_LONG).show();
+                    "Enter a valid email address.", Toast.LENGTH_LONG).show();
             return false;
         }
 
