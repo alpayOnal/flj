@@ -32,6 +32,7 @@ public class Profile extends DetailActivity {
     @BindView(R.id.lastname)  EditText profile_last_name;
     @BindView(R.id.email)  EditText profile_email;
     @BindView(R.id.password)  EditText profile_password;
+    @BindView(R.id.display_name)  TextView profile_display_name;
     @BindView(R.id.profileImage) ImageView profile_image;
     @BindView(R.id.updateProfile) Button button_update;
     private ProgressDialog updateProgress;
@@ -50,6 +51,9 @@ public class Profile extends DetailActivity {
         profile_last_name.setText(account.getLast_name());
         if (!account.userprofile.getPicture().isEmpty())
             new DownloadImageTask(profile_image).execute(account.userprofile.getPicture());
+
+        getSupportActionBar().setTitle("");
+        profile_display_name.setText(account.getDisplayName());
     }
 
 
@@ -77,6 +81,8 @@ public class Profile extends DetailActivity {
             getResources().getString(R.string.profile_update_message),
             Toast.LENGTH_LONG
         ).show();
+
+        profile_display_name.setText(event.account.getDisplayName());
     }
 
     @Subscribe
