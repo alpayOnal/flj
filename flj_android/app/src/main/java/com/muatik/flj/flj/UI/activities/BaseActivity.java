@@ -1,6 +1,8 @@
 package com.muatik.flj.flj.UI.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -36,6 +38,8 @@ import butterknife.Unbinder;
 /**
  * Created by muatik on 17.08.2016.
  */
+// @TODO: back tusuna main activity uzerindeyken basilirsa uygulama durdurulmali
+
 public class BaseActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -72,9 +76,15 @@ public class BaseActivity extends AppCompatActivity
     @BindView(R.id.toolbar)
     protected Toolbar toolbar;
 
+    private ProgressDialog progress;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        progress = new ProgressDialog(this);
+
     }
 
     protected void init() {
@@ -134,6 +144,8 @@ public class BaseActivity extends AppCompatActivity
         } else if (id == R.id.nav_profile) {
             startActivity(new Intent(getApplication(), Profile.class));
         } else if (id == R.id.nav_logout) {
+            progress.setMessage(getResources().getString(R.string.logout_progress_message));
+            progress.show();
             AccountManager.signout();
             startActivity(new Intent(getApplication(), Login.class));
         }

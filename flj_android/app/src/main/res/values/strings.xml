@@ -14,7 +14,25 @@
     <string name="facebook_app_id">643883019112948</string>
     <string name="facebook_login_button">Sign in with Facebook</string>
     <string name="facebook_logout_button">Sign out Facebook</string>
+
+    <string name="google_login_button">Sign in with Google</string>
     <string name="google_client_id">223265251589-b1ojj9mj6pitskb9oh0rksifg3qijje5.apps.googleusercontent.com</string>
+    <string name="google_failed_message">Google sign in failed. Please try again.</string>
     <string name="title_activity_test">test</string>
     <string name="title_activity_profile">Profile</string>
+
+    <string name="waiting_sign_in_facebook">Waiting for sign in Facebook...</string>
+    <string name="waiting_sign_in_google">Waiting for sign in Google...</string>
+
+    <string name="waiting_for_sign_up">Waiting for sign up...</string>
+    <string name="waiting_for_sign_in">Waiting for sign in...</string>
+
+
+    <string name="invalid_email_message">Enter a valid email addres.</string>
+    <string name="invalid_password_message">Between 4 and 20 alphanumeric characters.</string>
+
+    <string name="profile_update_message">Your profile updated.</string>
+    <string name="profile_fields_required_message">The above fields are required.</string>
+
+    <string name="logout_progress_message">Logging Out...</string>
 </resources>

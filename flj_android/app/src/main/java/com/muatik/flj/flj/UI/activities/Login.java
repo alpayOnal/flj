@@ -102,7 +102,7 @@ public class Login extends FragmentActivity implements
 
         setContentView(R.layout.activity_login);
         loginProgress = new ProgressDialog(this);
-        loginProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        //loginProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
         unbinder = ButterKnife.bind(this);
 
@@ -137,6 +137,8 @@ public class Login extends FragmentActivity implements
                 String profileId = loginResult.getAccessToken().getUserId();
                 String token = loginResult.getAccessToken().getToken();
                 AccountManager.signinViaFacebook(profileId, token);
+                loginProgress.setMessage(getResources().getString(R.string.waiting_sign_in_facebook));
+                loginProgress.show();
             }
             @Override
             public void onCancel() {
@@ -169,7 +171,7 @@ public class Login extends FragmentActivity implements
         signInButton.setEnabled(true);
         signInButton.setColorScheme(SignInButton.COLOR_LIGHT);
         signInButton.setScopes(gso.getScopeArray());
-        setGooglePlusButtonText(signInButton, "Google");
+        setGooglePlusButtonText(signInButton, getResources().getString(R.string.google_login_button));
     }
 
     protected void setGooglePlusButtonText(SignInButton signInButton, String buttonText) {
@@ -184,7 +186,7 @@ public class Login extends FragmentActivity implements
                 tv.setWidth(350);
                 tv.setTextColor(Color.WHITE);
                 tv.setTextSize(16);
-                tv.setText("Sign in with Google");
+                tv.setText(buttonText);
                 return;
             }
         }
@@ -242,6 +244,8 @@ public class Login extends FragmentActivity implements
         if (result.isSuccess()) {
             GoogleSignInAccount acct = result.getSignInAccount();
             AccountManager.signinViaGoogle(result.getSignInAccount().getIdToken());
+            loginProgress.setMessage(getResources().getString(R.string.waiting_sign_in_google));
+            loginProgress.show();
         } else {
         }
     }
@@ -268,7 +272,11 @@ public class Login extends FragmentActivity implements
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        Toast.makeText(getApplicationContext(), "Google sign in failed. Please try again.", Toast.LENGTH_LONG).show();
+        Toast.makeText(
+            getApplicationContext(),
+            getResources().getString(R.string.google_failed_message),
+            Toast.LENGTH_LONG
+        ).show();
         Log.d("FLJ-googlelogin", "onConnectionFailed:" + connectionResult);
     }
 
@@ -286,7 +294,7 @@ public class Login extends FragmentActivity implements
         String email = emailText.getText().toString();
         String password = passwordText.getText().toString();
         if (validateBasicAuthForn()){
-            loginProgress.setMessage("Waiting for Sign In ...");
+            loginProgress.setMessage(getResources().getString(R.string.waiting_for_sign_in));
             loginProgress.show();
             AccountManager.signinBasicAuth(email, password);
         }
@@ -301,7 +309,7 @@ public class Login extends FragmentActivity implements
         Account account  = new Account(userId, email, email, password);
         account.userprofile = userprofile;
         if (validateBasicAuthForn()){
-            loginProgress.setMessage("Waiting for Sign Up ...");
+            loginProgress.setMessage(getResources().getString(R.string.waiting_for_sign_up));
             loginProgress.show();
             AccountManager.signupBasicAuth(account);
         }
@@ -314,14 +322,20 @@ public class Login extends FragmentActivity implements
         String password = passwordText.getText().toString();
 
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            Toast.makeText(getApplicationContext(),
-                    "Enter a valid email address.", Toast.LENGTH_LONG).show();
+            Toast.makeText(
+                getApplicationContext(),
+                getResources().getString(R.string.invalid_email_message),
+                Toast.LENGTH_LONG
+            ).show();
             return false;
         }
 
         if (password.isEmpty() || password.length() < 4 || password.length() > 20) {
-            Toast.makeText(getApplicationContext(),
-                    "Between 4 and 20 alphanumeric characters.", Toast.LENGTH_LONG).show();
+            Toast.makeText(
+                getApplicationContext(),
+                getResources().getString(R.string.invalid_password_message),
+                Toast.LENGTH_LONG
+            ).show();
             return false;
         }
 
@@ -344,8 +358,11 @@ public class Login extends FragmentActivity implements
     public void remember() {
         String email = emailTextRemember.getText().toString();
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            Toast.makeText(getApplicationContext(),
-                    "Enter a valid email addres.", Toast.LENGTH_LONG).show();
+            Toast.makeText(
+                getApplicationContext(),
+                getResources().getString(R.string.invalid_email_message),
+                Toast.LENGTH_LONG
+            ).show();
         } else {
             Log.d("FLJ-remember", emailTextRemember.getText().toString());
         }
