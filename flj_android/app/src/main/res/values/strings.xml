@@ -35,4 +35,5 @@
     <string name="profile_fields_required_message">The above fields are required.</string>
 
     <string name="logout_progress_message">Logging Out...</string>
+    <string name="emtpy_account_display_name">Your Profile</string>
 </resources>

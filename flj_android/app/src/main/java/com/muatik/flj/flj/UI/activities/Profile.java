@@ -1,27 +1,18 @@
 package com.muatik.flj.flj.UI.activities;
 
 import android.app.ProgressDialog;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import com.muatik.flj.flj.R;
 import com.muatik.flj.flj.UI.entities.Account;
 import com.muatik.flj.flj.UI.entities.AccountManager;
 import com.muatik.flj.flj.UI.utilities.DownloadImageTask;
 import com.squareup.otto.Subscribe;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -51,9 +42,14 @@ public class Profile extends DetailActivity {
         profile_last_name.setText(account.getLast_name());
         if (!account.userprofile.getPicture().isEmpty())
             new DownloadImageTask(profile_image).execute(account.userprofile.getPicture());
+        else
+            profile_image.setImageResource(R.drawable.photo);
 
         getSupportActionBar().setTitle("");
-        profile_display_name.setText(account.getDisplayName());
+        if (!account.getDisplayName().isEmpty())
+            profile_display_name.setText(account.getDisplayName());
+        else
+            profile_display_name.setText(getResources().getString(R.string.emtpy_account_display_name));
     }
 
 

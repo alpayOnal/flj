@@ -30,7 +30,10 @@ public class MainNavProfile {
         TextView accountEmail = (TextView) headerLayout.findViewById(R.id.account_email);
         profileImage = new WeakReference<ImageView>(
                 (ImageView) headerLayout.findViewById(R.id.account_image));
-        accountName.setText(AccountManager.getAuthenticatedAccount().getDisplayName());
+        if (!AccountManager.getAuthenticatedAccount().getDisplayName().isEmpty())
+            accountName.setText(AccountManager.getAuthenticatedAccount().getDisplayName());
+        else
+            accountName.setText(R.string.emtpy_account_display_name);
         accountEmail.setText(AccountManager.getAuthenticatedAccount().getEmail());
         if (!AccountManager.getAuthenticatedAccount().userprofile.getPicture().isEmpty()){
             try {
