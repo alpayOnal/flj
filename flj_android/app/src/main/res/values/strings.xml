@@ -36,4 +36,11 @@
 
     <string name="logout_progress_message">Logging Out...</string>
     <string name="emtpy_account_display_name">Your Profile</string>
+    <string name="post_job_activity_title">Post New Job</string>
+
+    <string name="post_job_activity_form_title_hint">Title</string>
+    <string name="post_job_activity_form_description_hint">Description</string>
+    <string name="post_job_activity_form_country_hint">Country</string>
+    <string name="post_job_activity_form_city_hint">City</string>
+    <string name="post_job_activity_form_employer_hint">Employer</string>
 </resources>

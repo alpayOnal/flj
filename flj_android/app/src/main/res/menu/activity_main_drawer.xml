@@ -18,6 +18,10 @@
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"
             android:title="Alarms" />
+        <item
+            android:id="@+id/nav_post_job"
+            android:icon="@drawable/ic_add_circle_black_48dp"
+            android:title="Post Job" />
     </group>
 
     <item android:title="Communicate">

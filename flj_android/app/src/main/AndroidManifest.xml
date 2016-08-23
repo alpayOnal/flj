@@ -3,7 +3,7 @@
     package="com.muatik.flj.flj">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
+    AIzaSyCYZ_h-smdYPg3kHVjc0z4ldcwOauquTcM
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -21,8 +21,8 @@
         <activity
             android:name=".UI.activities.Login"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -42,8 +42,10 @@
             android:name="com.facebook.FacebookActivity"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity android:name=".UI.activities.Profile"
-            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name=".UI.activities.Profile"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".UI.activities.PostJob" />
     </application>
 
 </manifest>
