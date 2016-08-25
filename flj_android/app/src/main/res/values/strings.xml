@@ -16,6 +16,7 @@
     <string name="facebook_logout_button">Sign out Facebook</string>
 
     <string name="google_login_button">Sign in with Google</string>
+    <string name="google_api_key">AIzaSyBIHIMgLv4Sq9bAJ7b_sMTW-8DYl17F-8A</string>
     <string name="google_client_id">223265251589-b1ojj9mj6pitskb9oh0rksifg3qijje5.apps.googleusercontent.com</string>
     <string name="google_failed_message">Google sign in failed. Please try again.</string>
     <string name="title_activity_test">test</string>
