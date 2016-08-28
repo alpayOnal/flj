@@ -3,7 +3,10 @@
     package="com.muatik.flj.flj">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    AIzaSyCYZ_h-smdYPg3kHVjc0z4ldcwOauquTcM
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -52,6 +55,8 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_api_key" />
+        <activity android:name="com.muatik.flj.flj.UI.activities.MapsActivity" android:label="@string/title_activity_maps">
+        </activity>
     </application>
 
 </manifest>

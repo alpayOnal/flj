@@ -44,4 +44,5 @@
     <string name="post_job_activity_form_country_hint">Country</string>
     <string name="post_job_activity_form_city_hint">City</string>
     <string name="post_job_activity_form_employer_hint">Employer</string>
+    <string name="title_activity_maps">Map</string>
 </resources>
