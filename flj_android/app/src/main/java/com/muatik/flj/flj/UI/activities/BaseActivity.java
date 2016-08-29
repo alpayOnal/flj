@@ -149,7 +149,7 @@ public class BaseActivity extends AppCompatActivity
             AccountManager.signout();
             startActivity(new Intent(getApplication(), Login.class));
         } else if (id == R.id.nav_post_job) {
-            startActivity(new Intent(getApplication(), MapsActivity.class));
+            startActivity(new Intent(getApplication(), PostJob.class));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
