@@ -39,7 +39,7 @@
                         android:singleLine="true"
                         android:layout_height="wrap_content"
                         android:layout_width="match_parent"
-                        android:drawableLeft="@drawable/user"
+                        android:drawableLeft="@drawable/ic_account_box_black_18dp"
                         android:background="@drawable/edit_bg_selector"/>
                 </android.support.design.widget.TextInputLayout>
                 <android.support.design.widget.TextInputLayout
@@ -53,7 +53,7 @@
                         android:singleLine="true"
                         android:layout_height="wrap_content"
                         android:layout_width="match_parent"
-                        android:drawableLeft="@drawable/user"
+                        android:drawableLeft="@drawable/ic_account_box_black_18dp"
                         android:background="@drawable/edit_bg_selector"/>
                 </android.support.design.widget.TextInputLayout>
                 <android.support.design.widget.TextInputLayout
@@ -66,7 +66,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:singleLine="true"
-                        android:drawableLeft="@drawable/email"
+                        android:drawableLeft="@drawable/ic_email_black_18dp"
                         android:background="@drawable/edit_bg_selector"/>
                 </android.support.design.widget.TextInputLayout>
                 <android.support.design.widget.TextInputLayout
@@ -80,7 +80,7 @@
                         android:singleLine="true"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/password"
+                        android:drawableLeft="@drawable/ic_lock_black_18dp"
                         android:background="@drawable/edit_bg_selector"/>
                 </android.support.design.widget.TextInputLayout>
         </LinearLayout>

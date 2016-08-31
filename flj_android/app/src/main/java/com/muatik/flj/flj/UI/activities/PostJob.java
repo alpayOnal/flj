@@ -1,5 +1,6 @@
 package com.muatik.flj.flj.UI.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -38,6 +39,9 @@ public class PostJob extends DetailActivity {
             new LatLng(41.0082376,28.9783589), new LatLng(42.0082376,28.9783589));
     protected GoogleApiClient mGoogleApiClient;
 
+    private ProgressDialog loadingProgress;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +54,7 @@ public class PostJob extends DetailActivity {
         init();
 
         getSupportActionBar().setTitle(getResources().getString(R.string.post_job_activity_title));
+        loadingProgress = new ProgressDialog(this);
 
 
 
@@ -64,11 +69,12 @@ public class PostJob extends DetailActivity {
             @Override
             public void onClick(View v) {
                 try {
+                    loadingProgress.setMessage(getResources().getString(R.string.post_job_activity_loading_map_message));
+                    loadingProgress.show();
                     builder = new PlacePicker.IntentBuilder();
                     Intent intent = builder.build(PostJob.this);
                     // Start the Intent by requesting a result, identified by a request code.
                     startActivityForResult(intent, PLACE_PICKER_FLAG);
-
                 } catch (GooglePlayServicesRepairableException e) {
                     GooglePlayServicesUtil
                             .getErrorDialog(e.getConnectionStatusCode(), PostJob.this, 0);
@@ -80,6 +86,13 @@ public class PostJob extends DetailActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        loadingProgress.cancel();
     }
 
 
@@ -95,9 +108,10 @@ public class PostJob extends DetailActivity {
                     LatLng latLng = place.getLatLng();
                     Log.v("Latitude is", "" + latLng.latitude);
                     Log.v("Latitude is", "" + latLng.longitude);
-                    TextView latlongtext = (TextView) findViewById(R.id.latlong);
-                    latlongtext.setText(latLng.toString());
-
+                    TextView lattext = (TextView) findViewById(R.id.location_lat);
+                    TextView longtext = (TextView) findViewById(R.id.location_long);
+                    //lattext.setText((int) latLng.latitude);
+                    //longtext.setText((int) latLng.longitude);
                     myLocation.setText(place.getName() + ", " + place.getAddress());
                     break;
             }
