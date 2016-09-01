@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +27,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.muatik.flj.flj.R;
 import com.muatik.flj.flj.UI.adapters.PlacesAutoCompleteAdapter;
+import com.muatik.flj.flj.UI.entities.Account;
+import com.muatik.flj.flj.UI.entities.AccountManager;
+import com.muatik.flj.flj.UI.entities.Job;
+import com.muatik.flj.flj.UI.entities.Jobs;
+import com.squareup.otto.Subscribe;
+
+import butterknife.BindView;
+import butterknife.OnClick;
 
 public class PostJob extends DetailActivity {
 
@@ -40,7 +49,14 @@ public class PostJob extends DetailActivity {
     protected GoogleApiClient mGoogleApiClient;
 
     private ProgressDialog loadingProgress;
+    private static Job newJob;
 
+    @BindView(R.id.title) EditText newjob_title;
+    @BindView(R.id.description)  EditText newjob_description;
+    @BindView(R.id.country)  EditText newjob_country;
+    @BindView(R.id.city)  EditText newjob_city;
+    @BindView(R.id.employer)  EditText newjob_employer;
+    @BindView(R.id.saveJob) Button button_saveJob;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +102,8 @@ public class PostJob extends DetailActivity {
             }
         });
 
+        newJob = new Job();
+        newJob.setLatLong(0,0);
     }
 
     @Override
@@ -103,15 +121,8 @@ public class PostJob extends DetailActivity {
             switch (requestCode) {
                 case PLACE_PICKER_FLAG:
                     Place place = PlacePicker.getPlace(data, this);
-                    //googleplacesapitutorial V/Latitude is: 41.079413300000006
-                    ///Longitude is: 28.853854499999997
                     LatLng latLng = place.getLatLng();
-                    Log.v("Latitude is", "" + latLng.latitude);
-                    Log.v("Latitude is", "" + latLng.longitude);
-                    TextView lattext = (TextView) findViewById(R.id.location_lat);
-                    TextView longtext = (TextView) findViewById(R.id.location_long);
-                    //lattext.setText((int) latLng.latitude);
-                    //longtext.setText((int) latLng.longitude);
+                    newJob.setLatLong(latLng.latitude, latLng.longitude);
                     myLocation.setText(place.getName() + ", " + place.getAddress());
                     break;
             }
@@ -155,4 +166,71 @@ public class PostJob extends DetailActivity {
             final Place place = places.get(0);
         }
     };
+
+
+    @OnClick(R.id.saveJob)
+    public void saveJob() {
+        String title = newjob_title.getText().toString();
+        String description = newjob_description.getText().toString();
+        String country = newjob_country.getText().toString();
+        String city = newjob_city.getText().toString();
+        String employer = newjob_employer.getText().toString();
+
+        newJob.setDescription(description);
+        newJob.setTitle(description);
+        newJob.setEmployer(employer);
+        newJob.setCountry(country);
+        newJob.setCity(city);
+        newJob.setUser(AccountManager.getAuthenticatedAccount().getId());
+
+        if (validateForm()) {
+            Jobs jobs = new Jobs();
+            jobs.insertJob(newJob);
+            loadingProgress.setMessage(getResources().getString(R.string.post_job_saving_message));
+            loadingProgress.show();
+        }
+    }
+
+
+    public boolean validateForm() {
+
+        String title = newjob_title.getText().toString();
+        String description = newjob_description.getText().toString();
+        String country = newjob_country.getText().toString();
+        String city = newjob_city.getText().toString();
+        String employer = newjob_employer.getText().toString();
+
+        if (title.isEmpty() || description.isEmpty() || country.isEmpty()
+                || city.isEmpty() || employer.isEmpty()) {
+            Toast.makeText(getApplicationContext(),
+                    getResources().getString(R.string.post_job_fields_required_message),
+                    Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        return true;
+    }
+
+    @Subscribe
+    public void jobSuccessfullyInserted(Jobs.EventOnInsert event){
+        loadingProgress.cancel();
+        Toast.makeText(
+                getApplicationContext(),
+                getResources().getString(R.string.post_job_added),
+                Toast.LENGTH_LONG
+        ).show();
+        this.finish();
+    }
+
+    @Subscribe
+    public void jobInsertingFailure(Jobs.EventOnInsertFailure event){
+        loadingProgress.cancel();
+        Log.d("error", event.error.getMessage());
+        Log.d("error", event.message);
+        Toast.makeText(
+                getApplicationContext(),
+                event.message,
+                Toast.LENGTH_LONG
+        ).show();
+    }
 }

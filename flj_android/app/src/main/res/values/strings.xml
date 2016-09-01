@@ -48,8 +48,8 @@
     <string name="post_job_activity_form_button_pick_location">Pick Location</string>
     <string name="post_job_activity_form_select_your_location">Select Your Location</string>
     <string name="post_job_activity_loading_map_message">Loading Map...</string>
-
-
+    <string name="post_job_fields_required_message">The above fields are required.</string>
+    <string name="post_job_saving_message">Your job is saving...</string>
+    <string name="post_job_added">Your job has been added.</string>
     <string name="title_activity_maps">Map</string>
-
 </resources>

@@ -276,7 +276,6 @@ public class JobList extends ActivityWithDrawer {
             infiniteScroller.setDontListen(true);
     }
 
-
 //    @Subscribe
 //    public void onJobClicked(JobViewHolder.EventOnJobClicked event) {
 //

@@ -261,7 +261,10 @@ public class API {
         Call<Job> countView(@Path("jobId") String jobId);
 
         @PUT("users/{userId}/")
-        Call<Account> updateAccout(@Path("userId") int userId, @Body Account account);
+        Call<Account> updateAccount(@Path("userId") int userId, @Body Account account);
+
+        @POST("posts/")
+        Call<Job> saveJob(@Body Job job);
     }
 
     private static final String HOST = "http://192.168.2.62:8000/";

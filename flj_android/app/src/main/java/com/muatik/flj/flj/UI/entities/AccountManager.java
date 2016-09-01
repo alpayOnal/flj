@@ -150,7 +150,7 @@ public class AccountManager {
 
     public static void updateAccout(Account account) {
 
-        Call<Account> call = API.authorized.updateAccout(authenticated.getId(), account);
+        Call<Account> call = API.authorized.updateAccount(authenticated.getId(), account);
         call.enqueue(new API.BriefCallback<Account>() {
             @Override
             public void onFailure(Call<Account> call, Throwable t, Response<Account> response) {

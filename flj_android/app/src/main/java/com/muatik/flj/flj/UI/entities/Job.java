@@ -72,6 +72,10 @@ public class Job implements Serializable {
         return longitude;
     }
 
+    public void setUser(Integer user) {
+        this.user = user;
+    }
+
     public Integer getUser() {
         return user;
     }
@@ -93,6 +97,17 @@ public class Job implements Serializable {
         this.employer = employer;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
 
     public Integer getView_counter() {
         return view_counter;
@@ -134,4 +149,8 @@ public class Job implements Serializable {
         this.source_url = source_url;
     }
 
+    public void setLatLong(double latitude, double longitude) {
+        this.latitude = String.valueOf(latitude);
+        this.longitude = String.valueOf(longitude);
+    }
 }
